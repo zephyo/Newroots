@@ -10,3 +10,11 @@ ideation
 6) analyze text and speech for signs of alzheimers (e.g. smaller vocabulary in texting) (physical health)
 7) anonymous place to share feelings and get support; exclusive group so no meanies (see past cs147 proj http://tinyurl.com/hdydwey) (mental health)
 
+
+narrow down by: 
+- scope
+- potential to win
+- desire to finish
+
+
+
