@@ -6,4 +6,6 @@ ideation
 3) a web app to better access your support network (mental health)
 4) cognitive behavioral therapy as an app (mental health)
 5) help you detect symptoms of mental illness/poor well-being in those you care for (mental health)
+6) analyze text and speech for signs of alzheimers (e.g. smaller vocabulary in texting) (physical health)
+7) anonymous place to share feelings and get support; exclusive group so no meanies (see past cs147 proj http://tinyurl.com/hdydwey) (mental health)
 
