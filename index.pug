@@ -1,0 +1,118 @@
+
+nav.main-nav
+  .nav-content
+    span.logo my_friends
+      span.sublogo give and get support.
+    button#feed-but
+      span(data-jam="messages-alt" data-fill="#9FC6C1")
+    button#network-but
+      span(data-jam="users" data-fill="#9FC6C1")
+    button#user-but
+      span(data-jam="user" data-fill="#9FC6C1")
+  
+section.feed.active-section
+  .create-thought
+    textarea(rows="2" placeholder="Your thoughts")
+    button.share update
+    
+  h1.date-marker February 15
+  .checkin.activity
+    .header
+      .pic
+      span.name Gloria Wang 
+      span.sub &nbsp;checked in
+      span.date A few seconds ago
+      button.user-edit
+        span(data-jam="pencil" data-fill="#EFF0DA")
+    .content
+      .mood
+        span feeling 
+        .mood-icon 5
+      span feeling better but still kinda sad because I don't know anyone in my dorm :/ is that just me?
+      .mood
+        span took meds 
+        .mood-icon
+          span(data-jam="check" data-fill="#EFF0DA")
+    .leave-comment
+      input(type="text" placeholder="comment..")
+      button
+        span(data-jam="paper-plane" data-fill="#9FC6C1")      
+      
+  .thought.activity
+    .header
+      .pic
+      span.name Brianna Burman
+      span.sub &nbsp;updated
+      span.date 12 min ago
+    .reply
+      span worried/stressed abt interviews
+    .comment
+      span you got this!!
+    .comment
+      span So awesome you’re planning for them! Since you’re thinking about it, I’m sure you’ll be super prepared!
+    .reply
+      span thx guys :) i appreicate it
+    .leave-comment
+      input(type="text" placeholder="comment..")
+      button
+        span(data-jam="paper-plane" data-fill="#9FC6C1")
+    
+section.network
+  .header
+    .search-bar
+      input(type="text" placeholder="search")
+      button#search-friends
+        span(data-jam="search" data-fill="#9FC6C1")
+    button#add-friends
+        span(data-jam="user-plus" data-fill="#9FC6C1")
+  .friends
+    .friend
+      .pic
+      span Brianna Burman
+      button
+        span(data-jam="heart" data-fill="#e38882")
+    .friend
+      .pic
+      span Felicia Wilson
+      button
+        span(data-jam="heart" data-fill="#e38882")
+    
+
+section.user
+  button#edit
+    span(data-jam="pencil" data-fill="#9FC6C1")
+  .pic
+  h1 Gloria Wang
+    span.username @gloria1029
+  .check-in-edit
+    h2 Your Daily Check-in
+    ul
+      li How are you feeling today?
+      li Did you take your medication?
+    button add more 
+  button#logout-but logout  
+
+.modal-bg
+  .checkin.modal
+    h1 February 15
+    h2 How are you feeling today?
+    .mood-measurer
+      input(type="range" min="0" max="100" value="50")
+      .num
+        small 1
+        small 7
+    .feelings(contenteditable="true") How am I feeling? ..
+    h2 Did you take your medication?
+    .yesno
+      button
+        span(data-jam="check" data-fill="#9FC6C1")
+      button
+        span(data-jam="close" data-fill="#9FC6C1")  
+    button#submit
+      span(data-jam="arrow-right" data-fill="#9FC6C1")
+  
+  .home-page
+    h2 my_friends
+    p give and get support
+    button login
+    
