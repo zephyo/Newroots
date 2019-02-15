@@ -12,9 +12,9 @@ ideation
 
 
 narrow down by: 
-- scope
-- potential to win
-- desire to finish
+1) scope
+2) how motivating it is
+3) potential to win
 
 
 
