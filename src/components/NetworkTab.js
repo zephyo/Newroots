@@ -28,6 +28,7 @@ class NetworkTab extends React.Component {
     });
 
     var requestsRef = this.props.firebase.user(this.props.uid).collection("requests");
+    
     requestsRef.onSnapshot((doc) => {
       this.setRequests(doc.data());
     })
