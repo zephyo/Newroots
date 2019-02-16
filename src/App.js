@@ -20,7 +20,7 @@ const NetworkTabFB = withFirebase(NetworkTab);
 
 const NavBarFB = withFirebase(NavBar);
 
-let feedListen;
+//let feedListen;
 
 var data = {
   baseURL: '',
@@ -40,7 +40,7 @@ class App extends React.Component {
     //listen for network requests
     //fix - firebase doesnt exist in this xontentxt - maybe just have this code on compoenents that need it
       
-      feedListen = firebase.firestore().collection("users").doc(this.state.userData.uid).collection("feed")
+      /*feedListen = firebase.firestore().collection("users").doc(this.state.userData.uid).collection("feed")
         .onSnapshot(function(snapshot) {
             let tempFeed = [];
             snapshot.docChanges().forEach(function(change) {
@@ -54,10 +54,10 @@ class App extends React.Component {
             this.setState({
                 feed:tempFeed
             })
-        });
+        });*/
   }
   componentWillUnmount(){
-      feedListen();
+      //feedListen();
   }
 
   fillFeed = () => {

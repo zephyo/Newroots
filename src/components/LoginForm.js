@@ -7,7 +7,6 @@ const INITIAL_STATE = {
 };
 
 class LoginForm extends React.Component {
-  let element = this;
   constructor(props) {
     super(props);
     this.state = INITIAL_STATE;
@@ -18,6 +17,7 @@ class LoginForm extends React.Component {
   };
   
   onSubmit = () => {
+    let element = this;
     const { email, password } = this.state;
 
     this.props.firebase
@@ -37,9 +37,6 @@ class LoginForm extends React.Component {
             });
             element.props.checkLogin(doc.data());
         });
-        
-
-          });
 
       })
       .catch(error => {

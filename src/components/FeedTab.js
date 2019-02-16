@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import autosize from 'autosize';
 
+let feedListen;
 
 const CheckinPost = (props) => {
 
@@ -18,15 +19,35 @@ class FeedTab extends React.Component {
 
    componentDidMount() {
     autosize($('textarea'));
+    let element = this;
+    let tempFeed = [];
+    feedListen = this.props.firebase.user(this.state.userData.uid).collection("feed")
+    .onSnapshot(function(snapshot) {
+        //let tempFeed = [];
+        snapshot.docChanges().forEach(function(change) {
+                
+            if (change.type === "added") {
+                //console.log("New city: ", change.doc.data());
+                tempFeed.push(change.doc.id);
+            }
+                
+        });
+        element.setState({
+            feed:tempFeed
+        })
+    });
+  }
+  componentWillUnmount(){
+      feedListen();
   }
 
   render (){
 
-    feed = this.props.feed;
+    /*feed = this.props.feed;
 
     for (var i = 0; i< feed.length; i++){
       
-    }
+    }*/
 
     return (
      <section className="feed">
