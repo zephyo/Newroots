@@ -18,6 +18,8 @@ const UserTabFB = withFirebase(UserTab);
 
 const NetworkTabFB = withFirebase(NetworkTab);
 
+const NavBarFB = withFirebase(NavBar);
+
 let feedListen;
 
 var data = {
@@ -38,51 +40,6 @@ class App extends React.Component {
     //listen for network requests
     //fix - firebase doesnt exist in this xontentxt - maybe just have this code on compoenents that need it
       
-      
-    /*var requestsRef = firebase.database().ref(`users/${this.state.userData.uid}`+ '/requests');
-    requestsRef.on('value', (snapshot) => {
-  
-      this.setState({
-        userData: {
-          ...this.state.userData,
-          requests:snapshot.val()
-        }
-      });
-    });*/
-    // const element = this;
-    // var requestsRef = firebase.firestore().collection("users").doc(this.state.userData.uid).collection("requests");
-    // requestsRef.get()
-    // .then(function(querySnapshot) {
-    //     let requests = [];
-    //     querySnapshot.forEach(function(doc) {
-    //         // doc.data() is never undefined for query doc snapshots
-    //         //console.log(doc.id, " => ", doc.data());
-    //         requests.push(doc.id);
-    //     });
-    //     element.setState({
-    //         userData:{
-    //             ...element.state.userData,
-    //             requests:requests
-    //         }
-    //     })
-    // })
-    // .catch(function(error) {
-    //     console.log("Error getting documents: ", error);
-    // });
-      
-    //listen for feed requests
-    /*var feedRef = firebase.database().ref('feed');
-    feedRef.on('value', (snapshot) => {
-      let val = snapshot.val();
-      if (val == null) return;
-
-      let tempFeed;
-      this.setState({
-          feed: tempFeed
-        });
-    });
-
-    fillFeed();*/
       firebase.firestore().collection("users").doc(this.state.userData.uid).collection("feed")
         .onSnapshot(function(snapshot) {
             let tempFeed = [];
@@ -103,8 +60,6 @@ class App extends React.Component {
   fillFeed = () => {
       
   }
-
- 
 
   SignUp = (userData) => {
     this.setState({
@@ -242,7 +197,7 @@ class App extends React.Component {
       <div className="container">
         <div className="bg"></div>
         <div className="main-bg-texture"></div>
-        <NavBar
+        <NavBarFB
           setActiveTab={this.setActiveTab}
           requestsLength={this.state.userData.requests.length}
         />
