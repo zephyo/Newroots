@@ -12,7 +12,7 @@ class NetworkTab extends React.Component {
     this.state = {
       addFriend: false,
       network: this.props.network,
-      networkUsers: null,
+      networkUsers: [],
       loading: false,
       requests: this.props.requests,
     };
@@ -83,9 +83,9 @@ class NetworkTab extends React.Component {
     let users = [];
     let counter = 0;
 
-    for (var i = 0; i < this.state.requests.length; i++) {
+    for (var i = 0; i < this.state.network.length; i++) {
       this.props.firebase
-        .users(this.state.requests[i]).get().then((doc) => {
+        .user(this.state.network[i]).get().then(function(doc) {
           users.push(doc.data());
           this.setState({ networkUsers: users });
           counter++;
@@ -97,7 +97,8 @@ class NetworkTab extends React.Component {
   }
 
   render() {
-    if (this.state.networkUsers == null && this.state.network.length > 0) {
+    if ((!this.state.networkUsers || this.state.networkUsers.length === 0) && 
+    this.state.network.length > 0) {
       if (this.state.loading == false) {
         this.loadNetworkUsers();
       }
