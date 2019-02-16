@@ -11,9 +11,9 @@ class NavBar extends React.Component {
 
   componentDidMount() {
     var requestsRef = this.props.firebase.user(this.props.uid).collection("requests");
-
+    let element = this;
     requestsRef.onSnapshot(function(querySnapshot) {
-      this.setState({ requestsLength: querySnapshot.length })
+      // element.setState({ requestsLength: querySnapshot.length })
     })
     .catch(function (error) {
       console.log("Error getting documents: ", error);
