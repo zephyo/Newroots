@@ -35,7 +35,7 @@ body {
   color: $black;
 }
 
-h1 {
+h1, .profile-name {
   font-family: "Frank Ruhl Libre", serif;
   text-transform: uppercase;
   color: $dark;
@@ -52,6 +52,7 @@ button {
   font-family: inherit;
   font-size: inherit;
   transition: all 0.3s ease;
+  background: white;
   &:hover {
     background: $light-pink;
   }
@@ -335,10 +336,79 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  #edit {
+
+  .yesno {
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    .no{
+      background: $pink;
+      .jam-co {
+        color: white;
+      }
+    }
+  }
+  
+  .add-panel {
+    textarea {
+      width: 95%;
+      resize: none;
+      padding: 20px;
+      text-align: center;
+    }
+    ul {
+      width: 75%;
+      margin: auto;
+      li {
+        background: $light;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  .edit-pic {
+    background: transparent;
+    width: 100px;
+    height: 100px;
+    padding: 0;
+    position: relative;
+    .edit-pic-but {
+      position: absolute;
+      background: $light;
+      width: 50px;
+      height: 50px;
+      top: -10px;
+      right: -10px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .jam-pencil {
+      color: $dark;
+      position: relative;
+    }
+  }
+  .profile-name {
+    margin: $feed-padding;
+    font-size: 1.5rem;
+  }
+  input[type='text']{
+    font-family: "Frank Ruhl Libre", serif;
+    text-align: center;
+    border-radius: 8px;
+  }
+  .edit {
     align-self: flex-end;
     border-radius: 50%;
     margin-right: $feed-padding;
+  }
+  .done {
+    background: #899c7d;
+    color: white;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2)
   }
   .pic {
     width: 100px;
@@ -350,12 +420,23 @@ section {
     background: $light-pink;
     text-align: center;
     box-shadow: 0 3px 15px rgba($pink, 0.4);
+
     ul {
       list-style: none;
       padding: 0;
       li {
+        position: relative;
         padding: $feed-padding;
         box-shadow: 0 3px 10px rgba($pink, 0.4);
+        .delete {
+          position: absolute;
+          width: 60px;
+          height: 100%;
+          top: 0;
+          right: 0;
+          background: #e38882;
+          box-shadow: 0 4px 10px rgba($black,0.2);
+        }
       }
     }
     button {
