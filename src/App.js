@@ -17,20 +17,20 @@ var data = {
   activeTab: 0,
   userData: null,
   feed: [
-    
+
   ],
 },
-    
-userBase='users',
-    
-config = {
-  apiKey: "AIzaSyBnWbqZC0wncY06pWlHX8DCbIM_EM9zrE8",
-  authDomain: "day-7-messaging.firebaseapp.com",
-  databaseURL: "https://day-7-messaging.firebaseio.com",
-  projectId: "day-7-messaging",
-  storageBucket: "day-7-messaging.appspot.com",
-  messagingSenderId: "307150346579"
-};
+
+  userBase = 'users',
+
+  config = {
+    apiKey: "AIzaSyBnWbqZC0wncY06pWlHX8DCbIM_EM9zrE8",
+    authDomain: "day-7-messaging.firebaseapp.com",
+    databaseURL: "https://day-7-messaging.firebaseio.com",
+    projectId: "day-7-messaging",
+    storageBucket: "day-7-messaging.appspot.com",
+    messagingSenderId: "307150346579"
+  };
 
 firebase.initializeApp(config);
 
@@ -45,25 +45,25 @@ class App extends React.Component {
       firebaseRef: firebase.database().ref(userBase),
     }, this.update);
   }
-  
+
   setActiveTab = (index) => {
-      this.setState({
+    this.setState({
       activeTab: index,
     });
   }
-  
+
   checkLogin = (user, pass) => {
     //check against database 
     //if (user)
     //if valid, set userData
     this.setState({
-      userData: 
+      userData:
       {
         profileImage: '',
         name: 'Gloria Wang',
         username: 'gloria',
         lastCheckin: '02/14/2019',
-        checkin: [
+        checkins: [
           {
             q: 'How are you feeling today?',
             type: 'range',
@@ -76,76 +76,78 @@ class App extends React.Component {
       },
     });
   }
-  
+
   // update this.state.lastCheckin as well as input checkin data to feed/database
   updateCheckin = () => {
     this.setState({
-    userData: {
-          ...this.state.userData,
-          lastCheckin: moment().format('L')
-        }
+      userData: {
+        ...this.state.userData,
+        lastCheckin: moment().format('L')
+      }
     });
   }
-  
+
   //check this.state.lastCheckin and see whether user has checked in today
   needToCheckin = () => {
-    if (this.state.userData.lastCheckin != moment().format('L')){
+    if (this.state.userData.lastCheckin != moment().format('L')) {
       return true;
     }
-    else{
+    else {
       return false;
     }
   }
-  
+
   //logout
   logout = () => {
     this.setState({
-    userData: null
+      userData: null
     });
   }
-  
+
   render() {
-    if (this.state.userData === null){
+    if (this.state.userData === null) {
       return (
         <HomePage
-          checkLogin = {this.checkLogin}
+          checkLogin={this.checkLogin}
         />
       );
     }
     var activeTab;
     //active tab is feed
-    if (this.state.activeTab == 0){
+    if (this.state.activeTab == 0) {
       activeTab = (
         <FeedTab />
       );
     }
     //active tab is network
-    else if (this.state.activeTab == 1){
+    else if (this.state.activeTab == 1) {
       activeTab = (
         <NetworkTab />
       );
     }
     //active tab is profile
-    else{
+    else {
       activeTab = (
-        <UserTab 
-          logout = {this.logout}
-          />
+        <UserTab
+          logout={this.logout}
+          checkIns={this.state.userData.checkins}
+          name={this.state.userData.name}
+        />
       );
     }
-    
+
     return (
       <div className="container">
         <div className="bg"></div>
         <div className="main-bg-texture"></div>
         <NavBar
-           setActiveTab = {this.setActiveTab}
+          setActiveTab={this.setActiveTab}
+        />
+        {activeTab}
+        {this.needToCheckin() ?
+          <CheckinModal
+            updateCheckin={this.updateCheckin}
           />
-          {activeTab}
-       {this.needToCheckin() ? 
-          <CheckinModal 
-            updateCheckin = {this.updateCheckin}
-          /> 
           : null}
       </div>
     );

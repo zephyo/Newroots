@@ -18,7 +18,7 @@ body {
   color: #635358;
 }
 
-h1 {
+h1, .profile-name {
   font-family: "Frank Ruhl Libre", serif;
   text-transform: uppercase;
   color: #8a8184;
@@ -35,6 +35,7 @@ button {
   font-family: inherit;
   font-size: inherit;
   transition: all 0.3s ease;
+  background: white;
 }
 button:hover {
   background: #f1d0ca;
@@ -301,10 +302,74 @@ section {
   flex-direction: column;
   align-items: center;
 }
-.user #edit {
+.user .yesno {
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.user .yesno .no {
+  background: #e38882;
+}
+.user .yesno .no .jam-co {
+  color: white;
+}
+.user .add-panel textarea {
+  width: 95%;
+  resize: none;
+  padding: 20px;
+  text-align: center;
+}
+.user .add-panel ul {
+  width: 75%;
+  margin: auto;
+}
+.user .add-panel ul li {
+  background: #eff0da;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+}
+.user .edit-pic {
+  background: transparent;
+  width: 100px;
+  height: 100px;
+  padding: 0;
+  position: relative;
+}
+.user .edit-pic .edit-pic-but {
+  position: absolute;
+  background: #eff0da;
+  width: 50px;
+  height: 50px;
+  top: -10px;
+  right: -10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.user .edit-pic .jam-pencil {
+  color: #8a8184;
+  position: relative;
+}
+.user .profile-name {
+  margin: 20px;
+  font-size: 1.5rem;
+}
+.user input[type=text] {
+  font-family: "Frank Ruhl Libre", serif;
+  text-align: center;
+  border-radius: 8px;
+}
+.user .edit {
   align-self: flex-end;
   border-radius: 50%;
   margin-right: 20px;
+}
+.user .done {
+  background: #899c7d;
+  color: white;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
 }
 .user .pic {
   width: 100px;
@@ -322,8 +387,18 @@ section {
   padding: 0;
 }
 .user .check-in-edit ul li {
+  position: relative;
   padding: 20px;
   box-shadow: 0 3px 10px rgba(227, 136, 130, 0.4);
+}
+.user .check-in-edit ul li .delete {
+  position: absolute;
+  width: 60px;
+  height: 100%;
+  top: 0;
+  right: 0;
+  background: #e38882;
+  box-shadow: 0 4px 10px rgba(99, 83, 88, 0.2);
 }
 .user .check-in-edit button {
   width: 100%;
