@@ -16,6 +16,8 @@ import { withFirebase } from './components/Firebase';
 
 const UserTabFB = withFirebase(UserTab);
 
+const NetworkTabFB = withFirebase(NetworkTab);
+
 let feedListen;
 
 var data = {
@@ -47,26 +49,26 @@ class App extends React.Component {
         }
       });
     });*/
-    const element = this;
-    var requestsRef = firebase.firestore().collection("users").doc(this.state.userData.uid).collection("requests");
-    requestsRef.get()
-    .then(function(querySnapshot) {
-        let requests = [];
-        querySnapshot.forEach(function(doc) {
-            // doc.data() is never undefined for query doc snapshots
-            //console.log(doc.id, " => ", doc.data());
-            requests.push(doc.id);
-        });
-        element.setState({
-            userData:{
-                ...element.state.userData,
-                requests:requests
-            }
-        })
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
+    // const element = this;
+    // var requestsRef = firebase.firestore().collection("users").doc(this.state.userData.uid).collection("requests");
+    // requestsRef.get()
+    // .then(function(querySnapshot) {
+    //     let requests = [];
+    //     querySnapshot.forEach(function(doc) {
+    //         // doc.data() is never undefined for query doc snapshots
+    //         //console.log(doc.id, " => ", doc.data());
+    //         requests.push(doc.id);
+    //     });
+    //     element.setState({
+    //         userData:{
+    //             ...element.state.userData,
+    //             requests:requests
+    //         }
+    //     })
+    // })
+    // .catch(function(error) {
+    //     console.log("Error getting documents: ", error);
+    // });
       
     //listen for feed requests
     /*var feedRef = firebase.database().ref('feed');
@@ -211,7 +213,7 @@ class App extends React.Component {
     //active tab is network
     else if (this.state.activeTab == 1) {
       activeTab = (
-        <NetworkTab 
+        <NetworkTabFB 
           uid={this.state.userData.uid}
           requests={this.state.userData.requests}
           network={this.state.userData.network}

@@ -22,6 +22,25 @@ class NetworkTab extends React.Component {
     networkRef.on('value', (snapshot) => {
       this.setNetworkUsers(snapshot.val())
     });
+
+    var requestsRef = this.props.firebase.user(this.props.uid).collection("requests");
+    requestsRef.onSnapshot((doc) => {
+      let requests = [];
+      querySnapshot.forEach(function (doc) {
+        // doc.data() is never undefined for query doc snapshots
+        //console.log(doc.id, " => ", doc.data());
+        requests.push(doc.id);
+      });
+      element.setState({
+        userData: {
+          ...element.state.userData,
+          requests: requests
+        }
+      })
+    })
+      .catch(function (error) {
+        console.log("Error getting documents: ", error);
+      });
   }
 
   setAddFriend = (bool) => {
