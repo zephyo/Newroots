@@ -132,7 +132,7 @@ class AddFriend extends React.Component {
     let counter = 0;
     for (var i = 0; i < this.state.requests.length; i++) {
       this.props.firebase
-        .users(this.state.requests[i]).get().then((doc) => {
+        .user(this.state.requests[i]).get().then((doc) => {
           users.push(doc.data());
           this.setState({ requestUsers: users });
           counter++;
