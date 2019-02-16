@@ -10,14 +10,15 @@ class NavBar extends React.Component {
   }
 
   componentDidMount() {
+    let element = this;
     var requestsRef = this.props.firebase.user(this.props.uid).collection("requests");
 
     requestsRef.onSnapshot(function(querySnapshot) {
-      this.setState({ requestsLength: querySnapshot.length })
+      element.setState({ requestsLength: querySnapshot.length })
     })
-    .catch(function (error) {
+    /*.catch(function (error) {
       console.log("Error getting documents: ", error);
-    });
+    });*/
   }
 
   setAddFriend = (bool) => {
