@@ -177,12 +177,9 @@ const rewriteImportedGlobals = state => bin => {
 
 				globalType.mutability = "var";
 
-				const init = [
-					createDefaultInitForGlobal(globalType),
-					t.instruction("end")
-				];
+				const init = createDefaultInitForGlobal(globalType);
 
-				newGlobals.push(t.global(globalType, init));
+				newGlobals.push(t.global(globalType, [init]));
 
 				path.remove();
 			}
@@ -199,10 +196,7 @@ const rewriteImportedGlobals = state => bin => {
 
 				const initialGlobalidx = init.args[0];
 
-				node.init = [
-					createDefaultInitForGlobal(node.globalType),
-					t.instruction("end")
-				];
+				node.init = [createDefaultInitForGlobal(node.globalType)];
 
 				additionalInitCode.push(
 					/**
@@ -321,8 +315,6 @@ const addInitFunction = ({
 	for (const instr of additionalInitCode) {
 		funcBody.push(instr);
 	}
-
-	funcBody.push(t.instruction("end"));
 
 	const funcResults = [];
 

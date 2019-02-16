@@ -1,33 +1,29 @@
 {
-  "name": "treehacks",
-  "version": "1.0.0",
-  "description": "ideation 1) a chrome extension/web app to help old people with the internet (physical health) 2) a web app to receive affirmation/support for thoughts (mental health) 3) a web app to better access your support network (mental health)   - log your medication/good habits (sleep, eating) everyday for support network to see 4) cognitive behavioral therapy as an app (mental health) 5) help you detect symptoms of mental illness/poor well-being in those you care for (mental health) 6) analyze text and speech for signs of alzheimers (e.g. smaller vocabulary in texting) (physical health) 7) anonymous place to share feelings and get support; exclusive group so no meanies (see past cs147 proj http://tinyurl.com/hdydwey) (mental health)",
-  "main": "index.js",
-  "dependencies": {},
-  "devDependencies": {
-    "@babel/core": "^7.3.3",
-    "@babel/preset-env": "^7.3.1",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.5",
-    "prop-types": "^15.7.2",
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "autosize": "^4.0.2",
+    "firebase": "^5.8.3",
+    "jquery": "^3.3.1",
+    "moment": "^2.24.0",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
-    "webpack": "^4.29.4",
-    "webpack-cli": "^3.2.3"
+    "react-scripts": "2.1.5"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode production"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zephyo/treehacks.git"
+  "eslintConfig": {
+    "extends": "react-app"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/zephyo/treehacks/issues"
-  },
-  "homepage": "https://github.com/zephyo/treehacks#readme"
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
