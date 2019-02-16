@@ -39,21 +39,19 @@ class SignupForm extends React.Component {
         // Create a user in your Firebase realtime database
         ID = authUser.user.uid;
 
-        return element.props.firebase
-          .user(ID)
-          .set({
-            uid: ID,
-            ...default_vals
+          return element.props.firebase
+            .user(ID)
+            .set({
+              uid: ID,
+              ...default_vals
+            }).then(()=>{  
+              this.setState({ ...INITIAL_STATE });
+              this.props.SignUp({
+              uid: ID,
+              ...default_vals
+
           });
-      })
-      .then(() => {
-
-        this.props.SignUp({
-          uid: ID,
-          ...default_vals
         });
-
-        this.setState({ ...INITIAL_STATE });
       })
       .catch(error => {
         this.setState({ error });
