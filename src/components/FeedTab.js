@@ -5,7 +5,7 @@ import autosize from 'autosize';
 let feedListen;
 
 const CheckinPost = (props) => {
-
+    
 };
 
 const ThoughtPost = (props) => {
