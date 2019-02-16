@@ -29,6 +29,7 @@ class LoginForm extends React.Component {
           .user(ID).once('value').then((snapshot)=>{
             this.setState({ ...INITIAL_STATE });
             this.props.checkLogin(snapshot.val());
+
           });*/
         this.props.firebase.user(ID).get().then(function(doc){
             element.setState({
@@ -37,6 +38,9 @@ class LoginForm extends React.Component {
             element.props.checkLogin(doc.data());
         });
         
+
+          });
+
       })
       .catch(error => {
         this.setState({ error });

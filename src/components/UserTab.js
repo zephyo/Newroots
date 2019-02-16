@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import AddCheckin from './AddCheckin';
 import $ from 'jquery';
 import { withFirebase } from './Firebase';
+import Avatar from './Avatar';
 
 const LogoutButton = (props) => {
   return (
@@ -118,11 +119,6 @@ class UserTab extends React.Component {
     let addQ;
 
 
-    let picStyle = this.state.PpfURL ? {
-      backgroundImage: 'url(' + this.state.PpfURL + ')',
-    } : null;
-
-
     if (this.state.editMode) {
       cornerButton = (
         <button className="edit done" onClick={() => this.setEditMode(false)}>Done</button>
@@ -131,11 +127,13 @@ class UserTab extends React.Component {
         <div>
           <input type="file" accept="image/*" id="ppf-upload" onChange={this.uploadPpf} />
           <label className="edit-pic" for="ppf-upload">
-            <div className="pic" style={picStyle}>
-              <div className="edit-pic-but">
+            <Avatar PpfURL={this.state.PpfURL}
+              content = {
+                <div className="edit-pic-but">
                 <span className="jam jam-pencil"></span>
-              </div>
-            </div>
+                </div>
+              }
+            />
           </label>
         </div>
       );
@@ -160,7 +158,7 @@ class UserTab extends React.Component {
         <button className="edit" onClick={() => this.setEditMode(true)}><span className="jam jam-pencil" style={{ color: '#9FC6C1' }}></span></button>
       );
       pic = (
-        <div className="pic" style={picStyle}></div>
+        <Avatar PpfURL={this.state.PpfURL}/>
       );
       name = (
         <div className="profile-name">{this.state.name}</div>
