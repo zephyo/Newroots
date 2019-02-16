@@ -39,6 +39,8 @@ class CheckinPost extends React.Component {
 
   render() {
 
+    let checkinData = this.props.checkinData;
+
     let editButton = null;
     if (this.props.isMyPost) {
       editButton = (

@@ -12,12 +12,12 @@ class NavBar extends React.Component {
   componentDidMount() {
     var requestsRef = this.props.firebase.user(this.props.uid).collection("requests");
 
-    requestsRef.get().then(function(doc){
-      this.setState({ requestsLength: doc.data().length })
+    requestsRef.onSnapshot(function(querySnapshot) {
+      this.setState({ requestsLength: querySnapshot.length })
     })
-      .catch(function (error) {
-        console.log("Error getting documents: ", error);
-      });
+    .catch(function (error) {
+      console.log("Error getting documents: ", error);
+    });
   }
 
   setAddFriend = (bool) => {

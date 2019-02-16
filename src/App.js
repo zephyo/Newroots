@@ -38,25 +38,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    //listen for network requests
-    //fix - firebase doesnt exist in this xontentxt - maybe just have this code on compoenents that need it
 
-    /*feedListen = firebase.firestore().collection("users").doc(this.state.userData.uid).collection("feed")
-      .onSnapshot(function(snapshot) {
-          let tempFeed = [];
-          snapshot.docChanges().forEach(function(change) {
-              
-              if (change.type === "added") {
-                  //console.log("New city: ", change.doc.data());
-                  tempFeed.push(change.doc.id);
-              }
-              
-          });
-          this.setState({
-              feed:tempFeed
-          })
-      });*/
   }
+  
   componentWillUnmount() {
     //feedListen();
   }

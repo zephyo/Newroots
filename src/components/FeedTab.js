@@ -51,8 +51,8 @@ class FeedTab extends React.Component {
         </div>
         <h1 className="date-marker">February 15</h1>
 
-       <CheckinPost />
-       <ThoughtPost />
+       {/* <CheckinPost />
+       <ThoughtPost /> */}
       </section>
     );
   }
