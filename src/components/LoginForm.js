@@ -29,7 +29,6 @@ class LoginForm extends React.Component {
             this.setState({ ...INITIAL_STATE });
             this.props.checkLogin(snapshot.val());
           });
-        
       })
       .catch(error => {
         this.setState({ error });
