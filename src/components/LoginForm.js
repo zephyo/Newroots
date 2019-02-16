@@ -7,6 +7,7 @@ const INITIAL_STATE = {
 };
 
 class LoginForm extends React.Component {
+  let element = this;
   constructor(props) {
     super(props);
     this.state = INITIAL_STATE;
@@ -15,7 +16,7 @@ class LoginForm extends React.Component {
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
-
+  
   onSubmit = () => {
     const { email, password } = this.state;
 
@@ -24,11 +25,17 @@ class LoginForm extends React.Component {
       .then((authUser) => {
         let ID = authUser.user.uid;
 
-        this.props.firebase
+        /*this.props.firebase
           .user(ID).once('value').then((snapshot)=>{
             this.setState({ ...INITIAL_STATE });
             this.props.checkLogin(snapshot.val());
-          });
+          });*/
+        this.props.firebase.user(ID).get().then(function(doc){
+            element.setState({
+                ...INITIAL_STATE
+            });
+            element.props.checkLogin(doc.data());
+        });
         
       })
       .catch(error => {
