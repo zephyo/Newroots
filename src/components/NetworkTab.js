@@ -20,6 +20,7 @@ class NetworkTab extends React.Component {
     return (
       <section className="network">
         <div className="header">
+        <h2>Your network</h2>
           <div className="search-bar">
             <input type="text" placeholder="search"/>
             <button id="search-friends"><span className="jam jam-search" style={{color: '#9FC6C1'}}></span></button>

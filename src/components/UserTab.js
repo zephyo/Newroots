@@ -1,7 +1,10 @@
 
 import React, { Component } from 'react';
 import $ from 'jquery';
+import { withFirebase } from './Firebase';
 
+
+const LogoutButtonFB = withFirebase(LogoutButton);
 
 class UserTab extends React.Component {
   constructor(props) {
@@ -129,10 +132,23 @@ class UserTab extends React.Component {
           {checkIns}
           {addQ}
         </div>
-        <button id="logout-but" onClick={()=>this.props.logout()}>logout</button>
+          <LogoutButtonFB
+            logout = {this.props.logout}
+          />
+        
       </section>
     );
   }
 }
+
+const LogoutButton = (props) => {
+  return (
+    <button id="logout-but" 
+          onClick={()=>{
+            props.logout();
+            props.firebase.doSignOut();
+            }}>logout</button>
+  )
+};
 
 export default UserTab;

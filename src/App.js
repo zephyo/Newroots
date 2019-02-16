@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import moment from 'moment';
-import firebase from 'firebase';
 
 import './App.css';
 import NavBar from './components/NavBar.js';
@@ -20,19 +19,7 @@ var data = {
 
   ],
 },
-
-  userBase = 'users',
-
-  config = {
-    apiKey: "AIzaSyBnWbqZC0wncY06pWlHX8DCbIM_EM9zrE8",
-    authDomain: "day-7-messaging.firebaseapp.com",
-    databaseURL: "https://day-7-messaging.firebaseio.com",
-    projectId: "day-7-messaging",
-    storageBucket: "day-7-messaging.appspot.com",
-    messagingSenderId: "307150346579"
-  };
-
-firebase.initializeApp(config);
+userBase = 'users';
 
 class App extends React.Component {
   constructor(props) {
@@ -41,9 +28,6 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    this.setState({
-      firebaseRef: firebase.database().ref(userBase),
-    }, this.update);
   }
 
   setActiveTab = (index) => {
@@ -52,7 +36,29 @@ class App extends React.Component {
     });
   }
 
-  checkLogin = (user, pass) => {
+  SignUp = (authUser) => {
+    this.setState({
+      userData:
+      {
+        profileImage: '',
+        name: 'Gloria Wang',
+        email: authUser.email,
+        lastCheckin: '02/14/2019',
+        checkins: [
+          {
+            q: 'How are you feeling today?',
+            type: 'range',
+          },
+          {
+            q: 'Have you took your medication?',
+            type: 'yesno'
+          }
+        ],
+      },
+    });
+  }
+
+  checkLogin = (userData) => {
     //check against database 
     //if (user)
     //if valid, set userData

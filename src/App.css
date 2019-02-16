@@ -418,6 +418,7 @@ section {
 .checkin.modal {
   padding: 40px;
   background: #eff0da;
+  z-index: 10;
 }
 .checkin.modal .bg {
   background: #e38882;
@@ -455,6 +456,7 @@ section {
   position: relative;
 }
 .checkin.modal #submit {
+  flex: none;
   border-radius: 50%;
   border: 3px solid #9fc6c1;
   margin: 40px;
@@ -580,17 +582,19 @@ section {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(244, 222, 218, 0.6);
+  z-index: 20;
 }
 
 .modal {
   width: 100%;
   max-width: 700px;
+  max-height: 80vh;
   position: absolute;
   background: #eff0da;
   left: 0;
   right: 0;
-  top: 10rem;
+  top: 12vh;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -601,6 +605,10 @@ section {
 }
 .modal .title {
   font-size: 3rem;
+}
+.modal h2 {
+  font-size: 1.2rem;
+  font-weight: 300;
 }
 .modal .bg-texture.first {
   position: absolute;

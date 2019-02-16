@@ -439,6 +439,7 @@ section {
   &.modal {
     padding: $feed-padding*2;
     background: $light;
+    z-index: 10;
     .bg {
       background: $pink;
       @include absolute;
@@ -471,6 +472,7 @@ section {
       }
     }
     #submit {
+      flex: none;
       border-radius: 50%;
       border: 3px solid $green;
       margin: 40px;
@@ -595,17 +597,19 @@ section {
 
 .modal-bg {
   @include absolute;
-  background: rgba(white, 0.4);
+  background: rgba($lighter-pink, 0.6);
+  z-index: 20;
 }
 
 .modal {
   width: 100%;
   max-width: 700px;
+  max-height: 80vh;
   position: absolute;
   background: $light;
   left: 0;
   right: 0;
-  top: 10rem;
+  top: 12vh;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -615,6 +619,10 @@ section {
   box-shadow: 0 5px 30px rgba($pink, 0.8);
   .title {
     font-size: 3rem;
+  }
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 300;
   }
 
   .bg-texture.first {

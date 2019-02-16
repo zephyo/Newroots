@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import plants from './../graphics/plants.png';
 import hero from './../graphics/hero.gif';
+import { withFirebase } from './Firebase';
+
+import SignupForm from './SignupForm';
+import LoginForm from './LoginForm';
+
+const SignUpFormFB = withFirebase(SignupForm);
+const LoginFormFB = withFirebase(LoginForm);
 
 class HomePage extends React.Component { 
   constructor(props) {
@@ -28,22 +35,15 @@ class HomePage extends React.Component {
     var content;
     if (this.state.loggingIn){
       content = (
-        <div className="login-page">
-           <h2>my_friends
-            <button className="back-but" onClick={()=>this.setLogin(false) }>
-              <span className="jam jam-arrow-left" style={{color: '#635358'}}></span>
-            </button>
-          </h2>
-          <input id="login-email" type="email" placeholder="email"></input>
-          <input id="login-pass" type="password" placeholder="password"></input>
-          <button className="login-but" onClick={()=>this.props.checkLogin($('#login-email').val(),$('#login-pass').val()) }>login</button>
-        </div>
+        <LoginFormFB 
+          checkLogin = {this.props.checkLogin}
+          setLogin = {this.setLogin} />
       );
     }else if (this.state.signingUp){
       content = (
-        <div>
-          
-        </div>
+        <SignUpFormFB 
+          SignUp = {this.props.SignUp}
+          setSignUp = {this.setSignUp}/>
       );
     }else{
       content = (
