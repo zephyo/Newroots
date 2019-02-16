@@ -200,6 +200,7 @@ class App extends React.Component {
         <NavBarFB
           setActiveTab={this.setActiveTab}
           requestsLength={this.state.userData.requests.length}
+          uid={this.state.userData.uid}
         />
         {activeTab}
         {this.needToCheckin() ?

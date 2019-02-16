@@ -10,6 +10,7 @@ class AddFriend extends React.Component {
       requests: this.props.requests,
       requestUsers: null,
       loading: false,
+      network: this.props.network,
       networkUsers: this.props.networkUsers,
       addedFriend: '',
       invitedFriend: '',
@@ -74,24 +75,38 @@ class AddFriend extends React.Component {
 
   acceptRequest = (uid) => {
     //remove uid from your request
-    // propgate to networktab and app
     removeRequest(uid);
     //insert uid to your network array and their network array
     //propogate backwards - update networktab's state and app's state
-    let networkUsers = this.state.networkUsers;
-    networkUsers.push(uid);
+    let network = this.state.network;
+    network.push(uid);
 
-    this.state.setState({ networkUsers: networkUsers });
+    this.state.setState({ network: network });
+
     this.props.firebase
       .user(this.props.uid)
       .update({
-        network: networkUsers
+        network: network
       });
+
+    this.props.firebase.user(uid).get().then((doc) => {
+      let dat = doc.data();
+      dat.push(this.props.uid);
+
+      this.props.firebase
+        .user(uid)
+        .update({
+          network: dat
+        });
+
+    }).catch(function (error) {
+      console.log("Error getting document:", error);
+    });
+
   }
 
   removeRequest = (uid) => {
     //remove uid from your requests
-    // update networktab's - update networktab's state and app's state
     let requestArr = this.state.requests;
     let index = requestArr.indexOf(uid);
     if (index > -1) {
