@@ -19,9 +19,14 @@ class NetworkTab extends React.Component {
   }
 
   componentDidMount() {
+    let element = this;
     let networkRef = this.props.firebase.user(this.props.uid).collection('network');
-    networkRef.onSnapshot((doc) => {
-      this.setNetworkUsers(doc.data())
+    networkRef.onSnapshot(function(querySnapshot){
+        let network = []
+        querySnapshot.forEach(function(doc){
+            network.push(doc.data())
+        })
+        element.setNetworkUsers(network);
     })
     .catch(function (error) {
       console.log("Error getting documents: ", error);
