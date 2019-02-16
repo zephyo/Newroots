@@ -45,7 +45,7 @@ class AddFriend extends React.Component {
           break;
         }
         //send request
-        sendRequest(users[i].uid);
+        this.sendRequest(users[i].uid);
         break;
       }
     }
@@ -75,7 +75,7 @@ class AddFriend extends React.Component {
 
   acceptRequest = (uid) => {
     //remove uid from your request
-    removeRequest(uid);
+    this.removeRequest(uid);
     //insert uid to your network array and their network array
     //propogate backwards - update networktab's state and app's state
     let network = this.state.network;

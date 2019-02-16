@@ -1,7 +1,8 @@
 import app from 'firebase/app';
 import 'firebase/auth';
-import 'firebase/database';
+import 'firebase/firestore';
 import 'firebase/storage';
+
 
 const config = {
   apiKey: "AIzaSyAE-aLJJ6ihwSxicksB67Yeg_84vE4J_wM",
@@ -16,7 +17,6 @@ class Firebase {
   constructor() {
     app.initializeApp(config);
     this.auth = app.auth();
-    this.db = app.database();
     this.store = app.storage();
     this.fs = app.firestore();
   }
@@ -27,9 +27,9 @@ class Firebase {
     this.auth.createUserWithEmailAndPassword(email, password);
 
   doSignInWithEmailAndPassword = (email, password) =>
-    this.auth.signInWithEmailAndPassword(email, password); 
-  
-  doSignOut = () => this.auth.signOut();  
+    this.auth.signInWithEmailAndPassword(email, password);
+
+  doSignOut = () => this.auth.signOut();
 
   doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
 
@@ -46,9 +46,9 @@ class Firebase {
 
   user = uid => this.fs.collection('users').doc(uid);
 
-  users = () => this.db.collection('users');
+  users = () => this.fs.collection('users');
 
-  feed = uid => this.db.collection("users").doc(uid).collection('feed');
+  feed = uid => this.fs.collection("users").doc(uid).collection('feed');
 
   photos = () => this.store.ref('photos');
 }

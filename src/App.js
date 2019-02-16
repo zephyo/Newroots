@@ -28,7 +28,7 @@ var data = {
   userData: null,
   feed: []
 },
-userBase = 'users';
+  userBase = 'users';
 
 class App extends React.Component {
   constructor(props) {
@@ -39,34 +39,34 @@ class App extends React.Component {
   componentDidMount() {
     //listen for network requests
     //fix - firebase doesnt exist in this xontentxt - maybe just have this code on compoenents that need it
-      
-      /*feedListen = firebase.firestore().collection("users").doc(this.state.userData.uid).collection("feed")
-        .onSnapshot(function(snapshot) {
-            let tempFeed = [];
-            snapshot.docChanges().forEach(function(change) {
-                
-                if (change.type === "added") {
-                    //console.log("New city: ", change.doc.data());
-                    tempFeed.push(change.doc.id);
-                }
-                
-            });
-            this.setState({
-                feed:tempFeed
-            })
-        });*/
+
+    /*feedListen = firebase.firestore().collection("users").doc(this.state.userData.uid).collection("feed")
+      .onSnapshot(function(snapshot) {
+          let tempFeed = [];
+          snapshot.docChanges().forEach(function(change) {
+              
+              if (change.type === "added") {
+                  //console.log("New city: ", change.doc.data());
+                  tempFeed.push(change.doc.id);
+              }
+              
+          });
+          this.setState({
+              feed:tempFeed
+          })
+      });*/
   }
-  componentWillUnmount(){
-      //feedListen();
+  componentWillUnmount() {
+    //feedListen();
   }
 
   fillFeed = () => {
-      
+
   }
 
   SignUp = (userData) => {
     this.setState({
-      userData:userData,
+      userData: userData,
     });
   }
 
@@ -103,43 +103,51 @@ class App extends React.Component {
         PpfURL: downloadURL
       }
     })
-  } 
-  
+  }
+
   setActiveTab = (index) => {
     this.setState({
       activeTab: index,
     });
   }
 
-  setName = (name)=>{
+  setName = (name) => {
     this.setState({
-      userData: 
-     { ...this.state.userData,
-      name: name}
+      userData:
+      {
+        ...this.state.userData,
+        name: name
+      }
     })
   }
 
-  setCheckins = (checkins)=>{
+  setCheckins = (checkins) => {
     this.setState({
-      userData: 
-     { ...this.state.userData,
-      checkins: checkins}
+      userData:
+      {
+        ...this.state.userData,
+        checkins: checkins
+      }
     })
   }
 
-  setNetwork = (network)=>{
+  setNetwork = (network) => {
     this.setState({
-      userData: 
-     { ...this.state.userData,
-      network: network}
+      userData:
+      {
+        ...this.state.userData,
+        network: network
+      }
     })
   }
 
-  setRequests = (requests)=>{
+  setRequests = (requests) => {
     this.setState({
-      userData: 
-     { ...this.state.userData,
-      requests: requests}
+      userData:
+      {
+        ...this.state.userData,
+        requests: requests
+      }
     })
   }
 
@@ -155,7 +163,7 @@ class App extends React.Component {
       return (
         <HomePage
           checkLogin={this.checkLogin}
-          SignUp = {this.SignUp}
+          SignUp={this.SignUp}
         />
       );
     }
@@ -163,15 +171,15 @@ class App extends React.Component {
     //active tab is feed
     if (this.state.activeTab == 0) {
       activeTab = (
-        <FeedTab 
-          feed = {this.state.feed}
+        <FeedTab
+          feed={this.state.feed}
         />
       );
     }
     //active tab is network
     else if (this.state.activeTab == 1) {
       activeTab = (
-        <NetworkTabFB 
+        <NetworkTabFB
           uid={this.state.userData.uid}
           requests={this.state.userData.requests}
           network={this.state.userData.network}
@@ -190,8 +198,8 @@ class App extends React.Component {
           uid={this.state.userData.uid}
           PpfURL={this.state.userData.PpfURL}
           setPpfURL={this.setPpfURL}
-          setName = {this.setName}
-          setCheckins = {this.setCheckins}
+          setName={this.setName}
+          setCheckins={this.setCheckins}
         />
       );
     }
@@ -202,14 +210,14 @@ class App extends React.Component {
         <div className="main-bg-texture"></div>
         <NavBarFB
           setActiveTab={this.setActiveTab}
-          requestsLength={this.state.userData.requests.length}
+          requestsLength={this.state.userData.requests ? this.state.userData.requests.length : 0}
           uid={this.state.userData.uid}
         />
         {activeTab}
         {this.needToCheckin() ?
           <CheckinModal
             updateCheckin={this.updateCheckin}
-            checkins = {this.state.userData.checkins}
+            checkins={this.state.userData.checkins ? this.state.userData.checkins : []}
           />
           : null}
       </div>
