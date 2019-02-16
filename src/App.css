@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Frank+Ruhl+Libre");
-@import url("https://fonts.googleapis.com/css?family=Rubik:300, 700");
+@import url("https://fonts.googleapis.com/css?family=Rubik:300,700");
 * {
   box-sizing: border-box;
 }
@@ -39,6 +39,10 @@ button {
 }
 button:hover {
   background: #f1d0ca;
+}
+
+button:focus, input:focus, textarea:focus {
+  outline: none;
 }
 
 input[type=text],
@@ -189,16 +193,28 @@ section {
   font-weight: 700;
 }
 .activity .header .date {
-  margin-left: auto;
+  margin-left: 20px;
+  margin-top: 5px;
+  font-size: 0.8rem;
 }
 .activity .content {
   padding: 20px;
   padding-top: 0;
 }
+.activity .name-date, .activity .name-date div {
+  display: flex;
+  justify-content: flex-start;
+}
+.activity .name-date {
+  flex-direction: column;
+}
+.activity .name-date + button {
+  margin-left: auto;
+}
 .activity .mood {
   font-size: 1.5rem;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   margin: 20px;
   margin-top: 0;

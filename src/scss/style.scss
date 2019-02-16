@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Frank+Ruhl+Libre");
-@import url("https://fonts.googleapis.com/css?family=Rubik:300, 700");
+@import url("https://fonts.googleapis.com/css?family=Rubik:300,700");
 
 $light: #eff0da;
 $lighter-pink: #f4deda;
@@ -56,6 +56,10 @@ button {
   &:hover {
     background: $light-pink;
   }
+}
+
+button:focus, input:focus, textarea:focus {
+  outline: none;
 }
 
 input[type="text"],
@@ -199,7 +203,9 @@ section {
       font-weight: 700;
     }
     .date {
-      margin-left: auto;
+      margin-left: 20px;
+      margin-top: 5px;
+      font-size: 0.8rem;
     }
   }
   .content {
@@ -207,10 +213,23 @@ section {
     padding-top: 0;
   }
 
+  .name-date,.name-date div {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .name-date {
+    flex-direction: column;
+  }
+
+  .name-date+button {
+    margin-left: auto;
+  }
+
   .mood {
     font-size: 1.5rem;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     margin: $feed-padding;
     margin-top: 0;

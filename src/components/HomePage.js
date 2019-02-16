@@ -10,28 +10,28 @@ import LoginForm from './LoginForm';
 const SignUpFormFB = withFirebase(SignupForm);
 const LoginFormFB = withFirebase(LoginForm);
 
-class HomePage extends React.Component { 
+class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       signingUp: false,
       loggingIn: false
     };
-  } 
-  
+  }
+
   setSignUp = (bool) => {
     this.setState({
       signingUp: bool
     });
   }
-  
+
   setLogin = (bool) => {
     this.setState({
       loggingIn: bool
     });
   }
-  
-  render (){ 
+
+  render (){
     var content;
     if (this.state.loggingIn){
       content = (
@@ -57,9 +57,9 @@ class HomePage extends React.Component {
         </div>
       );
     }
-    
+
     return (
-      <div className="home-page">   
+      <div className="home-page">
         <img className="bg-texture" src={hero}/>
         <img src={plants}/>
       {content}
