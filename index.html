@@ -6,7 +6,8 @@
   <title>healthy frens</title>
   
   
-  
+  <link rel='stylesheet' href='https://unpkg.com/jam-icons@2.0.0/css/jam.min.css'>
+
       <link rel="stylesheet" href="css/style.css">
 
   
@@ -15,109 +16,13 @@
 <body>
 
   
-<nav class="main-nav">
-  <div class="nav-content"><span class="logo">my_friends<span class="sublogo">give and get support.</span></span>
-    <button id="feed-but"><span data-jam="messages-alt" data-fill="#9FC6C1"></span></button>
-    <button id="network-but"><span data-jam="users" data-fill="#9FC6C1"></span></button>
-    <button id="user-but"><span data-jam="user" data-fill="#9FC6C1"></span></button>
-  </div>
-</nav>
-<section class="feed active-section">
-  <div class="create-thought">
-    <textarea rows="2" placeholder="Your thoughts"></textarea>
-    <button class="share">update</button>
-  </div>
-  <h1 class="date-marker">February 15</h1>
-  <div class="checkin activity">
-    <div class="header">
-      <div class="pic"></div><span class="name">Gloria Wang </span><span class="sub">&nbsp;checked in</span><span class="date">A few seconds ago</span>
-      <button class="user-edit"><span data-jam="pencil" data-fill="#EFF0DA"></span></button>
-    </div>
-    <div class="content">
-      <div class="mood"><span>feeling </span>
-        <div class="mood-icon">5</div>
-      </div><span>feeling better but still kinda sad because I don't know anyone in my dorm :/ is that just me?</span>
-      <div class="mood"><span>took meds </span>
-        <div class="mood-icon"><span data-jam="check" data-fill="#EFF0DA"></span></div>
-      </div>
-    </div>
-    <div class="leave-comment">
-      <input type="text" placeholder="comment.."/>
-      <button><span data-jam="paper-plane" data-fill="#9FC6C1">     </span></button>
-    </div>
-  </div>
-  <div class="thought activity">
-    <div class="header">
-      <div class="pic"></div><span class="name">Brianna Burman</span><span class="sub">&nbsp;updated</span><span class="date">12 min ago</span>
-    </div>
-    <div class="reply"><span>worried/stressed abt interviews</span></div>
-    <div class="comment"><span>you got this!!</span></div>
-    <div class="comment"><span>So awesome you’re planning for them! Since you’re thinking about it, I’m sure you’ll be super prepared!</span></div>
-    <div class="reply"><span>thx guys :) i appreicate it</span></div>
-    <div class="leave-comment">
-      <input type="text" placeholder="comment.."/>
-      <button><span data-jam="paper-plane" data-fill="#9FC6C1"></span></button>
-    </div>
-  </div>
-</section>
-<section class="network">
-  <div class="header">
-    <div class="search-bar">
-      <input type="text" placeholder="search"/>
-      <button id="search-friends"><span data-jam="search" data-fill="#9FC6C1"></span></button>
-    </div>
-    <button id="add-friends"><span data-jam="user-plus" data-fill="#9FC6C1"></span></button>
-  </div>
-  <div class="friends">
-    <div class="friend">
-      <div class="pic"></div><span>Brianna Burman</span>
-      <button><span data-jam="heart" data-fill="#e38882"></span></button>
-    </div>
-    <div class="friend">
-      <div class="pic"></div><span>Felicia Wilson</span>
-      <button><span data-jam="heart" data-fill="#e38882"></span></button>
-    </div>
-  </div>
-</section>
-<section class="user">
-  <button id="edit"><span data-jam="pencil" data-fill="#9FC6C1"></span></button>
-  <div class="pic"></div>
-  <h1>Gloria Wang<span class="username">@gloria1029</span></h1>
-  <div class="check-in-edit">
-    <h2>Your Daily Check-in</h2>
-    <ul>
-      <li>How are you feeling today?</li>
-      <li>Did you take your medication?</li>
-    </ul>
-    <button>add more </button>
-  </div>
-  <button id="logout-but">logout  </button>
-</section>
-<div class="modal-bg">
-  <div class="checkin modal">
-    <h1>February 15</h1>
-    <h2>How are you feeling today?</h2>
-    <div class="mood-measurer">
-      <input type="range" min="0" max="100" value="50"/>
-      <div class="num"><small>1</small><small>7</small></div>
-    </div>
-    <div class="feelings" contenteditable="true">How am I feeling? ..</div>
-    <h2>Did you take your medication?</h2>
-    <div class="yesno">
-      <button><span data-jam="check" data-fill="#9FC6C1"></span></button>
-      <button><span data-jam="close" data-fill="#9FC6C1"> </span></button>
-    </div>
-    <button id="submit"><span data-jam="arrow-right" data-fill="#9FC6C1"></span></button>
-  </div>
-  <div class="home-page">
-    <h2>my_friends</h2>
-    <p>give and get support</p>
-    <button>login</button>
-  </div>
-</div>
-  <script src='https://unpkg.com/jam-icons@2.0.0/js/jam.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<div id="app"></div>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/autosize.js/4.0.2/autosize.min.js'></script>
+<script src='http://unpkg.com/react/umd/react.development.js'></script>
+<script src='http://unpkg.com/react-dom/umd/react-dom.development.js'></script>
+<script src='https://www.gstatic.com/firebasejs/5.7.1/firebase.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
 
   
 
