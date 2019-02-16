@@ -40,9 +40,9 @@ button:hover {
   background: #f1d0ca;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
+input[type=text],
+input[type=email],
+input[type=password],
 textarea {
   font-family: inherit;
   font-size: inherit;
@@ -76,7 +76,7 @@ textarea {
   width: 100%;
   opacity: 0.6;
   background-size: contain;
-  background-image: url("https://zephyo.github.io/treehacks/graphics/pattern.png");
+  background-image: url("./graphics/pattern.png");
 }
 
 .main-nav {
@@ -128,7 +128,7 @@ section {
   height: 45px;
   width: 45px;
   border-radius: 50%;
-  background-image: url("https://zephyo.github.io/treehacks/graphics/ppf.png");
+  background-image: url("./graphics/ppf.png");
   background-size: cover;
 }
 
@@ -427,8 +427,7 @@ section {
   left: 0;
   right: 0;
   margin: auto;
-  -webkit-transform: rotate(45deg);
-          transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 .mood-measurer .num {
   display: inline-flex;
@@ -439,9 +438,7 @@ section {
   color: white;
 }
 .mood-measurer input {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   outline: none;
   border-radius: 0.25rem;
   position: relative;
@@ -621,3 +618,5 @@ section {
 .home-page .back-but .jam {
   font-size: 2.2rem;
 }
+
+/*# sourceMappingURL=App.css.map */

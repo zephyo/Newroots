@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import moment from 'moment';
+import texture1 from './../graphics/flower.png';
+import texture2 from './../graphics/thing.png';
 
 class CheckinModal extends React.Component {
   constructor(props) {
@@ -39,7 +41,7 @@ class CheckinModal extends React.Component {
   render (){ 
     return (
       <div className="modal-bg">
-        <div className="checkin modal"><img className="bg-texture first" src={this.props.graphicsURL + "flower.png"}/><img className="bg-texture second" src={this.props.graphicsURL + "thing.png"}/>
+        <div className="checkin modal"><img className="bg-texture first" src={texture1}/><img className="bg-texture second" src={texture2}/>
           <div className="bg"></div>
           <h1>{moment().format('MMMM D')}</h1>
           <h1 className="title"> 

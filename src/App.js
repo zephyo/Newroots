@@ -14,7 +14,6 @@ import UserTab from './components/UserTab.js';
 
 var data = {
   baseURL: '',
-  graphicsURL: 'https://zephyo.github.io/treehacks/graphics/',
   activeTab: 0,
   userData: null,
   feed: [
@@ -109,7 +108,6 @@ class App extends React.Component {
     if (this.state.userData === null){
       return (
         <HomePage
-          graphicsURL = {this.state.graphicsURL}
           checkLogin = {this.checkLogin}
         />
       );
@@ -141,13 +139,11 @@ class App extends React.Component {
         <div className="bg"></div>
         <div className="main-bg-texture"></div>
         <NavBar
-           graphicsURL = {this.state.graphicsURL}
            setActiveTab = {this.setActiveTab}
           />
           {activeTab}
        {this.needToCheckin() ? 
           <CheckinModal 
-            graphicsURL = {this.state.graphicsURL}
             updateCheckin = {this.updateCheckin}
           /> 
           : null}

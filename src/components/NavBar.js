@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import icon from './../graphics/icon.png';
 
 const NavBar = props => {
   return (
     <nav className="main-nav">
       <div className="nav-content">
-        <img className="logo-img" src={props.graphicsURL+"icon.png"}/>
+        <img className="logo-img" src={icon}/>
         <span className="logo">my_friends
           <span className="sublogo">give and get support.</span>
         </span>

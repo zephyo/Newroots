@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
+import plants from './../graphics/plants.png';
+import hero from './../graphics/hero.gif';
 
 class HomePage extends React.Component { 
   constructor(props) {
@@ -58,8 +60,8 @@ class HomePage extends React.Component {
     
     return (
       <div className="home-page">   
-        <img className="bg-texture" src={this.props.graphicsURL+"hero.gif"}/>
-        <img src={this.props.graphicsURL+"plants.png"}/>
+        <img className="bg-texture" src={hero}/>
+        <img src={plants}/>
       {content}
     </div>
     );
