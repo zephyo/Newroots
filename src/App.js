@@ -20,6 +20,7 @@ const NetworkTabFB = withFirebase(NetworkTab);
 
 const NavBarFB = withFirebase(NavBar);
 
+const FeedTabFB = withFirebase(FeedTab);
 //let feedListen;
 
 var data = {
@@ -171,7 +172,8 @@ class App extends React.Component {
     //active tab is feed
     if (this.state.activeTab == 0) {
       activeTab = (
-        <FeedTab
+        <FeedTabFB
+          uid={this.state.userData.uid}
           feed={this.state.feed}
         />
       );

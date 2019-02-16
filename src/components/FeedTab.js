@@ -21,7 +21,7 @@ class FeedTab extends React.Component {
     autosize($('textarea'));
     let element = this;
     let tempFeed = [];
-    feedListen = this.props.firebase.user(this.state.userData.uid).collection("feed")
+    feedListen = this.props.firebase.user(this.props.uid).collection("feed")
     .onSnapshot(function(snapshot) {
         //let tempFeed = [];
         snapshot.docChanges().forEach(function(change) {
