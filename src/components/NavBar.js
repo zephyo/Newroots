@@ -12,7 +12,7 @@ class NavBar extends React.Component {
   componentDidMount() {
     let element = this;
     var requestsRef = this.props.firebase.user(this.props.uid).collection("requests");
-
+    let element = this;
     requestsRef.onSnapshot(function(querySnapshot) {
       element.setState({ requestsLength: querySnapshot.length })
     })
