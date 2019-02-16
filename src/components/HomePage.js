@@ -3,28 +3,28 @@ import $ from 'jquery';
 import plants from './../graphics/plants.png';
 import hero from './../graphics/hero.gif';
 
-class HomePage extends React.Component { 
+class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       signingUp: false,
       loggingIn: false
     };
-  } 
-  
+  }
+
   setSignUp = (bool) => {
     this.setState({
       signingUp: bool
     });
   }
-  
+
   setLogin = (bool) => {
     this.setState({
       loggingIn: bool
     });
   }
-  
-  render (){ 
+
+  render (){
     var content;
     if (this.state.loggingIn){
       content = (
@@ -42,7 +42,7 @@ class HomePage extends React.Component {
     }else if (this.state.signingUp){
       content = (
         <div>
-          
+
         </div>
       );
     }else{
@@ -57,9 +57,9 @@ class HomePage extends React.Component {
         </div>
       );
     }
-    
+
     return (
-      <div className="home-page">   
+      <div className="home-page">
         <img className="bg-texture" src={hero}/>
         <img src={plants}/>
       {content}

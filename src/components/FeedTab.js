@@ -6,12 +6,12 @@ class FeedTab extends React.Component {
   constructor(props) {
     super(props);
   }
-  
+
    componentDidMount() {
     autosize($('textarea'));
   }
-  
-  render (){ 
+
+  render (){
     return (
      <section className="feed">
       <div className="create-thought">
@@ -21,13 +21,18 @@ class FeedTab extends React.Component {
       <h1 className="date-marker">February 15</h1>
       <div className="checkin activity">
         <div className="header">
-          <div className="pic"></div><span className="name">Gloria Wang </span><span className="sub">&nbsp;checked in</span><span className="date">A few seconds ago</span>
+          <div className="pic"></div>
+          <div className="name-date">
+            <div><span className="name">Gloria Wang </span><span className="sub">&nbsp;checked in</span></div>
+            <div><span className="date">A few seconds ago</span></div>
+          </div>
           <button className="user-edit"><span className="jam jam-pencil"  style={{color: '#EFF0DA'}}></span></button>
         </div>
         <div className="content">
           <div className="mood"><span>feeling </span>
             <div className="mood-icon">5</div>
-          </div><span>feeling better but still kinda sad because I don't know anyone in my dorm :/ is that just me?</span>
+          </div>
+          <div className="content">feeling better but still kinda sad because I don't know anyone in my dorm :/ is that just me?</div>
           <div className="mood"><span>took meds </span>
             <div className="mood-icon"><span className="jam jam-check"  style={{color: '#EFF0DA'}}></span></div>
           </div>
@@ -39,7 +44,11 @@ class FeedTab extends React.Component {
       </div>
       <div className="thought activity">
         <div className="header">
-          <div className="pic"></div><span className="name">Brianna Burman</span><span className="sub">&nbsp;updated</span><span className="date">12 min ago</span>
+          <div className="pic"></div>
+          <div className="name-date">
+            <div><span className="name">Brianna Burman</span><span className="sub">&nbsp;updated</span></div>
+            <div><span className="date">12 minutes ago</span></div>
+          </div>
         </div>
         <div className="reply"><span>worried/stressed abt interviews</span></div>
         <div className="comment"><span>you got this!!</span></div>
