@@ -310,13 +310,6 @@ section {
   width: 100px;
   height: 100px;
 }
-.user .username {
-  font-family: "Rubik", sans-serif;
-  font-weight: 300;
-  font-size: 1rem;
-  text-transform: initial;
-  margin-left: 10px;
-}
 .user .check-in-edit {
   margin: 20px;
   align-self: stretch;

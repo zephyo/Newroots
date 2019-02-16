@@ -84,6 +84,13 @@ class App extends React.Component {
     }
   }
   
+  //logout
+  logout = () => {
+    this.setState({
+    userData: null
+    });
+  }
+  
   render() {
     if (this.state.userData === null){
       return (
@@ -109,7 +116,9 @@ class App extends React.Component {
     //active tab is profile
     else{
       activeTab = (
-        <UserTab />
+        <UserTab 
+          logout = {this.logout}
+          />
       );
     }
     
@@ -233,7 +242,7 @@ class UserTab extends React.Component {
       <section className="user">
         <button id="edit"><span className="jam jam-pencil" style={{color: '#9FC6C1'}}></span></button>
         <div className="pic"></div>
-        <h1>Gloria Wang<span className="username">@gloria1029</span></h1>
+        <h1>Gloria Wang</h1>
         <div className="check-in-edit">
           <h2>Your Daily Check-in</h2>
           <ul>
@@ -242,7 +251,7 @@ class UserTab extends React.Component {
           </ul>
           <button>add more </button>
         </div>
-        <button id="logout-but">logout</button>
+        <button id="logout-but" onClick={()=>this.props.logout()}>logout</button>
       </section>
     );
   }
@@ -287,7 +296,7 @@ class CheckinModal extends React.Component {
       <div className="modal-bg">
         <div className="checkin modal"><img className="bg-texture first" src={this.props.graphicsURL + "flower.png"}/><img className="bg-texture second" src={this.props.graphicsURL + "thing.png"}/>
           <div className="bg"></div>
-          <h1>February 15</h1>
+          <h1>{moment().format('MMMM D')}</h1>
           <h1 className="title"> 
             <div className="highlight"></div><span>check-in</span>
           </h1>

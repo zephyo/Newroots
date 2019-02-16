@@ -82,10 +82,17 @@ App = function (_React$Component) {_inherits(App, _React$Component);
       {
         return false;
       }
+    };_this.
+
+
+    logout = function () {
+      _this.setState({
+        userData: null });
+
     };_this.state = data;return _this;}_createClass(App, [{ key: 'componentWillMount', value: function componentWillMount() {this.setState({ firebaseRef: firebase.database().ref(userBase) }, this.update);} // update this.state.lastCheckin as well as input checkin data to feed/database
     //check this.state.lastCheckin and see whether user has checked in today
-  }, { key: 'render', value: function render() {
-      if (this.state.userData === null) {
+    //logout
+  }, { key: 'render', value: function render() {if (this.state.userData === null) {
         return (
           React.createElement(HomePage, {
             graphicsURL: this.state.graphicsURL,
@@ -109,7 +116,9 @@ App = function (_React$Component) {_inherits(App, _React$Component);
         //active tab is profile
         else {
             activeTab =
-            React.createElement(UserTab, null);
+            React.createElement(UserTab, {
+              logout: this.logout });
+
 
           }
 
@@ -228,12 +237,12 @@ UserTab = function (_React$Component3) {_inherits(UserTab, _React$Component3);
     props));
   }_createClass(UserTab, [{ key: 'render', value: function render()
 
-    {
+    {var _this4 = this;
       return (
         React.createElement('section', { className: 'user' },
           React.createElement('button', { id: 'edit' }, React.createElement('span', { className: 'jam jam-pencil', style: { color: '#9FC6C1' } })),
           React.createElement('div', { className: 'pic' }),
-          React.createElement('h1', null, 'Gloria Wang', React.createElement('span', { className: 'username' }, '@gloria1029')),
+          React.createElement('h1', null, 'Gloria Wang'),
           React.createElement('div', { className: 'check-in-edit' },
             React.createElement('h2', null, 'Your Daily Check-in'),
             React.createElement('ul', null,
@@ -242,15 +251,15 @@ UserTab = function (_React$Component3) {_inherits(UserTab, _React$Component3);
 
             React.createElement('button', null, 'add more ')),
 
-          React.createElement('button', { id: 'logout-but' }, 'logout')));
+          React.createElement('button', { id: 'logout-but', onClick: function onClick() {return _this4.props.logout();} }, 'logout')));
 
 
     } }]);return UserTab;}(React.Component);var
 
 
 CheckinModal = function (_React$Component4) {_inherits(CheckinModal, _React$Component4);
-  function CheckinModal(props) {_classCallCheck(this, CheckinModal);var _this4 = _possibleConstructorReturn(this, (CheckinModal.__proto__ || Object.getPrototypeOf(CheckinModal)).call(this,
-    props));_this4.
+  function CheckinModal(props) {_classCallCheck(this, CheckinModal);var _this5 = _possibleConstructorReturn(this, (CheckinModal.__proto__ || Object.getPrototypeOf(CheckinModal)).call(this,
+    props));_this5.
 
 
 
@@ -279,21 +288,21 @@ CheckinModal = function (_React$Component4) {_inherits(CheckinModal, _React$Comp
 
 
     setMood = function (event) {
-      _this4.setState({ mood: event.target.value });
-    };_this4.state = { mood: 4 };return _this4;}_createClass(CheckinModal, [{ key: 'componentDidMount', value: function componentDidMount() {$('input[type="range"]').each(function (index) {var range = $(this).parent().find('.indicator');var p = $(range).find('p');$(range).hide();$(this).focusin(function () {$(range).css('left', 'calc(' + $(this).val() * (1 / 7) * 100 + '% - 60px)');$(range).show();});$(this).focusout(function () {$(range).hide();});$(this).on('input', function () {$(range).css('left', 'calc(' + $(this).val() * (1 / 7) * 100 + '% - 60px)');$(p).text($(this).val());});});} }, { key: 'render', value: function render()
+      _this5.setState({ mood: event.target.value });
+    };_this5.state = { mood: 4 };return _this5;}_createClass(CheckinModal, [{ key: 'componentDidMount', value: function componentDidMount() {$('input[type="range"]').each(function (index) {var range = $(this).parent().find('.indicator');var p = $(range).find('p');$(range).hide();$(this).focusin(function () {$(range).css('left', 'calc(' + $(this).val() * (1 / 7) * 100 + '% - 60px)');$(range).show();});$(this).focusout(function () {$(range).hide();});$(this).on('input', function () {$(range).css('left', 'calc(' + $(this).val() * (1 / 7) * 100 + '% - 60px)');$(p).text($(this).val());});});} }, { key: 'render', value: function render()
 
-    {var _this5 = this;
+    {var _this6 = this;
       return (
         React.createElement('div', { className: 'modal-bg' },
           React.createElement('div', { className: 'checkin modal' }, React.createElement('img', { className: 'bg-texture first', src: this.props.graphicsURL + "flower.png" }), React.createElement('img', { className: 'bg-texture second', src: this.props.graphicsURL + "thing.png" }),
             React.createElement('div', { className: 'bg' }),
-            React.createElement('h1', null, 'February 15'),
+            React.createElement('h1', null, moment().format('MMMM D')),
             React.createElement('h1', { className: 'title' },
               React.createElement('div', { className: 'highlight' }), React.createElement('span', null, 'check-in')),
 
             React.createElement('h2', null, 'How are you feeling today?'),
             React.createElement('div', { className: 'mood-measurer' },
-              React.createElement('input', { type: 'range', min: '1', max: '7', value: this.state.mood, onChange: function onChange(e) {return _this5.setMood(e);} }),
+              React.createElement('input', { type: 'range', min: '1', max: '7', value: this.state.mood, onChange: function onChange(e) {return _this6.setMood(e);} }),
               React.createElement('div', { className: 'indicator' },
                 React.createElement('p', null, '4')),
 
@@ -305,7 +314,7 @@ CheckinModal = function (_React$Component4) {_inherits(CheckinModal, _React$Comp
               React.createElement('button', { className: 'yes' }, React.createElement('span', { className: 'jam jam-check', style: { color: 'white' } })),
               React.createElement('button', { className: 'no' }, React.createElement('span', { className: 'jam jam-close', style: { color: '#8A8184' } }, ' '))),
 
-            React.createElement('button', { id: 'submit', onClick: function onClick() {return _this5.props.updateCheckin();} }, React.createElement('span', { className: 'jam jam-check', style: { color: '#9FC6C1' } })))));
+            React.createElement('button', { id: 'submit', onClick: function onClick() {return _this6.props.updateCheckin();} }, React.createElement('span', { className: 'jam jam-check', style: { color: '#9FC6C1' } })))));
 
 
 
@@ -313,8 +322,8 @@ CheckinModal = function (_React$Component4) {_inherits(CheckinModal, _React$Comp
 
 
 HomePage = function (_React$Component5) {_inherits(HomePage, _React$Component5);
-  function HomePage(props) {_classCallCheck(this, HomePage);var _this6 = _possibleConstructorReturn(this, (HomePage.__proto__ || Object.getPrototypeOf(HomePage)).call(this,
-    props));_this6.
+  function HomePage(props) {_classCallCheck(this, HomePage);var _this7 = _possibleConstructorReturn(this, (HomePage.__proto__ || Object.getPrototypeOf(HomePage)).call(this,
+    props));_this7.
 
 
 
@@ -322,30 +331,30 @@ HomePage = function (_React$Component5) {_inherits(HomePage, _React$Component5);
 
 
     setSignUp = function (bool) {
-      _this6.setState({
+      _this7.setState({
         signingUp: bool });
 
-    };_this6.
+    };_this7.
 
     setLogin = function (bool) {
-      _this6.setState({
+      _this7.setState({
         loggingIn: bool });
 
-    };_this6.state = { signingUp: false, loggingIn: false };return _this6;}_createClass(HomePage, [{ key: 'render', value: function render()
+    };_this7.state = { signingUp: false, loggingIn: false };return _this7;}_createClass(HomePage, [{ key: 'render', value: function render()
 
-    {var _this7 = this;
+    {var _this8 = this;
       var content;
       if (this.state.loggingIn) {
         content =
         React.createElement('div', { className: 'login-page' },
           React.createElement('h2', null, 'my_friends',
-            React.createElement('button', { className: 'back-but', onClick: function onClick() {return _this7.setLogin(false);} },
+            React.createElement('button', { className: 'back-but', onClick: function onClick() {return _this8.setLogin(false);} },
               React.createElement('span', { className: 'jam jam-arrow-left', style: { color: '#635358' } }))),
 
 
           React.createElement('input', { id: 'login-email', type: 'email', placeholder: 'email' }),
           React.createElement('input', { id: 'login-pass', type: 'password', placeholder: 'password' }),
-          React.createElement('button', { className: 'login-but', onClick: function onClick() {return _this7.props.checkLogin($('#login-email').val(), $('#login-pass').val());} }, 'login'));
+          React.createElement('button', { className: 'login-but', onClick: function onClick() {return _this8.props.checkLogin($('#login-email').val(), $('#login-pass').val());} }, 'login'));
 
 
       } else if (this.state.signingUp) {
@@ -360,8 +369,8 @@ HomePage = function (_React$Component5) {_inherits(HomePage, _React$Component5);
           React.createElement('h2', null, 'my_friends'),
           React.createElement('p', null, 'give and get support from your support network. feel safe with the ones you trust.'),
           React.createElement('div', { className: 'buts' },
-            React.createElement('button', { className: 'signup-but', onClick: function onClick() {return _this7.setSignUp(true);} }, 'sign up'),
-            React.createElement('button', { className: 'login-but', onClick: function onClick() {return _this7.setLogin(true);} }, 'login')));
+            React.createElement('button', { className: 'signup-but', onClick: function onClick() {return _this8.setSignUp(true);} }, 'sign up'),
+            React.createElement('button', { className: 'login-but', onClick: function onClick() {return _this8.setLogin(true);} }, 'login')));
 
 
 
