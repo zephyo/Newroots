@@ -19,6 +19,7 @@ class SignupForm extends React.Component {
 
   onSubmit = () => {
     const { name, email, passwordOne } = this.state;
+    let element = this;
     const default_vals = {
       name: name,
       email: email,
@@ -38,7 +39,7 @@ class SignupForm extends React.Component {
         // Create a user in your Firebase realtime database
         ID = authUser.user.uid;
 
-        return this.props.firebase
+        return element.props.firebase
           .user(ID)
           .set({
             uid: ID,

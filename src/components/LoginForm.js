@@ -15,8 +15,9 @@ class LoginForm extends React.Component {
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
-
+  
   onSubmit = () => {
+    let element = this;
     const { email, password } = this.state;
 
     this.props.firebase
@@ -24,11 +25,19 @@ class LoginForm extends React.Component {
       .then((authUser) => {
         let ID = authUser.user.uid;
 
-        this.props.firebase
+        /*this.props.firebase
           .user(ID).once('value').then((snapshot)=>{
             this.setState({ ...INITIAL_STATE });
             this.props.checkLogin(snapshot.val());
-          });
+
+          });*/
+        this.props.firebase.user(ID).get().then(function(doc){
+            element.setState({
+                ...INITIAL_STATE
+            });
+            element.props.checkLogin(doc.data());
+        });
+
       })
       .catch(error => {
         this.setState({ error });
