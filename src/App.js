@@ -16,6 +16,7 @@ import { withFirebase } from './components/Firebase';
 
 const UserTabFB = withFirebase(UserTab);
 
+let feedListen;
 
 var data = {
   baseURL: '',
@@ -33,8 +34,10 @@ class App extends React.Component {
 
   componentDidMount() {
     //listen for network requests
-    fix - firebase doesnt exist in this xontentxt - maybe just have this code on compoenents that need it
-    var requestsRef = firebase.database().ref(`users/${this.state.userData.uid}`+ '/requests');
+    //fix - firebase doesnt exist in this xontentxt - maybe just have this code on compoenents that need it
+      
+      
+    /*var requestsRef = firebase.database().ref(`users/${this.state.userData.uid}`+ '/requests');
     requestsRef.on('value', (snapshot) => {
   
       this.setState({
@@ -43,10 +46,30 @@ class App extends React.Component {
           requests:snapshot.val()
         }
       });
+    });*/
+    const element = this;
+    var requestsRef = firebase.firestore().collection("users").doc(this.state.userData.uid).collection("requests");
+    requestsRef.get()
+    .then(function(querySnapshot) {
+        let requests = [];
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            //console.log(doc.id, " => ", doc.data());
+            requests.push(doc.id);
+        });
+        element.setState({
+            userData:{
+                ...element.state.userData,
+                requests:requests
+            }
+        })
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
     });
-
+      
     //listen for feed requests
-    var feedRef = firebase.database().ref('feed');
+    /*var feedRef = firebase.database().ref('feed');
     feedRef.on('value', (snapshot) => {
       let val = snapshot.val();
       if (val == null) return;
@@ -57,11 +80,26 @@ class App extends React.Component {
         });
     });
 
-    fillFeed();
+    fillFeed();*/
+      firebase.firestore().collection("users").doc(this.state.userData.uid).collection("feed")
+        .onSnapshot(function(snapshot) {
+            let tempFeed = [];
+            snapshot.docChanges().forEach(function(change) {
+                
+                if (change.type === "added") {
+                    //console.log("New city: ", change.doc.data());
+                    tempFeed.push(change.doc.id);
+                }
+                
+            });
+            this.setState({
+                feed:tempFeed
+            })
+        });
   }
 
   fillFeed = () => {
-
+      
   }
 
  

@@ -18,6 +18,7 @@ class Firebase {
     this.auth = app.auth();
     this.db = app.database();
     this.store = app.storage();
+    this.fs = app.firestore();
   }
 
   // *** Auth API ***
@@ -37,11 +38,17 @@ class Firebase {
 
   // *** User API ***
 
-  user = uid => this.db.ref(`users/${uid}`);
+  /*user = uid => this.db.ref(`users/${uid}`);
 
   users = () => this.db.ref('users');
 
-  feed = () => this.db.ref('feed');
+  feed = () => this.db.ref('feed');*/
+
+  user = uid => this.fs.collection('users').doc(uid);
+
+  users = () => this.db.collection('users');
+
+  feed = uid => this.db.collection("users").doc(uid).collection('feed');
 
   photos = () => this.store.ref('photos');
 }
