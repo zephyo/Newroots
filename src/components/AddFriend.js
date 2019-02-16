@@ -109,7 +109,6 @@ class AddFriend extends React.Component {
       .update({
         requests: requestArr
       });
-    setRequests(requestArr);
   }
 
   loadRequestUsers = () => {

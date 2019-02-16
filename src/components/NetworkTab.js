@@ -25,18 +25,7 @@ class NetworkTab extends React.Component {
 
     var requestsRef = this.props.firebase.user(this.props.uid).collection("requests");
     requestsRef.onSnapshot((doc) => {
-      let requests = [];
-      querySnapshot.forEach(function (doc) {
-        // doc.data() is never undefined for query doc snapshots
-        //console.log(doc.id, " => ", doc.data());
-        requests.push(doc.id);
-      });
-      element.setState({
-        userData: {
-          ...element.state.userData,
-          requests: requests
-        }
-      })
+      this.setRequests(doc.data());
     })
       .catch(function (error) {
         console.log("Error getting documents: ", error);
@@ -124,7 +113,6 @@ class NetworkTab extends React.Component {
             setAddFriend={this.setAddFriend}
             uid={this.props.uid}
             requests={this.state.requests}
-            setRequests={this.setRequests}
             networkUsers={this.state.network}
           /> : null)}
       </section>
