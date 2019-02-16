@@ -619,4 +619,48 @@ section {
   font-size: 2.2rem;
 }
 
+.modal.network {
+  width: 90%;
+  padding: 20px;
+}
+.modal.network .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: transparent;
+}
+.modal.network .close .jam-close {
+  font-size: 2rem;
+  color: #8a8184;
+}
+.modal.network .add-friend {
+  background: #f4deda;
+  width: 100%;
+  margin: 20px 0 20px;
+  box-shadow: 0 2px 15px rgba(227, 136, 130, 0.5);
+}
+.modal.network .invite-friend {
+  background: #899c7d;
+  color: white;
+  width: 100%;
+  box-shadow: 0 2px 15px rgba(138, 129, 132, 0.5);
+}
+.modal.network .network-input {
+  background: white;
+  border-radius: 8px;
+  margin: 10px;
+  display: flex;
+}
+.modal.network .network-input input {
+  padding: 20px;
+  background: transparent;
+  flex: auto;
+}
+.modal.network .network-input button {
+  background: #e38882;
+  color: white;
+  border-radius: 5px;
+  margin: 5px;
+}
+
 /*# sourceMappingURL=App.css.map */
