@@ -11,13 +11,17 @@ import NetworkTab from './components/NetworkTab.js';
 import UserTab from './components/UserTab.js';
 
 
+import { withFirebase } from './components/Firebase';
+
+
+const UserTabFB = withFirebase(UserTab);
+
+
 var data = {
   baseURL: '',
   activeTab: 0,
   userData: null,
-  feed: [
-
-  ],
+  feed: []
 },
 userBase = 'users';
 
@@ -27,59 +31,50 @@ class App extends React.Component {
     this.state = data;
   }
 
-  componentWillMount() {
-  }
-
-  setActiveTab = (index) => {
-    this.setState({
-      activeTab: index,
+  componentDidMount() {
+    //listen for network requests
+    fix - firebase doesnt exist in this xontentxt - maybe just have this code on compoenents that need it
+    var requestsRef = firebase.database().ref(`users/${this.state.userData.uid}`+ '/requests');
+    requestsRef.on('value', (snapshot) => {
+  
+      this.setState({
+        userData: {
+          ...this.state.userData,
+          requests:snapshot.val()
+        }
+      });
     });
+
+    //listen for feed requests
+    var feedRef = firebase.database().ref('feed');
+    feedRef.on('value', (snapshot) => {
+      let val = snapshot.val();
+      if (val == null) return;
+
+      let tempFeed;
+      this.setState({
+          feed: tempFeed
+        });
+    });
+
+    fillFeed();
   }
 
-  SignUp = (authUser) => {
+  fillFeed = () => {
+
+  }
+
+ 
+
+  SignUp = (userData) => {
     this.setState({
-      userData:
-      {
-        profileImage: '',
-        name: 'Gloria Wang',
-        email: authUser.email,
-        lastCheckin: '02/14/2019',
-        checkins: [
-          {
-            q: 'How are you feeling today?',
-            type: 'range',
-          },
-          {
-            q: 'Have you took your medication?',
-            type: 'yesno'
-          }
-        ],
-      },
+      userData:userData,
     });
   }
 
   checkLogin = (userData) => {
-    //check against database 
-    //if (user)
-    //if valid, set userData
     this.setState({
-      userData:
-      {
-        profileImage: '',
-        name: 'Gloria Wang',
-        username: 'gloria',
-        lastCheckin: '02/14/2019',
-        checkins: [
-          {
-            q: 'How are you feeling today?',
-            type: 'range',
-          },
-          {
-            q: 'Have you took your medication?',
-            type: 'yesno'
-          }
-        ],
-      },
+      userData: userData,
     });
   }
 
@@ -103,6 +98,53 @@ class App extends React.Component {
     }
   }
 
+  setPpfURL = (downloadURL) => {
+    this.setState({
+      userData: {
+        ...this.state.userData,
+        PpfURL: downloadURL
+      }
+    })
+  } 
+  
+  setActiveTab = (index) => {
+    this.setState({
+      activeTab: index,
+    });
+  }
+
+  setName = (name)=>{
+    this.setState({
+      userData: 
+     { ...this.state.userData,
+      name: name}
+    })
+  }
+
+  setCheckins = (checkins)=>{
+    this.setState({
+      userData: 
+     { ...this.state.userData,
+      checkins: checkins}
+    })
+  }
+
+  setNetwork = (network)=>{
+    this.setState({
+      userData: 
+     { ...this.state.userData,
+      network: network}
+    })
+  }
+
+  setRequests = (requests)=>{
+    this.setState({
+      userData: 
+     { ...this.state.userData,
+      requests: requests}
+    })
+  }
+
   //logout
   logout = () => {
     this.setState({
@@ -115,6 +157,7 @@ class App extends React.Component {
       return (
         <HomePage
           checkLogin={this.checkLogin}
+          SignUp = {this.SignUp}
         />
       );
     }
@@ -122,22 +165,35 @@ class App extends React.Component {
     //active tab is feed
     if (this.state.activeTab == 0) {
       activeTab = (
-        <FeedTab />
+        <FeedTab 
+          feed = {this.state.feed}
+        />
       );
     }
     //active tab is network
     else if (this.state.activeTab == 1) {
       activeTab = (
-        <NetworkTab />
+        <NetworkTab 
+          uid={this.state.userData.uid}
+          requests={this.state.userData.requests}
+          network={this.state.userData.network}
+          setRequests={this.setRequests}
+          setNetwork={this.setNetwork}
+        />
       );
     }
     //active tab is profile
     else {
       activeTab = (
-        <UserTab
+        <UserTabFB
           logout={this.logout}
-          checkIns={this.state.userData.checkins}
+          checkins={this.state.userData.checkins}
           name={this.state.userData.name}
+          uid={this.state.userData.uid}
+          PpfURL={this.state.userData.PpfURL}
+          setPpfURL={this.setPpfURL}
+          setName = {this.setName}
+          setCheckins = {this.setCheckins}
         />
       );
     }
@@ -148,11 +204,13 @@ class App extends React.Component {
         <div className="main-bg-texture"></div>
         <NavBar
           setActiveTab={this.setActiveTab}
+          requestsLength={this.state.userData.requests.length}
         />
         {activeTab}
         {this.needToCheckin() ?
           <CheckinModal
             updateCheckin={this.updateCheckin}
+            checkins = {this.state.userData.checkins}
           />
           : null}
       </div>

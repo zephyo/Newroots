@@ -18,7 +18,8 @@ body {
   color: #635358;
 }
 
-h1, .profile-name {
+h1,
+.profile-name {
   font-family: "Frank Ruhl Libre", serif;
   text-transform: uppercase;
   color: #8a8184;
@@ -41,7 +42,9 @@ button:hover {
   background: #f1d0ca;
 }
 
-button:focus, input:focus, textarea:focus {
+button:focus,
+input:focus,
+textarea:focus {
   outline: none;
 }
 
@@ -201,7 +204,8 @@ section {
   padding: 20px;
   padding-top: 0;
 }
-.activity .name-date, .activity .name-date div {
+.activity .name-date,
+.activity .name-date div {
   display: flex;
   justify-content: flex-start;
 }
@@ -318,6 +322,9 @@ section {
   flex-direction: column;
   align-items: center;
 }
+.user input[type=file] {
+  display: none;
+}
 .user .yesno {
   margin: auto;
   margin-top: 20px;
@@ -326,7 +333,7 @@ section {
 .user .yesno .no {
   background: #e38882;
 }
-.user .yesno .no .jam-co {
+.user .yesno .no .jam-close {
   color: white;
 }
 .user .add-panel textarea {
@@ -370,6 +377,7 @@ section {
 }
 .user .profile-name {
   margin: 20px;
+  text-transform: initial;
   font-size: 1.5rem;
 }
 .user input[type=text] {
@@ -390,6 +398,7 @@ section {
 .user .pic {
   width: 100px;
   height: 100px;
+  position: relative;
 }
 .user .check-in-edit {
   margin: 20px;
@@ -600,9 +609,30 @@ section {
   bottom: 0;
   background: rgba(244, 222, 218, 0.6);
   z-index: 20;
+  animation: fadeIn 2s ease;
 }
 
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
 .modal {
+  animation: fadeInUp 1s ease 0.5s;
+  animation-fill-mode: both;
   width: 100%;
   max-width: 700px;
   max-height: 80vh;

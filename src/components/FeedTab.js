@@ -2,6 +2,15 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import autosize from 'autosize';
 
+
+const CheckinPost = (props) => {
+
+};
+
+const ThoughtPost = (props) => {
+  
+};
+
 class FeedTab extends React.Component {
   constructor(props) {
     super(props);
@@ -12,6 +21,13 @@ class FeedTab extends React.Component {
   }
 
   render (){
+
+    feed = this.props.feed;
+
+    for (var i = 0; i< feed.length; i++){
+      
+    }
+
     return (
      <section className="feed">
       <div className="create-thought">

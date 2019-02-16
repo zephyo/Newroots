@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
 const INITIAL_STATE = {
+  name: '',
   email: '',
   passwordOne: '',
-  passwordTwo: '',
   error: null,
 };
 
@@ -17,47 +17,61 @@ class SignupForm extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  onSubmit = event => {
-    const { email, passwordOne } = this.state;
-
+  onSubmit = () => {
+    const { name, email, passwordOne } = this.state;
+    const default_vals = {
+      name: name,
+      email: email,
+      network: [],
+      requests: [],
+      checkins: [
+        {
+          q: 'How are you feeling today?',
+          type: 'range',
+        }
+      ]
+    };
+    let ID;
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
         // Create a user in your Firebase realtime database
+        ID = authUser.user.uid;
+
         return this.props.firebase
-          .user(authUser.user.uid)
+          .user(ID)
           .set({
-            username,
-            email,
+            uid: ID,
+            ...default_vals
           });
       })
       .then(() => {
-        this.setState({ ...INITIAL_STATE });
+
         this.props.SignUp({
-          username: username,
-          email: email
+          uid: ID,
+          ...default_vals
         });
+
+        this.setState({ ...INITIAL_STATE });
       })
       .catch(error => {
         this.setState({ error });
       });
 
-    event.preventDefault();
   };
 
   render() {
     const {
+      name,
       email,
       passwordOne,
-      passwordTwo,
       error,
     } = this.state;
 
     const isInvalid =
-      passwordOne !== passwordTwo ||
       passwordOne === '' ||
       email === '' ||
-      username === '';
+      name === '';
 
     return (
       <div className="login-page">
@@ -66,33 +80,33 @@ class SignupForm extends React.Component {
             <span className="jam jam-arrow-left" style={{ color: '#635358' }}></span>
           </button>
         </h2>
-        <input 
-          name="email" 
-          type="email" 
-          placeholder="email" 
+        <input
+          name="name"
+          type="text"
+          placeholder="full name"
+          value={name}
+          onChange={this.onChange}>
+        </input>
+        <input
+          name="email"
+          type="email"
+          placeholder="email"
           value={email}
           onChange={this.onChange}>
-          </input>
-        <input 
-          name="passwordOne" 
-          type="password" 
-          placeholder="password" 
+        </input>
+        <input
+          name="passwordOne"
+          type="password"
+          placeholder="password"
           value={passwordOne}
           onChange={this.onChange}>
-          </input>  
-        <input 
-          name="passwordTwo" 
-          type="password" 
-          placeholder="confirm password" 
-          value={passwordTwo}
-          onChange={this.onChange}>
-          </input>    
+        </input>
 
-          {error && <p>{error.message}</p>}
+        {error && <p>{error.message}</p>}
 
         <button disabled={isInvalid}
-          className="signup-but" 
-          onClick={() => this.onSubmit() }>
+          className="signup-but"
+          onClick={() => this.onSubmit()}>
           sign up
           </button>
       </div>

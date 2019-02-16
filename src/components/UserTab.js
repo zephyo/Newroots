@@ -1,72 +1,153 @@
 
 import React, { Component } from 'react';
+import AddCheckin from './AddCheckin';
 import $ from 'jquery';
 import { withFirebase } from './Firebase';
 
+const LogoutButton = (props) => {
+  return (
+    <button id="logout-but"
+      onClick={() => {
+        props.logout();
+        props.firebase.doSignOut();
+      }}>logout</button>
+  )
+};
 
 const LogoutButtonFB = withFirebase(LogoutButton);
+
 
 class UserTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       editMode: false,
-      checkIns: this.props.checkIns,
+      checkins: this.props.checkins,
       name: this.props.name,
       addMode: false,
+      PpfURL: this.props.PpfURL,
     };
   }
-  
+
   setEditMode = (bool) => {
     this.setState({
       editMode: bool
     });
 
     //TODO: save changes
-    if (bool === false){
-      
+    if (bool === false) {
+      if ($('.profile-name').val() != this.state.name) {
+        let NameVal = $('.profile-name').val();
+        this.setState({
+          name: NameVal
+        });
+        this.props.setName(NameVal);
+        this.props.firebase
+          .user(this.props.uid)
+          .update({
+            name: NameVal
+          });
+      }
     }
   };
 
-  setAddMode = (bool, checkin) => {
+  setAddMode = (bool) => {
     this.setState({
       addMode: bool
     });
-
-    //TODO: save changes
-    if (bool === false && checkin !== null){
-      
-    }
   };
 
-  render (){ 
+  addCheckin = (obj) => {
+    let arr = this.state.checkins;
+    arr.push(obj);
+    this.setState({ checkins: arr });
+    this.props.setCheckins(arr);
+
+    this.props.firebase
+      .user(this.props.uid)
+      .update({
+        checkins: arr
+      });
+  }
+
+  removeCheckinAt = (index) => {
+    let arr = this.state.checkins;
+    arr.splice(index, 1);
+    this.setState({ checkins: arr });
+    this.props.setCheckins(arr);
+
+    this.props.firebase
+      .user(this.props.uid)
+      .update({
+        checkins: arr
+      });
+  }
+
+  uploadPpf = (event) => {
+    let firstFile = event.target.files[0] // upload the first file only
+    let task = this.props.firebase.photos().put(firstFile);
+
+    task.on('state_changed', (snapshot) => {
+      // Observe state change events such as progress, pause, and resume
+      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+    }, (error) => {
+      // Handle unsuccessful uploads
+    }, () => {
+      // Handle successful uploads on complete
+      task.snapshot.ref.getDownloadURL().then((downloadURL) => {
+
+        this.props.firebase
+        .user(this.props.uid)
+        .update({
+          PpfURL: downloadURL
+        });
+
+        this.setState({PpfURL: downloadURL});
+        this.props.setPpfURL(downloadURL);
+      });
+    });
+  }
+
+  render() {
     let cornerButton;
     let pic;
     let name;
-    let checkIns;
+    let checkins;
     let addQ;
 
-    if (this.state.editMode){
+
+    let picStyle = this.state.PpfURL ? {
+      backgroundImage: 'url(' + this.state.PpfURL + ')',
+    } : null;
+
+
+    if (this.state.editMode) {
       cornerButton = (
-        <button className="edit done" onClick={()=>this.setEditMode(false)}>Done</button>
+        <button className="edit done" onClick={() => this.setEditMode(false)}>Done</button>
       );
       pic = (
-        <button className="edit-pic">
-          <div className="pic"></div>
-          <div className="edit-pic-but">
-            <span className="jam jam-pencil"></span>
-          </div>
-        </button>
+        <div>
+          <input type="file" accept="image/*" id="ppf-upload" onChange={this.uploadPpf} />
+          <label className="edit-pic" for="ppf-upload">
+            <div className="pic" style={picStyle}>
+              <div className="edit-pic-but">
+                <span className="jam jam-pencil"></span>
+              </div>
+            </div>
+          </label>
+        </div>
       );
       name = (
         <input type="text" className="profile-name" placeholder={this.state.name}></input>
       );
-      checkIns = (
+      checkins = (
         <ul>
-          {this.state.checkIns.map(function(checkIn, index){
+          {this.state.checkins.map((checkin, index) => {
             return <li>
-              {checkIn.q}
-              <button className="delete">
+              {checkin.q}
+              <button className="delete" onClick={() => this.removeCheckinAt(index)}>
                 <span className="jam jam-trash"></span>
               </button>
             </li>;
@@ -74,52 +155,38 @@ class UserTab extends React.Component {
         </ul>
       );
     }
-    else{
+    else {
       cornerButton = (
-        <button className="edit" onClick={()=>this.setEditMode(true)}><span className="jam jam-pencil" style={{color: '#9FC6C1'}}></span></button>
+        <button className="edit" onClick={() => this.setEditMode(true)}><span className="jam jam-pencil" style={{ color: '#9FC6C1' }}></span></button>
       );
       pic = (
-        <div className="pic"></div>
+        <div className="pic" style={picStyle}></div>
       );
       name = (
         <div className="profile-name">{this.state.name}</div>
       );
-      checkIns = (
+      checkins = (
         <ul>
-          {this.state.checkIns.map(function(checkIn, index){
-            return <li>{checkIn.q}</li>;
+          {this.state.checkins.map(function (checkin, index) {
+            return <li>{checkin.q}</li>;
           })}
         </ul>
       );
     }
 
-    if (this.state.addMode){
+    if (this.state.addMode) {
       addQ = (
-        <div className="add-panel">
-          <h1>Add Check-in</h1>
-          <textarea id="check-in" placeholder="What's your check-in?"></textarea>
-          <h3>Check-in type</h3>
-          <ul>
-            <li><span className="jam jam-align-justify"></span> Text</li>
-            <li><span className="jam jam-brightness"></span> Yes/No</li>
-            <li><span className="jam jam-star"></span> Scale</li>
-          </ul>
-          <div className="yesno">
-            <button className="yes" onClick = {()=>this.setAddMode(false, {
-              q: $('check-in').val(),
-              type: ''
-            })}>
-              <span className="jam jam-check"   style={{color: 'white'} }></span></button>
-            <button className="no" onClick = {()=>this.setAddMode(false)}>
-              <span className="jam jam-close"   style={{color: '#8A8184'}}> </span></button>
-          </div>
-        </div>
+        <AddCheckin
+          setAddMode={this.setAddMode}
+          uid={this.props.uid}
+          addCheckin={this.addCheckin}
+        />
       );
-    }else { 
+    } else {
       addQ = (
-        <button onClick = {()=>{this.setAddMode(true, null)}}>add more
+        <button onClick={() => { this.setAddMode(true) }}>add more
         </button>
-        );
+      );
     }
 
     return (
@@ -129,26 +196,17 @@ class UserTab extends React.Component {
         {name}
         <div className="check-in-edit">
           <h2>Your Daily Check-in</h2>
-          {checkIns}
+          {checkins}
           {addQ}
         </div>
-          <LogoutButtonFB
-            logout = {this.props.logout}
-          />
-        
+        <LogoutButtonFB
+          logout={this.props.logout}
+        />
+
       </section>
     );
   }
 }
 
-const LogoutButton = (props) => {
-  return (
-    <button id="logout-but" 
-          onClick={()=>{
-            props.logout();
-            props.firebase.doSignOut();
-            }}>logout</button>
-  )
-};
 
 export default UserTab;

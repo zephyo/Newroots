@@ -21,9 +21,15 @@ class LoginForm extends React.Component {
 
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
-      .then((data) => {
-        this.setState({ ...INITIAL_STATE });
-        this.props.checkLogin(data);
+      .then((authUser) => {
+        let ID = authUser.user.uid;
+
+        this.props.firebase
+          .user(ID).once('value').then((snapshot)=>{
+            this.setState({ ...INITIAL_STATE });
+            this.props.checkLogin(snapshot.val());
+          });
+        
       })
       .catch(error => {
         this.setState({ error });
@@ -56,7 +62,7 @@ class LoginForm extends React.Component {
           type="password"
           placeholder="password"
         />
-     {error && <p>{error.message}</p>}
+      {error && <p>{error.message}</p>}
      <button className="login-but" onClick={this.onSubmit} disabled={isInvalid} >login</button>
    </div>
     );
