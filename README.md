@@ -1,6 +1,9 @@
 # Newroots - a responsive web app to help build effective support networks - *for treehacks 2019*
 
-[![IMAGE ALT TEXT](http://img.youtube.com/vi/_pA-kaYiR8Y/0.jpg)](http://www.youtube.com/watch?v=_pA-kaYiR8Y "Newroots")
+![alt text](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/762/668/datas/gallery.jpg)
+![alt text](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/766/593/datas/gallery.jpg)
+![alt text](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/766/594/datas/gallery.jpg)
+![alt text](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/766/595/datas/gallery.jpg)
 
 ## Inspiration
 One need only search "social media" in the app store to be presented with a dizzying array of options. Yet one need only search "social media mental health" to see that all these apps may be doing more harm than we realize.  Even without the aid of social media, depression and other mental illnesses are already a huge problem, especially among college students, who are going through a major life transition. It can be easy to feel isolated, or to worry that you're the only one struggling. Social support can be a critical factor in improving mental health, but what are we supposed to do when all our social apps seem to be making things worse? Luckily, this is where Newroots comes in!
