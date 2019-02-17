@@ -60,28 +60,56 @@ class YesNoQ extends React.Component {
 
 }
 
-const RangeQ = (props) => {
-  return (
-    <div className="ci-question">
-      <h2>{props.q}</h2>
-      <div className="mood-measurer">
-        <input type="range"
-          min="1"
-          max="10"
-          value={props.val}
-          onChange={(event) => props.setAnswer(event.target.value, props.index)} />
-        <div className="indicator">
-          <p>4</p>
+class RangeQ extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    $('input[type="range"]').each(function (index) {
+      let range = $(this).parent().find('.indicator');
+      let p = $(range).find('p');
+      $(range).hide();
+
+      $(this).focusin(function () {
+        $(range).css('left', ('calc(' + $(this).val() * (1 / 10) * 100) + '% - 60px)');
+        $(range).show();
+      });
+
+      $(this).focusout(function () {
+        $(range).hide();
+      });
+
+      $(this).on('input', function () {
+        $(range).css('left', ('calc(' + $(this).val() * (1 / 10) * 100) + '% - 60px)');
+        $(p).text($(this).val());
+      });
+    });
+  }
+
+  render() {
+    return (
+      <div className="ci-question">
+        <h2>{this.props.q}</h2>
+        <div className="mood-measurer">
+          <input type="range"
+            min="1"
+            max="10"
+            value={this.props.val}
+            onChange={(event) => this.props.setAnswer(event.target.value, this.props.index)} />
+          <div className="indicator">
+            <p>4</p>
+          </div>
+          <div className="num"><small>1</small><small>7</small></div>
         </div>
-        <div className="num"><small>1</small><small>7</small></div>
+        <textarea
+          className="feelings"
+          rows="1"
+          placeholder="Other comments"
+          onChange={(event) => this.props.setComment(event, this.props.index)}></textarea>
       </div>
-      <textarea
-        className="feelings"
-        rows="1"
-        placeholder="Other comments"
-        onChange={(event) => props.setComment(event, props.index)}></textarea>
-    </div>
-  );
+    );
+  }
 };
 
 class CheckinModal extends React.Component {
@@ -93,27 +121,7 @@ class CheckinModal extends React.Component {
     };
   }
 
-  componentDidMount() {
-    $('input[type="range"]').each(function (index) {
-      let range = $(this).parent().find('.indicator');
-      let p = $(range).find('p');
-      $(range).hide();
 
-      $(this).focusin(function () {
-        $(range).css('left', ('calc(' + $(this).val() * (1 / 7) * 100) + '% - 60px)');
-        $(range).show();
-      });
-
-      $(this).focusout(function () {
-        $(range).hide();
-      });
-
-      $(this).on('input', function () {
-        $(range).css('left', ('calc(' + $(this).val() * (1 / 7) * 100) + '% - 60px)');
-        $(p).text($(this).val());
-      });
-    });
-  }
 
   incrementCurrIndex = () => {
     let i = this.state.currIndex;

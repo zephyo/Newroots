@@ -302,6 +302,7 @@ section {
 .thought .reply .pic,
 .all-comments .comment .pic,
 .all-comments .reply .pic {
+  flex: none;
   margin: 10px;
 }
 .thought .comment,
@@ -314,6 +315,10 @@ section {
   text-align: right;
   border-radius: 3rem 3rem 0 3rem;
   color: #eff0da;
+}
+.thought .comment .pic,
+.all-comments .comment .pic {
+  align-self: flex-end;
 }
 .thought .reply,
 .all-comments .reply {
@@ -796,6 +801,7 @@ section {
 .all-comments {
   transform-origin: top;
   animation: scaleDown 0.5s ease;
+  margin: 10px;
 }
 
 @keyframes scaleDown {
@@ -1214,6 +1220,7 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 40px;
 }
 .error-msg img {
   max-width: 250px;

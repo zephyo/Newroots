@@ -309,6 +309,7 @@ section {
       margin: $feed-padding/3;
     }
     .pic {
+      flex: none;
       margin: 10px;
     }
   }
@@ -319,6 +320,9 @@ section {
       text-align: right;
       border-radius: 3rem 3rem 0 3rem;
       color: $light;
+    }
+    .pic {
+      align-self: flex-end;
     }
   }
   .reply {
@@ -805,6 +809,7 @@ section {
 .all-comments {
   transform-origin: top;
   animation: scaleDown 0.5s ease;
+  margin: 10px;
 }
 
 @keyframes scaleDown {
@@ -1243,6 +1248,7 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: $feed-padding * 2;
   img {
     max-width: 250px;
     margin: 20px;

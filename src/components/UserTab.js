@@ -117,7 +117,7 @@ class UserTab extends React.Component {
 
   uploadPpf = (event) => {
     let firstFile = event.target.files[0] // upload the first file only
-    let task = this.props.firebase.photos().put(firstFile);
+    let task = this.props.firebase.photos(this.props.uid).put(firstFile);
 
     task.on('state_changed', (snapshot) => {
       // Observe state change events such as progress, pause, and resume
@@ -140,6 +140,10 @@ class UserTab extends React.Component {
         this.props.setPpfURL(downloadURL);
       });
     });
+  }
+
+  setName = (event) => {
+    this.setState({ name: event.target.value })
   }
 
   render() {
@@ -169,7 +173,7 @@ class UserTab extends React.Component {
         </div>
       );
       name = (
-        <input type="text" className="profile-name" placeholder={this.state.name}></input>
+        <input type="text" className="profile-name" onChange={this.setName} value={this.state.name}></input>
       );
       checkins = (
         <ul className="your-checkins">

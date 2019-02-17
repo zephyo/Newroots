@@ -92,7 +92,8 @@ class App extends React.Component {
         ...this.state.userData,
         PpfURL: downloadURL
       }
-    })
+    });
+    
   }
 
   setActiveTab = (index) => {
@@ -226,7 +227,7 @@ class App extends React.Component {
 
         <div className="bg"></div>
         <div className="main-bg-texture"></div>
-        
+
         {this.needToCheckin() ?
           <CheckinModalFB
             PpfURL={this.state.userData.PpfURL}

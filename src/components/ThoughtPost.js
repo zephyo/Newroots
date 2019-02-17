@@ -45,7 +45,7 @@ class ThoughtPost extends React.Component {
     convoListen = this.props.firebase.posts().doc(this.props.postid).collection("conversation").onSnapshot((snapshot) => {
 
       let tempConvo = this.state.conversation;
-      
+
       if (this.loadedComments()) {
 
         snapshot.docChanges().forEach((change) => {
@@ -80,6 +80,14 @@ class ThoughtPost extends React.Component {
     return this.state.conversation.length !== 0;
   }
 
+  compare = (a, b) => {
+    if (a.timestamp < b.timestamp)
+      return -1;
+    if (a.timestamp > b.timestamp)
+      return 1;
+    return 0;
+  }
+
   loadComments = () => {
 
     if (!this.loadedComments()) {
@@ -103,6 +111,8 @@ class ThoughtPost extends React.Component {
         });
 
         //at end, set state of conversation and showconversation
+
+        tempConvo.sort(this.compare);
 
         this.setState({
           conversation: tempConvo,
@@ -151,18 +161,18 @@ class ThoughtPost extends React.Component {
 
         {thought}
 
-       
+
         <CommentBut
           loadComments={this.loadComments}
           commentLength={this.state.conversationLength}
         />
-         <Comments
+        <Comments
           showComments={this.state.showComments}
           conversation={this.state.conversation}
         />
         <CommentBox
           uid={this.props.uid}
-          PpfURL={this.props.PpfURL}
+          PpfURL={this.props.yourPpfURL}
           poster={this.props.name}
           firebase={this.props.firebase}
           postid={this.props.postid}

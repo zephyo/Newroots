@@ -63,6 +63,8 @@ class AddFriend extends React.Component {
         this.setAddedFriend("couldn't find " + email);
       });
 
+
+
     // if (this.state.allUsers.length == 0){
 
     // }else{
@@ -101,6 +103,7 @@ class AddFriend extends React.Component {
 
     this.setState({ network: network });
 
+
     this.props.firebase
       .user(this.props.uid)
       .update({
@@ -112,6 +115,28 @@ class AddFriend extends React.Component {
         network: firebase.firestore.FieldValue.arrayUnion(this.props.uid)
       });
 
+
+    //update their feed with your posts; update your feed with their posts
+    this.props.firebase
+      .feed(uid).where('uid', '==', uid).get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+
+          this.props.firebase
+            .feed(this.props.uid).doc(doc.id).set(doc.data());
+
+        });
+      });
+
+
+    this.props.firebase
+      .feed(this.props.uid).where('uid', '==', this.props.uid).get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+
+          this.props.firebase
+            .feed(uid).doc(doc.id).set(doc.data());
+
+        });
+      });
   }
 
   removeRequest = (uid) => {

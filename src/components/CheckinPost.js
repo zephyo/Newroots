@@ -83,6 +83,15 @@ class CheckinPost extends React.Component {
     return this.state.conversation.length !== 0;
   }
 
+
+   compare = (a, b) => {
+    if (a.timestamp < b.timestamp)
+      return -1;
+    if (a.timestamp > b.timestamp)
+      return 1;
+    return 0;
+  }
+
   loadComments = () => {
 
     if (!this.loadedComments()) {
@@ -107,6 +116,8 @@ class CheckinPost extends React.Component {
         });
 
         //at end, set state of conversation and showconversation
+
+        tempConvo.sort(this.compare);
 
         this.setState({
           conversation: tempConvo,
@@ -206,18 +217,18 @@ class CheckinPost extends React.Component {
 
         </div>
 
-    
+
         <CommentBut
           loadComments={this.loadComments}
           commentLength={this.state.conversationLength}
-        />   
-         <Comments
+        />
+        <Comments
           showComments={this.state.showComments}
           conversation={this.state.conversation}
         />
         <CommentBox
           uid={this.props.uid}
-          PpfURL={this.props.PpfURL}
+          PpfURL={this.props.yourPpfURL}
           poster={this.props.name}
           firebase={this.props.firebase}
           postid={this.props.postid}

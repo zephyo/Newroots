@@ -30,7 +30,8 @@ class SignupForm extends React.Component {
           q: 'How are you feeling today?',
           type: 'range',
         }
-      ]
+      ],
+      PpfURL: null
     };
     let ID;
     this.props.firebase

@@ -83,6 +83,9 @@ class FeedTab extends React.Component {
         });
         console.log(JSON.stringify(tempCheckins));
         console.log(JSON.stringify(tempThoughts));
+
+
+
         element.setState({
           checkins: tempCheckins,
           thoughts: tempThoughts
@@ -97,51 +100,95 @@ class FeedTab extends React.Component {
     feedListen();
   }
 
-  /*feed = this.props.feed;
+  compare = (a, b) => {
+    if (a.timestamp < b.timestamp)
+      return -1;
+    if (a.timestamp > b.timestamp)
+      return 1;
+    return 0;
+  }
 
-  for (var i = 0; i< feed.length; i++){
-    
-  }*/
-  /*<ThoughtPost /> 
-  const listItems = numbers.map((number) =>
-    <li>{number}</li>
-  );
-  */
-  //const checkins = this.state.checkins;
+
   render() {
 
-    let checkinItems = this.state.checkins.map((checkin, index) =>
-      <CheckinPost
-        uid={this.props.uid}
-        posterUid={checkin.uid}
-        
-        PpfURL={checkin.PpfURL}
-        key={toString(index)}
-        name={checkin.name}
-        timestamp={checkin.timestamp}
 
-        postid={checkin.postid}
-        checkinData={checkin.checkinData}
-        firebase={this.props.firebase}
-      />
+    let feed = this.state.checkins.concat(this.state.thoughts);
+    feed.sort(this.compare);
+
+    let feedItems = feed.map((f, index) => {
+      if (f.checkinData) {
+        return <CheckinPost
+          uid={this.props.uid}
+          posterUid={f.uid}
+
+          PpfURL={f.PpfURL}
+          yourPpfURL={this.props.PpfURL}
+          key={toString(index)}
+          name={f.name}
+          timestamp={f.timestamp}
+
+          postid={f.postid}
+          checkinData={f.checkinData}
+          firebase={this.props.firebase}
+        />;
+      } else {
+        return <ThoughtPost
+          uid={this.props.uid}
+          posterUid={f.uid}
+
+          PpfURL={f.PpfURL}
+          yourPpfURL={this.props.PpfURL}
+
+          key={toString(index)}
+          name={f.name}
+          thought={f.thought}
+          timestamp={f.timestamp}
+
+          message={f.message}
+          postid={f.postid}
+          firebase={this.props.firebase
+          } />;
+      }
+    }
     );
-    let thoughtItems = this.state.thoughts.map((thought, index) =>
-      <ThoughtPost
-        uid={this.props.uid}
-        posterUid={thought.uid}
 
-        PpfURL={thought.PpfURL}
-        key={toString(index)}
-        name={thought.name}
-        thought={thought.thought}
-        timestamp={thought.timestamp}
-        
-        message={thought.message}
-        postid={thought.postid}
-        firebase={this.props.firebase
-        } />
-    );
+    // let feedItems = this.state.checkins.map((checkin, index) =>
+    //   <CheckinPost
+    //     uid={this.props.uid}
+    //     posterUid={checkin.uid}
 
+    //     PpfURL={checkin.PpfURL}
+    //     yourPpfURL={this.props.PpfURL}
+    //     key={toString(index)}
+    //     name={checkin.name}
+    //     timestamp={checkin.timestamp}
+
+    //     postid={checkin.postid}
+    //     checkinData={checkin.checkinData}
+    //     firebase={this.props.firebase}
+    //   />
+    // );
+
+    // let thoughtItems = this.state.thoughts.map((thought, index) =>
+    //   <ThoughtPost
+    //     uid={this.props.uid}
+    //     posterUid={thought.uid}
+
+    //     PpfURL={thought.PpfURL}
+    //     yourPpfURL={this.props.PpfURL}
+
+    //     key={toString(index)}
+    //     name={thought.name}
+    //     thought={thought.thought}
+    //     timestamp={thought.timestamp}
+
+    //     message={thought.message}
+    //     postid={thought.postid}
+    //     firebase={this.props.firebase
+    //     } />
+    // );
+    // console.log(checkinItems);
+    //combine checkinItems and thoughtItems then sort then render
 
     return (
 
@@ -154,8 +201,7 @@ class FeedTab extends React.Component {
           firebase={this.props.firebase}
         />
         <h1 className="date-marker">February 17</h1>
-        {checkinItems}
-        {thoughtItems}
+        {feedItems}
 
 
         <ErrorMsg

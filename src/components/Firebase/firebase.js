@@ -60,7 +60,7 @@ class Firebase {
 
   fs = () => this.fs;
 
-  photos = () => this.store.ref('photos');
+  photos = (uid) => this.store.ref(uid);
 
 }
 
