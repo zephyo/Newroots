@@ -155,15 +155,15 @@ class AddFriend extends React.Component {
     let counter = 0;
     for (var i = 0; i < this.state.requests.length; i++) {
       let req = this.state.requests[i];
-      console.log(req)
+      // console.log(req)
       this.props.firebase
         .user(req).get().then((doc) => {
           users.push(doc.data());
-          console.log(JSON.stringify(doc.data()));
+          // console.log(JSON.stringify(doc.data()));
           this.setState({ requestUsers: users });
           counter++;
           if (counter === this.state.requests.length) {
-            console.log("done loading");
+            // console.log("done loading");
             this.setState({ loading: false });
           }
         });

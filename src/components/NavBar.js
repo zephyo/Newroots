@@ -16,9 +16,6 @@ class NavBar extends React.Component {
     requestsRef.onSnapshot((doc) => {
       this.setState({ requestsLength: doc.data().requests.length })
     })
-    /*.catch(function (error) {
-      console.log("Error getting documents: ", error);
-    });*/
   }
 
   setAddFriend = (bool) => {
@@ -38,7 +35,7 @@ class NavBar extends React.Component {
       <nav className="main-nav">
         <div className="nav-content">
           <img className="logo-img" src={icon} />
-          <span className="logo">my_friends
+          <span className="logo">Newroots
           <span className="sublogo">give and get support.</span>
           </span>
           <button id="feed-but" onClick={() => this.props.setActiveTab(0)}>

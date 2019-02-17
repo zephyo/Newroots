@@ -4,6 +4,9 @@ import { withFirebase } from './Firebase';
 import { request } from 'http';
 import Avatar from './Avatar';
 
+import graphics3 from '../graphics/3.png';
+import ErrorMsg from './ErrorMsg';
+
 const AddFriendFB = withFirebase(AddFriend);
 
 class NetworkTab extends React.Component {
@@ -21,13 +24,13 @@ class NetworkTab extends React.Component {
   componentDidMount() {
     let ref = this.props.firebase.user(this.props.uid);
 
-    console.log(JSON.stringify(this.state.requests));
+    // console.log(JSON.stringify(this.state.requests));
 
-    ref.onSnapshot((doc)=> {
+    ref.onSnapshot((doc) => {
       let data = doc.data();
       this.setNetworkUsers(data.network);
       this.setRequests(data.requests);
-      console.log(JSON.stringify(this.state.requests));
+      // console.log(JSON.stringify(this.state.requests));
     })
   }
 
@@ -121,6 +124,7 @@ class NetworkTab extends React.Component {
       network.push(addEl);
     }
 
+
     return (
       <section className="network">
         <h2>Your network</h2>
@@ -129,17 +133,24 @@ class NetworkTab extends React.Component {
             <input type="text" placeholder="search" onChange={this.filterNetwork} />
             <button id="search-friends"><span className="jam jam-search" style={{ color: '#9FC6C1' }}></span></button>
           </div>
-          <button id="add-friends" onClick={() => this.setAddFriend(true)} disabled={this.state.loading}>
+          <button id="add-friends" onClick={() => this.setAddFriend(true)} disabled={!this.state.loading}>
             <span className="jam jam-user-plus" style={{ color: '#9FC6C1' }}>
               {alert}
             </span>
 
-          
+
 
           </button>
         </div>
         <div className="friends">
-          {network}
+          {network.length == 0 ?
+            <ErrorMsg
+              src={graphics3}
+              header='No support yet.'
+              msg='Why not invite someone you trust?'
+            />
+            : network
+          }
         </div>
         {(this.state.addFriend ?
           <AddFriendFB

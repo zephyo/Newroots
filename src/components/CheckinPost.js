@@ -11,6 +11,8 @@ import Avatar from './Avatar';
   -timestamp : string - e.g. a few seconds ago
   -checkinData : array
 
+  -conversation :array
+
   - example of checkinData: 
     [
       {

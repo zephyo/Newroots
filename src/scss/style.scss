@@ -713,6 +713,14 @@ section {
   .no {
     background: $light-pink;
   }
+
+  .disabled {
+    background: rgba($dark, 0.5);
+    .jam {
+      color: white !important;
+    }
+
+  }
 }
 
 .modal-bg {
@@ -865,8 +873,8 @@ section {
 .modal.network {
   width: 90%;
   padding: $feed-padding;
-  max-height: 90vh;
   top: 5vh;
+  bottom: initial;
 
   .close {
     position: absolute;
@@ -988,29 +996,56 @@ section {
     display: flex;
     flex-direction: column;
     height: 100%;
-    button {
+    overflow-y: scroll;
+    button:not(.cont-onboarding) {
       width: initial;
-      flex: auto;
-      margin-top: $feed-padding/2;
+      flex: 0 0 auto;
+      margin-bottom: $feed-padding/2;
       color: $light;
       border-radius: 10px;
       text-align: left;
       padding-left: 40px;
       font-size: 1.1rem;
-      &.mindful {
+      &:nth-child(1) {
         background: #b7a69e;
       }
-      &.sleep {
+      &:nth-child(2) {
         background: #565e57;
       }
-      &.food {
+      &:nth-child(3) {
         background: #754067;
       }
-      &.fitness {
+      &:nth-child(4) {
         background: #d66a63;
       }
-      &.med {
+      &:nth-child(5) {
         background: #e8cc84;
+      }
+    }
+    .ob-cat {
+      flex: none;
+      display: flex;
+      flex-direction: column;
+      background: $dark;
+      border-radius: 10px;
+      box-shadow: 0 0 40px rgba($dark, 0.7);
+      margin-bottom: 20px;
+      .ob-cat-opt {
+        margin-bottom: 0;
+        &:first-child {
+          position: relative;
+          &:before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            transform: rotate(90deg);
+          }
+        }
       }
     }
   }
@@ -1033,7 +1068,8 @@ section {
     font-size: 20px;
     color: #333;
   }
-  &.one, &.six {
+  &.one,
+  &.six {
     h1 {
       margin-bottom: 0;
     }
@@ -1103,6 +1139,18 @@ section {
       width: calc(100% - 80px);
       margin: 40px;
     }
+    h2 {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.ob-cat {
+  .ob-cat-opt {
+    &.selected {
+      background: white !important;
+      color: $black !important;
+    }
   }
 }
 
@@ -1119,5 +1167,18 @@ section {
   span {
     font-size: 2rem;
     color: white;
+  }
+}
+
+.error-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  img {
+    max-width: 250px;
+    margin: 20px;
+  }
+  p {
+    margin-top: 0;
   }
 }

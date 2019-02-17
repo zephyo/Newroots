@@ -166,6 +166,8 @@ class App extends React.Component {
         <Onboarding 
           setOnboarding = {this.setOnboarding}
           name={this.state.userData.name}
+          setCheckins = {this.setCheckins}
+          uid = {this.state.userData.uid}
         />
       );
     }
@@ -183,7 +185,7 @@ class App extends React.Component {
     }
     //active tab is network
     else if (this.state.activeTab == 1) {
-      console.log('app.js req-'+JSON.stringify(this.state.userData.requests));
+      // console.log('app.js req-'+JSON.stringify(this.state.userData.requests));
       activeTab = (
         <NetworkTabFB
           uid={this.state.userData.uid}
@@ -222,6 +224,8 @@ class App extends React.Component {
         {activeTab}
         {this.needToCheckin() ?
           <CheckinModalFB
+            network = {this.state.userData.network}
+            name = {this.state.userData.name}
             uid = {this.state.userData.uid}
             updateCheckin={this.updateCheckin}
             checkins={this.state.userData.checkins ? this.state.userData.checkins : []}

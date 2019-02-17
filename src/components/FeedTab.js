@@ -74,7 +74,7 @@ class FeedTab extends React.Component {
           }
 
         });
-        console.log(tempCheckins);
+        // console.log(tempCheckins);
         element.setState({
           feed: tempFeed,
           checkins: tempCheckins,

@@ -35,7 +35,7 @@ class LoginForm extends React.Component {
             element.setState({
                 ...INITIAL_STATE
             });
-            console.log(JSON.stringify(doc.data()));
+            // console.log(JSON.stringify(doc.data()));
             element.props.checkLogin(doc.data());
         });
 
@@ -52,7 +52,7 @@ class LoginForm extends React.Component {
 
     return (
       <div className="login-page">
-      <h2>my_friends
+      <h2>Newroots
        <button className="back-but" onClick={()=>this.props.setLogin(false) }>
          <span className="jam jam-arrow-left" style={{color: '#635358'}}></span>
        </button>

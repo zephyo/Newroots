@@ -9,35 +9,55 @@ const TextQ = (props) => {
   return (
     <div className="ci-question">
       <h2>{props.q}</h2>
-      <textarea className="feelings" rows="3" placeholder="Hmm"
-        onChange={(event) => props.setAnswer(event.target.value, props.index)}>
-        ></textarea>
+      <textarea className="feelings" rows="3" placeholder="I think.."
+        onChange={(event) => props.setAnswer(event.target.value, props.index)}></textarea>
     </div>
   );
 };
 
-const YesNoQ = (props) => {
-  return (
-    <div className="ci-question">
-      <h2>{props.q}</h2>
-      <div className="yesno">
-        <button className="yes"
-          onClick={() => props.setAnswer('yes', props.index)}>
-          <span className="jam jam-check" style={{ color: 'white' }}></span>
-        </button>
-        <button className="no"
-          onClick={() => props.setAnswer('no', props.index)}>
-          <span className="jam jam-close" style={{ color: '#8A8184' }}> </span>
-        </button>
+class YesNoQ extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      answer: null
+    };
+  }
+  render() {
+    let yesClass = 'yes', noClass = 'no', answer = this.state.answer;
+    if (answer == 'yes') {
+      noClass += ' disabled';
+    } else if (answer == 'no') {
+      yesClass += ' disabled';
+    }
+    return (
+      <div className="ci-question">
+        <h2>{this.props.q}</h2>
+        <div className="yesno">
+          <button className={yesClass}
+            onClick={() => {
+              this.setState({ answer: 'yes' })
+              this.props.setAnswer('yes', this.props.index)
+            }}>
+            <span className="jam jam-check" style={{ color: 'white' }}></span>
+          </button>
+          <button className={noClass}
+            onClick={() => {
+              this.setState({ answer: 'no' })
+              this.props.setAnswer('no', this.props.index)
+            }}>
+            <span className="jam jam-close" style={{ color: '#8A8184' }}> </span>
+          </button>
+        </div>
+        <textarea
+          className="feelings"
+          rows="1"
+          placeholder="Other comments"
+          onChange={(event) => this.props.setComment(event, this.props.index)}></textarea>
       </div>
-      <textarea
-        className="feelings"
-        rows="1"
-        placeholder="Other comments"
-        onChange={(event) => props.setComment(event, props.index)}></textarea>
-    </div>
-  );
-};
+    );
+  }
+
+}
 
 const RangeQ = (props) => {
   return (
@@ -46,7 +66,7 @@ const RangeQ = (props) => {
       <div className="mood-measurer">
         <input type="range"
           min="1"
-          max="7"
+          max="10"
           value={props.val}
           onChange={(event) => props.setAnswer(event.target.value, props.index)} />
         <div className="indicator">
@@ -118,8 +138,24 @@ class CheckinModal extends React.Component {
   saveCheckinData = () => {
     let time = moment().format('L');
 
+    //save to feed of every person in the network
+    let network = this.props.network;
+    let data = {
+      author: this.props.name,
+      author_uid: this.props.uid,
+      checkin: true,
+      checkinData: this.state.checkins,
+      timestamp: new Date()
+    };
+
+    for (let i = 0; i < network.length; i++) {
+      this.props.firebase.feed(network[i]).add(data);
+    }
+
+    //save to post
+    this.props.firebase.posts().add(data);
+
     this.props.firebase.user(this.props.uid).update({
-      // requests: firebase.firestore.FieldValue.arrayRemove(uid),
       lastCheckin: time
     }).then(() => {
       this.props.updateCheckin(time);
@@ -156,7 +192,7 @@ class CheckinModal extends React.Component {
           <RangeQ
             q={checkins[i].q}
             index={i}
-            val={checkins[i].answer ? checkins[i].answer : 4}
+            val={checkins[i].answer ? checkins[i].answer : 5}
             setAnswer={this.setAnswer}
             setComment={this.setComment}
           />
@@ -184,8 +220,8 @@ class CheckinModal extends React.Component {
     return (
       <div className="modal-bg">
         <div className="checkin modal">
-        <img className="bg-texture first" src={texture1} />
-        <img className="bg-texture second" src={texture2} />
+          <img className="bg-texture first" src={texture1} />
+          <img className="bg-texture second" src={texture2} />
           <div className="bg"></div>
           <h1>{moment().format('MMMM D')}</h1>
           <h1 className="title">

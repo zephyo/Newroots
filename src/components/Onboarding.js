@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { withFirebase } from './Firebase';
 import graphics1 from '../graphics/1.png';
 import graphics2 from '../graphics/2.png';
 import graphics3 from '../graphics/3.png';
 import texture1 from './../graphics/flower.png';
 import texture2 from './../graphics/thing.png';
+import OnboardingCategories from './OnboardingCategories';
+import { withFirebase } from './Firebase';
 
+const OnboardingCategoriesFB = withFirebase(OnboardingCategories);
 
 /*
 props:
@@ -55,7 +57,7 @@ class Onboarding extends React.Component {
           page = (
             <div className="page one">
               <h1>{"Hi " + this.props.name + ","}</h1>
-              <p>welcome to my_friends. We're going to take you through steps to best support you.</p><img src={graphics3} />
+              <p>Welcome to Newroots. We're going to take you through steps to best support you.</p><img src={graphics3} />
               {button}
             </div>
           );
@@ -82,26 +84,14 @@ class Onboarding extends React.Component {
         }
       case 2:
         {
-          button = (
-            <Button
-              Listener={this.incrementPage}
-              Classes="jam jam-check"
-            />
-          );
 
           page = (
-            <div className="page three">
-              <h2>What would you like to check in about?</h2>
-              <div className="categories">
-                <button className="mindful">mindfuless</button>
-                <button className="sleep">sleep</button>
-                <button className="food">food</button>
-                <button className="fitness">fitness</button>
-                <button className="med">medication</button>
-              </div>
-
-              {button}
-            </div>
+           
+              <OnboardingCategoriesFB
+                uid = {this.props.uid}
+                setCheckins={this.props.setCheckins}
+                incrementPage={this.incrementPage}
+              />
           );
           break;
         }

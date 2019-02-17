@@ -48,8 +48,8 @@ class HomePage extends React.Component {
     }else{
       content = (
         <div>
-          <h2>my_friends</h2>
-          <p>give and get support from your support network. feel safe with the ones you trust.</p>
+          <h2>Newroots</h2>
+          <p>Give and get support from your support network. Feel safe with those you trust.</p>
           <div className="buts">
             <button className="signup-but" onClick={()=>this.setSignUp(true)} >sign up</button>
             <button className="login-but" onClick={()=>this.setLogin(true) }>login</button>

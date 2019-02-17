@@ -688,6 +688,12 @@ section {
 .yesno .no {
   background: #f1d0ca;
 }
+.yesno .disabled {
+  background: rgba(138, 129, 132, 0.5);
+}
+.yesno .disabled .jam {
+  color: white !important;
+}
 
 .modal-bg {
   position: absolute;
@@ -841,8 +847,8 @@ section {
 .modal.network {
   width: 90%;
   padding: 20px;
-  max-height: 90vh;
   top: 5vh;
+  bottom: initial;
 }
 .modal.network .close {
   position: absolute;
@@ -965,31 +971,58 @@ section {
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow-y: scroll;
 }
-.page .categories button {
+.page .categories button:not(.cont-onboarding) {
   width: initial;
-  flex: auto;
-  margin-top: 10px;
+  flex: 0 0 auto;
+  margin-bottom: 10px;
   color: #eff0da;
   border-radius: 10px;
   text-align: left;
   padding-left: 40px;
   font-size: 1.1rem;
 }
-.page .categories button.mindful {
+.page .categories button:not(.cont-onboarding):nth-child(1) {
   background: #b7a69e;
 }
-.page .categories button.sleep {
+.page .categories button:not(.cont-onboarding):nth-child(2) {
   background: #565e57;
 }
-.page .categories button.food {
+.page .categories button:not(.cont-onboarding):nth-child(3) {
   background: #754067;
 }
-.page .categories button.fitness {
+.page .categories button:not(.cont-onboarding):nth-child(4) {
   background: #d66a63;
 }
-.page .categories button.med {
+.page .categories button:not(.cont-onboarding):nth-child(5) {
   background: #e8cc84;
+}
+.page .categories .ob-cat {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  background: #8a8184;
+  border-radius: 10px;
+  box-shadow: 0 0 40px rgba(138, 129, 132, 0.7);
+  margin-bottom: 20px;
+}
+.page .categories .ob-cat .ob-cat-opt {
+  margin-bottom: 0;
+}
+.page .categories .ob-cat .ob-cat-opt:first-child {
+  position: relative;
+}
+.page .categories .ob-cat .ob-cat-opt:first-child:before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  transform: rotate(90deg);
 }
 .page #tags {
   border-radius: 10px;
@@ -1068,6 +1101,14 @@ section {
   width: calc(100% - 80px);
   margin: 40px;
 }
+.page.six h2 {
+  margin-bottom: 0;
+}
+
+.ob-cat .ob-cat-opt.selected {
+  background: white !important;
+  color: #635358 !important;
+}
 
 .cont-onboarding {
   position: absolute;
@@ -1083,6 +1124,19 @@ section {
 .cont-onboarding span {
   font-size: 2rem;
   color: white;
+}
+
+.error-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.error-msg img {
+  max-width: 250px;
+  margin: 20px;
+}
+.error-msg p {
+  margin-top: 0;
 }
 
 /*# sourceMappingURL=App.css.map */
