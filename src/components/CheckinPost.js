@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Avatar from './Avatar';
-
+import CommentBox from './CommentBox';
+import CommentBut from './CommentBut';
+import Comments from './Comments';
+import Conversation from './Conversation';
 
 
 /*
@@ -37,14 +40,95 @@ import Avatar from './Avatar';
 class CheckinPost extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      conversation: [],
+      conversationLength: 0,
+      showComments: false
+    }
   }
+  componentDidMount() {
+
+    this.props.firebase.posts().doc(this.props.postid).collection("conversation").onSnapshot((snapshot) => {
+
+      let tempConvo = this.state.conversation;
+
+      if (this.loadedComments()) {
+
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            let dat = change.doc.data();
+            tempConvo.push({
+              uid: dat.uid,
+              isMyPost: dat.uid == this.props.uid,
+              PpfURL: dat.PpfURL,
+              poster: dat.poster,
+              timestamp: dat.timestamp,
+              message: dat.message
+            })
+          }
+
+        });
+      }
+      console.log(tempConvo);
+      this.setState({
+        conversation: tempConvo,
+        conversationLength: snapshot.size
+      });
+
+    });
+
+  }
+
+  loadedComments = () => {
+    return this.state.conversation.length !== 0;
+  }
+
+  loadComments = () => {
+
+    if (!this.loadedComments()) {
+
+      //load comments
+      let tempConvo = [];
+
+      //get once snapshot
+      this.props.firebase.posts().doc(this.props.postid).collection("conversation").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          let dat = doc.data();
+          console.log('id ' + dat.uid + '\n' + this.props.uid);
+          tempConvo.push({
+            uid: dat.uid,
+            isMyPost: dat.uid == this.props.uid,
+            PpfURL: dat.PpfURL,
+            poster: dat.poster,
+            timestamp: dat.timestamp,
+            message: dat.message
+          })
+        });
+
+        //at end, set state of conversation and showconversation
+
+        this.setState({
+          conversation: tempConvo,
+          conversationLength: tempConvo.length,
+          showComments: !this.state.showComments
+        });
+      });
+
+
+    } else {
+      this.setState({ showComments: !this.state.showComments })
+    }
+  }
+
+
 
   render() {
 
     let checkinData = this.props.checkinData;
 
     let editButton = null;
-    if (this.props.isMyPost) {
+    if (this.props.posterUid == this.props.uid) {
       editButton = (
         <button className="user-edit">
           <span className="jam jam-pencil" style={{ color: '#EFF0DA' }}></span>
@@ -98,7 +182,7 @@ class CheckinPost extends React.Component {
             <div className="mood">
               <span>{checkin.q} </span>
             </div>
-            <div className="content">{checkin.comment}</div>
+            <div className="content">{checkin.answer}</div>
           </div>
         );
       }
@@ -121,10 +205,23 @@ class CheckinPost extends React.Component {
           {checkins}
 
         </div>
-        <div className="leave-comment">
-          <input type="text" placeholder="comment.." />
-          <button><span className="jam jam-paper-plane" style={{ color: '#9FC6C1' }}></span></button>
-        </div>
+
+    
+        <CommentBut
+          loadComments={this.loadComments}
+          commentLength={this.state.conversationLength}
+        />   
+         <Comments
+          showComments={this.state.showComments}
+          conversation={this.state.conversation}
+        />
+        <CommentBox
+          uid={this.props.uid}
+          PpfURL={this.props.PpfURL}
+          poster={this.props.name}
+          firebase={this.props.firebase}
+          postid={this.props.postid}
+        />
       </div>
     );
   }

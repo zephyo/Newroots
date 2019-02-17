@@ -81,7 +81,7 @@ class NetworkTab extends React.Component {
     let users = [];
     let counter = 0;
 
-    for (var i = 0; i < this.state.network.length; i++) {
+    for (let i = 0; i < this.state.network.length; i++) {
 
       this.props.firebase
         .user(this.state.network[i])
@@ -133,7 +133,7 @@ class NetworkTab extends React.Component {
             <input type="text" placeholder="search" onChange={this.filterNetwork} />
             <button id="search-friends"><span className="jam jam-search" style={{ color: '#9FC6C1' }}></span></button>
           </div>
-          <button id="add-friends" onClick={() => this.setAddFriend(true)} disabled={!this.state.loading}>
+          <button id="add-friends" onClick={() => this.setAddFriend(true)} >
             <span className="jam jam-user-plus" style={{ color: '#9FC6C1' }}>
               {alert}
             </span>

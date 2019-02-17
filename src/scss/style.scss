@@ -79,16 +79,30 @@ textarea {
 
 .container {
   @include absolute;
+  overflow-y: scroll;
 }
 
 .bg {
   @include absolute;
-  background: $light-pink;
+  position: fixed;
+  transition: all 1s ease;
   z-index: -2;
 }
 
+.feed + .bg {
+  background: $light-pink;
+}
+
+.network + .bg {
+  background: rgba(#d3d7c2, 0.9);
+}
+
+.user + .bg {
+  background: rgba(#deebf4, 0.9);
+}
+
 .main-bg-texture {
-  position: absolute;
+  position: fixed;
   mix-blend-mode: multiply;
   z-index: -1;
   top: 50px;
@@ -175,6 +189,10 @@ section {
     width: 7rem;
     border-radius: 2rem;
     margin-right: $feed-padding;
+    &:hover {
+      transform: scale(0.97);
+      background: $dark;
+    }
   }
 
   &:before,
@@ -200,6 +218,16 @@ section {
   margin: $feed-padding * 2;
   box-shadow: 0 8px 30px rgba($dark, 0.2);
 
+  .comment-but {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $pink;
+    .jam {
+      margin-right: 12px;
+    }
+  }
   .header {
     padding: $feed-padding;
     display: flex;
@@ -262,33 +290,53 @@ section {
   margin-left: $feed-padding;
 }
 
-.thought {
+.thought,
+.all-comments {
   display: flex;
   flex-direction: column;
 
   .header,
   .comment,
   .reply {
-    background: $light;
+    background: transparent;
   }
   .comment,
   .reply {
-    padding: $feed-padding;
-    margin: $feed-padding/3;
-    display: inline-block;
+    display: flex;
     max-width: 70%;
+    .bubble {
+      padding: $feed-padding;
+      margin: $feed-padding/3;
+    }
+    .pic {
+      margin: 10px;
+    }
   }
   .comment {
-    text-align: right;
+    flex-direction: row-reverse;
     align-self: flex-end;
-    border-radius: 3rem 3rem 0 3rem;
-    background: $dark-green;
-    color: $light;
+    .bubble {
+      text-align: right;
+      border-radius: 3rem 3rem 0 3rem;
+      color: $light;
+    }
   }
   .reply {
     align-self: flex-start;
-    border-radius: 0 3rem 3rem 3rem;
+    .bubble {
+      border-radius: 0 3rem 3rem 3rem;
+      background: white;
+      color: $black;
+    }
   }
+}
+
+.thought .comment .bubble {
+  background: $dark-green;
+}
+
+.checkin .all-comments .comment .bubble {
+  background: $black;
 }
 
 .leave-comment {
@@ -466,12 +514,18 @@ section {
       width: 100%;
       background: $dark-green;
       color: white;
+      &:hover {
+        background: $dark;
+      }
     }
   }
   #logout-but {
     margin-top: $feed-padding;
     background: $pink;
     width: 100%;
+    &:hover {
+      background: $red;
+    }
   }
 
   .add-panel {
@@ -719,7 +773,6 @@ section {
     .jam {
       color: white !important;
     }
-
   }
 }
 
@@ -742,6 +795,22 @@ section {
   0% {
     opacity: 0;
     transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.all-comments {
+  transform-origin: top;
+  animation: scaleDown 0.5s ease;
+}
+
+@keyframes scaleDown {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.5);
   }
   100% {
     opacity: 1;

@@ -4,6 +4,7 @@ import autosize from 'autosize';
 import CheckinPost from './CheckinPost';
 import ThoughtPost from './ThoughtPost';
 import moment from 'moment';
+import ThoughtInput from './ThoughtInput';
 
 import graphics1 from '../graphics/1.png';
 import ErrorMsg from './ErrorMsg';
@@ -15,7 +16,8 @@ class FeedTab extends React.Component {
     super(props);
     this.state = {
       thoughts: [],
-      checkins: []
+      checkins: [],
+
     }
     //this.processTime = this.processTime.bind(this);
   }
@@ -42,46 +44,49 @@ class FeedTab extends React.Component {
     autosize($('textarea'));
     let element = this;
     let tempFeed = [];
-    let tempCheckins = [];
-    let tempThoughts = [];
+    let tempCheckins = this.state.checkins;
+    let tempThoughts = this.state.thoughts;
     feedListen = this.props.firebase.user(this.props.uid).collection("feed")
-      .onSnapshot(function (snapshot) {
+      .onSnapshot((snapshot) => {
         //let tempFeed = [];
-        snapshot.docChanges().forEach(function (change) {
-
+        snapshot.docChanges().forEach((change) => {
+          console.log("changety[e]: " + change.type);
           if (change.type === "added") {
-            //console.log("New city: ", change.doc.data());
+            console.log("New city: ", change.doc.data());
             tempFeed.push(change.doc.id);
+            let dat = change.doc.data();
             if (change.doc.data().checkin) {
-              tempCheckins.push({
-                uid: element.props.uid,
-                name: change.doc.data().author,
-                timestamp: moment().startOf('hour').fromNow(),
-                ismyPost: (element.props.uid == change.doc.data().author_uid),
-                checkinData: JSON.parse(change.doc.data().checkinData)
+              tempCheckins.unshift({
+                uid: dat.uid,
+                name: dat.name,
+                PpfURL: dat.PpfURL,
+                timestamp: moment(dat.timestamp).format('lll'),
+                postid: change.doc.id,
+                checkinData: dat.checkinData
               })
             }
             else {
-              tempThoughts.push({
-                uid: element.props.uid,
-                name: change.doc.data().name,
-                isMyPost: (element.props.uid == change.doc.data().author_uid),
-                message: change.doc.data().message,
-                comments: change.doc.data().comm_cont,
+              tempThoughts.unshift({
+                uid: dat.uid,
+                name: dat.name,
+                PpfURL: dat.PpfURL,
+                thought: dat.thought,
+                message: dat.message,
+                comments: dat.comm_cont,
                 conversation: [],
-                postid:change.doc.id,
-                  timestamp:change.doc.timestamp
+                postid: change.doc.id,
+                timestamp: moment(dat.timestamp).format('lll'),
               })
             }
           }
 
         });
-        console.log(tempCheckins);
-        console.log(tempThoughts);
-        element.setState(prevState => ({
-            checkins: element.state.checkins.concat(tempCheckins),
-            thoughts: element.state.thoughts.concat(tempThoughts)
-        }))
+        console.log(JSON.stringify(tempCheckins));
+        console.log(JSON.stringify(tempThoughts));
+        element.setState({
+          checkins: tempCheckins,
+          thoughts: tempThoughts
+        })
         /*element.setState({
           checkins: tempCheckins,
           thoughts: tempThoughts
@@ -92,35 +97,63 @@ class FeedTab extends React.Component {
     feedListen();
   }
 
-    /*feed = this.props.feed;
+  /*feed = this.props.feed;
 
-    for (var i = 0; i< feed.length; i++){
-      
-    }*/
-    /*<ThoughtPost /> 
-    const listItems = numbers.map((number) =>
-      <li>{number}</li>
-    );
-    */
-    //const checkins = this.state.checkins;
+  for (var i = 0; i< feed.length; i++){
+    
+  }*/
+  /*<ThoughtPost /> 
+  const listItems = numbers.map((number) =>
+    <li>{number}</li>
+  );
+  */
+  //const checkins = this.state.checkins;
   render() {
 
-    const checkinItems = this.state.checkins.map((checkin, index) =>
-      <CheckinPost key={toString(index)} name={checkin.name} timestamp={checkin.timestamp} ismyPost={checkin.ismyPost} checkinData={checkin.checkinData} />
+    let checkinItems = this.state.checkins.map((checkin, index) =>
+      <CheckinPost
+        uid={this.props.uid}
+        posterUid={checkin.uid}
+        
+        PpfURL={checkin.PpfURL}
+        key={toString(index)}
+        name={checkin.name}
+        timestamp={checkin.timestamp}
+
+        postid={checkin.postid}
+        checkinData={checkin.checkinData}
+        firebase={this.props.firebase}
+      />
     );
-    const thoughtItems = this.state.thoughts.map((thought, index) =>
-      <ThoughtPost key={toString(index)} name={thought.name} timestamp={thought.timestamp} ismyPost={thought.ismyPost} message={thought.message} postid = {thought.postid} firebase={this.props.firebase} timestamp={moment().startOf('hour').fromNow()} />
+    let thoughtItems = this.state.thoughts.map((thought, index) =>
+      <ThoughtPost
+        uid={this.props.uid}
+        posterUid={thought.uid}
+
+        PpfURL={thought.PpfURL}
+        key={toString(index)}
+        name={thought.name}
+        thought={thought.thought}
+        timestamp={thought.timestamp}
+        
+        message={thought.message}
+        postid={thought.postid}
+        firebase={this.props.firebase
+        } />
     );
 
 
     return (
 
       <section className="feed">
-        <div className="create-thought">
-          <textarea rows="2" placeholder="Your thoughts"></textarea>
-          <button id="update">update</button>
-        </div>
-        <h1 className="date-marker">February 15</h1>
+        <ThoughtInput
+          PpfURL={this.props.PpfURL}
+          name={this.props.name}
+          uid={this.props.uid}
+          network={this.props.network}
+          firebase={this.props.firebase}
+        />
+        <h1 className="date-marker">February 17</h1>
         {checkinItems}
         {thoughtItems}
 

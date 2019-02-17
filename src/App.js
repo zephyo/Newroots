@@ -142,7 +142,7 @@ class App extends React.Component {
   }
 
   setOnboarding = (bool) => {
-    this.setState({onboarding: bool})
+    this.setState({ onboarding: bool })
   }
 
   //logout
@@ -161,13 +161,13 @@ class App extends React.Component {
         />
       );
     }
-    else if (this.state.onboarding){
+    else if (this.state.onboarding) {
       return (
-        <Onboarding 
-          setOnboarding = {this.setOnboarding}
+        <Onboarding
+          setOnboarding={this.setOnboarding}
           name={this.state.userData.name}
-          setCheckins = {this.setCheckins}
-          uid = {this.state.userData.uid}
+          setCheckins={this.setCheckins}
+          uid={this.state.userData.uid}
         />
       );
     }
@@ -178,7 +178,10 @@ class App extends React.Component {
     if (this.state.activeTab == 0) {
       activeTab = (
         <FeedTabFB
+          PpfURL={this.state.userData.PpfURL}
+          name={this.state.userData.name}
           uid={this.state.userData.uid}
+          network={this.state.userData.network}
           feed={this.state.feed}
         />
       );
@@ -214,19 +217,22 @@ class App extends React.Component {
 
     return (
       <div className="container">
-        <div className="bg"></div>
-        <div className="main-bg-texture"></div>
         <NavBarFB
           setActiveTab={this.setActiveTab}
           requestsLength={this.state.userData.requests ? this.state.userData.requests.length : 0}
           uid={this.state.userData.uid}
         />
         {activeTab}
+
+        <div className="bg"></div>
+        <div className="main-bg-texture"></div>
+        
         {this.needToCheckin() ?
           <CheckinModalFB
-            network = {this.state.userData.network}
-            name = {this.state.userData.name}
-            uid = {this.state.userData.uid}
+            PpfURL={this.state.userData.PpfURL}
+            network={this.state.userData.network}
+            name={this.state.userData.name}
+            uid={this.state.userData.uid}
             updateCheckin={this.updateCheckin}
             checkins={this.state.userData.checkins ? this.state.userData.checkins : []}
           />

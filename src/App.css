@@ -64,6 +64,7 @@ textarea {
   left: 0;
   right: 0;
   bottom: 0;
+  overflow-y: scroll;
 }
 
 .bg {
@@ -72,12 +73,25 @@ textarea {
   left: 0;
   right: 0;
   bottom: 0;
-  background: #f1d0ca;
+  position: fixed;
+  transition: all 1s ease;
   z-index: -2;
 }
 
+.feed + .bg {
+  background: #f1d0ca;
+}
+
+.network + .bg {
+  background: rgba(211, 215, 194, 0.9);
+}
+
+.user + .bg {
+  background: rgba(222, 235, 244, 0.9);
+}
+
 .main-bg-texture {
-  position: absolute;
+  position: fixed;
   mix-blend-mode: multiply;
   z-index: -1;
   top: 50px;
@@ -166,6 +180,10 @@ section {
   border-radius: 2rem;
   margin-right: 20px;
 }
+.create-thought #update:hover {
+  transform: scale(0.97);
+  background: #8a8184;
+}
 .create-thought:before, .create-thought:after {
   content: "";
   background: white;
@@ -186,6 +204,16 @@ section {
 .activity {
   margin: 40px;
   box-shadow: 0 8px 30px rgba(138, 129, 132, 0.2);
+}
+.activity .comment-but {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e38882;
+}
+.activity .comment-but .jam {
+  margin-right: 12px;
 }
 .activity .header {
   padding: 20px;
@@ -243,32 +271,67 @@ section {
   margin-left: 20px;
 }
 
-.thought {
+.thought,
+.all-comments {
   display: flex;
   flex-direction: column;
 }
 .thought .header,
 .thought .comment,
-.thought .reply {
-  background: #eff0da;
+.thought .reply,
+.all-comments .header,
+.all-comments .comment,
+.all-comments .reply {
+  background: transparent;
 }
 .thought .comment,
-.thought .reply {
-  padding: 20px;
-  margin: 6.6666666667px;
-  display: inline-block;
+.thought .reply,
+.all-comments .comment,
+.all-comments .reply {
+  display: flex;
   max-width: 70%;
 }
-.thought .comment {
-  text-align: right;
+.thought .comment .bubble,
+.thought .reply .bubble,
+.all-comments .comment .bubble,
+.all-comments .reply .bubble {
+  padding: 20px;
+  margin: 6.6666666667px;
+}
+.thought .comment .pic,
+.thought .reply .pic,
+.all-comments .comment .pic,
+.all-comments .reply .pic {
+  margin: 10px;
+}
+.thought .comment,
+.all-comments .comment {
+  flex-direction: row-reverse;
   align-self: flex-end;
+}
+.thought .comment .bubble,
+.all-comments .comment .bubble {
+  text-align: right;
   border-radius: 3rem 3rem 0 3rem;
-  background: #899c7d;
   color: #eff0da;
 }
-.thought .reply {
+.thought .reply,
+.all-comments .reply {
   align-self: flex-start;
+}
+.thought .reply .bubble,
+.all-comments .reply .bubble {
   border-radius: 0 3rem 3rem 3rem;
+  background: white;
+  color: #635358;
+}
+
+.thought .comment .bubble {
+  background: #899c7d;
+}
+
+.checkin .all-comments .comment .bubble {
+  background: #635358;
 }
 
 .leave-comment {
@@ -444,10 +507,16 @@ section {
   background: #899c7d;
   color: white;
 }
+.user .check-in-edit button:hover {
+  background: #8a8184;
+}
 .user #logout-but {
   margin-top: 20px;
   background: #e38882;
   width: 100%;
+}
+.user #logout-but:hover {
+  background: #d55c5a;
 }
 .user .add-panel textarea {
   width: 95%;
@@ -718,6 +787,21 @@ section {
   0% {
     opacity: 0;
     transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+.all-comments {
+  transform-origin: top;
+  animation: scaleDown 0.5s ease;
+}
+
+@keyframes scaleDown {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.5);
   }
   100% {
     opacity: 1;

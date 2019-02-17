@@ -52,10 +52,11 @@ class Firebase {
 
   feed = uid => this.fs.collection("users").doc(uid).collection('feed');
 
-  post = uid => this.fs.collection('posts').doc(uid);
+  post = postid => this.fs.collection('posts').doc(postid);
 
   posts = () => this.fs.collection('posts');
-  //post = postid => this.fs.collection("posts").doc(postid).collection("conversation");
+
+  // post = postid => this.fs.collection("posts").doc(postid).collection("conversation");
 
   fs = () => this.fs;
 

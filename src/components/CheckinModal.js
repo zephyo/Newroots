@@ -5,6 +5,7 @@ import texture1 from './../graphics/flower.png';
 import texture2 from './../graphics/thing.png';
 
 
+
 const TextQ = (props) => {
   return (
     <div className="ci-question">
@@ -138,22 +139,31 @@ class CheckinModal extends React.Component {
   saveCheckinData = () => {
     let time = moment().format('L');
 
-    //save to feed of every person in the network
-    let network = this.props.network;
-    let data = {
-      author: this.props.name,
-      author_uid: this.props.uid,
-      checkin: true,
-      checkinData: this.state.checkins,
-      timestamp: new Date()
-    };
+    if (this.state.checkins.length !== 0) {
+      //save to feed of every person in the network
+      let network = this.props.network;
+      let PpfURL = this.props.PpfURL === undefined ? null : this.props.PpfURL;
+      let data = {
+        PpfURL: PpfURL,
+        name: this.props.name,
+        uid: this.props.uid,
+        checkin: true,
+        checkinData: this.state.checkins,
+        timestamp: new Date().toString()
+      };
 
-    for (let i = 0; i < network.length; i++) {
-      this.props.firebase.feed(network[i]).add(data);
+      //save to your feed
+      this.props.firebase.feed(this.props.uid).add(data).then((docRef) => {
+        let id = docRef.id;
+        for (let i = 0; i < network.length; i++) {
+          this.props.firebase.feed(network[i]).doc(id).set(data);
+        }
+
+        //save to post
+        this.props.firebase.posts().doc(id).set(data);
+      });
     }
 
-    //save to post
-    this.props.firebase.posts().add(data);
 
     this.props.firebase.user(this.props.uid).update({
       lastCheckin: time
@@ -199,6 +209,17 @@ class CheckinModal extends React.Component {
         );
       }
       checkinQs.push(addEl);
+    }
+
+    if (checkins.length === 0) {
+      checkinQs.push(
+        <div className="ci-question">
+          <h2>{'Good day, ' + this.props.name + '.'}</h2>
+          <p>
+            You've got nothing to check-in - have a great rest of the day.
+          </p>
+        </div>
+      );
     }
 
 

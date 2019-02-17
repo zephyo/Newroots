@@ -39,14 +39,15 @@ class NavBar extends React.Component {
           <span className="sublogo">give and get support.</span>
           </span>
           <button id="feed-but" onClick={() => this.props.setActiveTab(0)}>
-            <span className="jam jam-messages-alt" style={{ color: '#9FC6C1' }}></span></button>
+            <span className="jam jam-messages-alt" style={{ color: '#e38882' }}></span></button>
           <button id="network-but" onClick={() => this.props.setActiveTab(1)}>
-            <span className="jam jam-users" style={{ color: '#9FC6C1' }}>
+            <span className="jam jam-users" style={{ color: '#85d0c6' }}>
               {networkNotif}
             </span>
 
           </button>
-          <button id="user-but" onClick={() => this.props.setActiveTab(2)}><span className="jam jam-user" style={{ color: '#9FC6C1' }}></span></button>
+          <button id="user-but" onClick={() => this.props.setActiveTab(2)}>
+          <span className="jam jam-user" style={{ color: '#94cdea' }}></span></button>
         </div>
       </nav>
     );
