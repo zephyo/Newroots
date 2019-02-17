@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/Newroots/static/media/1.bf41d086.png"
   },
   {
-    "revision": "8e809686294ff7b93503",
+    "revision": "bb252983fceed1b7ed3c",
     "url": "/Newroots/static/css/main.b575cdef.chunk.css"
   },
   {
@@ -28,8 +28,8 @@ self.__precacheManifest = [
     "url": "/Newroots/static/media/thing.9dafac6d.png"
   },
   {
-    "revision": "8e809686294ff7b93503",
-    "url": "/Newroots/static/js/main.8e809686.chunk.js"
+    "revision": "bb252983fceed1b7ed3c",
+    "url": "/Newroots/static/js/main.bb252983.chunk.js"
   },
   {
     "revision": "f681080268cd25145a1f48d97667e93d",
@@ -56,7 +56,7 @@ self.__precacheManifest = [
     "url": "/Newroots/static/media/2.6dfd6078.png"
   },
   {
-    "revision": "7f284e260c40d6acacf669fab05a3f7b",
+    "revision": "528d5b9a0d186490f37f87faba78796c",
     "url": "/Newroots/index.html"
   }
 ];
