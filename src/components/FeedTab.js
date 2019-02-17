@@ -16,6 +16,25 @@ class FeedTab extends React.Component {
     }
     //this.processTime = this.processTime.bind(this);
   }
+    /*
+      -PpfURL : string (optional)
+      -name : string
+      -isMyPost : bool
+      -timestamp : string - e.g. a few seconds ago
+      -conversation : array
+
+    - example of conversation: 
+    [
+      {
+        uid: 'fdsadsadaad'
+        PpfURL: '...'
+        poster: true //is message from poster
+        message: 'hi i love'
+        
+      },
+     ...
+    ]
+    */
   componentDidMount() {
     autosize($('textarea'));
     let element = this;
@@ -32,10 +51,21 @@ class FeedTab extends React.Component {
             tempFeed.push(change.doc.id);
               if(change.doc.data().checkin){
                   tempCheckins.push({
+                      uid:element.props.uid,
                       name:change.doc.data().author,
                       timestamp:moment().startOf('hour').fromNow(),
                       ismyPost:(element.props.uid == change.doc.data().author_uid),
                       checkinData:JSON.parse(change.doc.data().checkinData)
+                  })
+              }
+              else{
+                  tempThoughts.push({
+                      uid:element.props.uid,
+                      name:change.doc.data().author,
+                      isMyPost:(element.props.uid == change.doc.data().author_uid),
+                      message:change.doc.data().message,
+                      comments:change.doc.data().comm_cont,
+                      conversation:[]
                   })
               }
           }
@@ -44,7 +74,8 @@ class FeedTab extends React.Component {
         console.log(tempCheckins);
         element.setState({
           feed: tempFeed,
-          checkins: tempCheckins
+          checkins: tempCheckins,
+          thoughts: tempThoughts
         })
       });
   }
@@ -64,9 +95,12 @@ class FeedTab extends React.Component {
       <li>{number}</li>
     );
     */
-    const checkins = this.state.checkins;
-    const listItems = this.state.checkins.map((checkin,index) =>
+    //const checkins = this.state.checkins;
+    const checkinItems = this.state.checkins.map((checkin,index) =>
       <CheckinPost key={toString(index)} name={checkin.name} timestamp={checkin.timestamp} ismyPost={checkin.ismyPost} checkinData={checkin.checkinData}/>
+    );
+    const thoughtItems = this.state.thoughts.map((thought,index) =>
+      <ThoughtPost key={toString(index)} name={thought.name} timestamp={thought.timestamp} ismyPost={thought.ismyPost} checkinData={thought.checkinData}/>
     );
     return (
         
@@ -76,7 +110,8 @@ class FeedTab extends React.Component {
           <button id="update">update</button>
         </div>
         <h1 className="date-marker">February 15</h1>
-        {listItems}
+        {checkinItems}
+        {thoughtItems}
 
       </section>
     );
