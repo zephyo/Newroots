@@ -114,6 +114,7 @@ class NetworkTab extends React.Component {
     let network = [];
     for (var i = 0; i < this.state.networkUsers.length; i++) {
       let user = this.state.networkUsers[i];
+      if (user == undefined) continue;
       var addEl = (
         <div className="friend">
           <Avatar PpfURL={user.PpfURL} />
