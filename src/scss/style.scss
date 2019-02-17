@@ -981,6 +981,8 @@ section {
   img {
     align-self: center;
     width: 90%;
+    max-height: 350px;
+    object-fit: contain;
   }
   .categories {
     display: flex;
@@ -1031,7 +1033,7 @@ section {
     font-size: 20px;
     color: #333;
   }
-  &.one {
+  &.one, &.six {
     h1 {
       margin-bottom: 0;
     }
@@ -1044,13 +1046,28 @@ section {
     justify-content: center;
     h2 {
       width: 60%;
+      min-width: 180px;
     }
   }
 
-  &.four {
-
+  &.three {
+    margin: 40px 50px 120px 50px;
   }
-  
+
+  &.four {
+    > * {
+      z-index: 1;
+    }
+
+    .bg-texture {
+      position: absolute;
+      top: 10px;
+      right: -5px;
+      width: initial;
+      z-index: 0;
+    }
+  }
+
   &.five button,
   &.six button {
     width: initial;
@@ -1063,10 +1080,28 @@ section {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    margin-top: auto;
+    padding-bottom: 200px;
+    .notif-buts {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      bottom: 10px;
+      left: 40px;
+      right: 40px;
+    }
     .no {
       width: initial;
       background: transparent;
+      color: $dark;
+    }
+  }
+  &.six {
+    button {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: calc(100% - 80px);
+      margin: 40px;
     }
   }
 }

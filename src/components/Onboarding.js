@@ -72,7 +72,7 @@ class Onboarding extends React.Component {
 
           page = (
             <div className="page two">
-              <img className="bg-texture first" src={texture1} />
+              <img className="bg-texture" src={texture1} />
               <h2>Let's create a check-in!</h2>
               <p>A check-in means checking in every day about what matters to you - like sleep, feelings, and more.</p>
               {button}
@@ -116,7 +116,7 @@ class Onboarding extends React.Component {
 
           page = (
             <div className="page four">
-              <img className="bg-texture second" src={texture2} />
+              <img className="bg-texture" src={texture2} />
               <h2>Great! Who'll support you through this?</h2>
               <label htmlFor="tag-typer">
                 <div id="tags">
@@ -161,7 +161,9 @@ class Onboarding extends React.Component {
 
           page = (
             <div className="page six">
-              <h2>This is your space. Ready to explore it?</h2><img src={graphics1} />
+              <h2>This is your space to grow.</h2>
+              <p>Ready for your first check-in?</p>
+              <img src={graphics1} />
               {button}
             </div>
           );
