@@ -1,7 +1,6 @@
 # Newroots - a responsive web app to help build effective support networks - *for treehacks 2019*
 
-![alt text](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/762/668/datas/gallery.jpg)
-![alt text](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/766/593/datas/gallery.jpg)
+![alt text](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/762/668/datas/gallery.jpg) ![alt text](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/766/593/datas/gallery.jpg)
 ![alt text](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/766/594/datas/gallery.jpg)
 ![alt text](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/766/595/datas/gallery.jpg)
 
