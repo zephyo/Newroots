@@ -5,8 +5,10 @@ $light: #eff0da;
 $lighter-pink: #f4deda;
 $light-pink: #f1d0ca;
 $pink: #e38882;
+$red: #d55c5a;
 $green: #9fc6c1;
 $dark-green: #899c7d;
+$blue: #91ceec;
 $dark: #8a8184;
 $black: #635358;
 
@@ -44,6 +46,7 @@ h1,
 
 .jam {
   font-size: 1.5rem;
+  position: relative;
 }
 
 button {
@@ -336,12 +339,29 @@ section {
   }
 }
 
+.alert {
+  background: $red;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Rubik", sans-serif;
+  line-height: 18px;
+  border: 1px white solid;
+  position: absolute;
+  bottom: -8px;
+  left: -11px;
+}
+
 .user {
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  input[type="file"]{
+  input[type="file"] {
     display: none;
   }
 
@@ -353,25 +373,6 @@ section {
       background: $pink;
       .jam-close {
         color: white;
-      }
-    }
-  }
-
-  .add-panel {
-    textarea {
-      width: 95%;
-      resize: none;
-      padding: 20px;
-      text-align: center;
-    }
-    ul {
-      width: 75%;
-      margin: auto;
-      li {
-        background: $light;
-        border-radius: 1rem;
-        display: flex;
-        align-items: center;
       }
     }
   }
@@ -431,13 +432,25 @@ section {
     text-align: center;
     box-shadow: 0 3px 15px rgba($pink, 0.4);
 
-    ul {
+    .your-checkins {
       list-style: none;
       padding: 0;
       li {
         position: relative;
         padding: $feed-padding;
+        margin: $feed-padding/2;
         box-shadow: 0 3px 10px rgba($pink, 0.4);
+        .checkicon {
+          position: absolute;
+          width: 60px;
+          height: 100%;
+          top: 0;
+          left: 0;
+          margin: auto;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
         .delete {
           position: absolute;
           width: 60px;
@@ -460,15 +473,92 @@ section {
     background: $pink;
     width: 100%;
   }
+
+  .add-panel {
+    textarea {
+      width: 95%;
+      resize: none;
+      padding: 20px;
+      text-align: center;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      width: 75%;
+      margin: auto;
+      position: relative;
+      li {
+        background: $light;
+        border-radius: 1rem;
+        padding: 0;
+        border: 1px $dark solid;
+        button {
+          background: transparent;
+          color: inherit;
+          display: flex;
+          align-items: center;
+
+          .jam-chevron-down {
+            margin-right: 20px;
+            margin-left: auto;
+          }
+        }
+      }
+      li:not(:first-child) {
+        position: absolute;
+        left: 0;
+        right: 0;
+        z-index: 8;
+      }
+      li:nth-child(2) {
+        bottom: -100%;
+      }
+      li:nth-child(3) {
+        bottom: -200%;
+      }
+    }
+  }
+}
+
+.jam.checkicon {
+  margin: $feed-padding;
+  border-radius: 5px;
+  &.jam-align-justify {
+    color: $light;
+    background: $red;
+  }
+  &.jam-brightness {
+    color: $light;
+    background: $blue;
+  }
+  &.jam-star {
+    color: $light;
+    background: $green;
+  }
 }
 
 .checkin {
   background: $pink;
   color: white;
   &.modal {
+    animation-delay: 0.5s;
     padding: $feed-padding * 2;
     background: $light;
     z-index: 10;
+    .checkin-content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-evenly;
+    }
+    .yesno {
+      padding: $feed-padding 0 $feed-padding;
+    }
+    .ci-question {
+      width: 100%;
+    }
     .bg {
       background: $pink;
       @include absolute;
@@ -554,11 +644,12 @@ section {
   align-items: stretch;
   width: 100%;
   position: relative;
+  padding: $feed-padding * 2;
 
   .indicator {
     position: absolute;
     left: 92%;
-    top: -70px;
+    top: -30px;
     padding: 0px 20px 0px 20px;
     background: $light;
     color: $pink;
@@ -610,7 +701,7 @@ section {
 
 .yesno {
   display: flex;
-  width: 80%;
+  width: 100%;
   button {
     flex: auto;
     border-radius: 3rem;
@@ -626,7 +717,7 @@ section {
 
 .modal-bg {
   @include absolute;
-  background: rgba($lighter-pink, 0.6);
+  background: rgba($lighter-pink, 0.8);
   z-index: 20;
   animation: fadeIn 2s ease;
 }
@@ -651,16 +742,18 @@ section {
 }
 
 .modal {
-  animation: fadeInUp 1s ease 0.5s;
+  animation: fadeInUp 1s ease;
   animation-fill-mode: both;
   width: 100%;
   max-width: 700px;
-  max-height: 80vh;
+  max-height: 700px;
+  z-index: 20;
   position: absolute;
   background: $light;
   left: 0;
   right: 0;
-  top: 12vh;
+  top: 5rem;
+  bottom: 0;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -772,6 +865,9 @@ section {
 .modal.network {
   width: 90%;
   padding: $feed-padding;
+  max-height: 90vh;
+  top: 5vh;
+
   .close {
     position: absolute;
     top: 0;
@@ -780,6 +876,35 @@ section {
     .jam-close {
       font-size: 2rem;
       color: $dark;
+    }
+  }
+  .scrolling-row {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    width: 100%;
+    .preview {
+      display: flex;
+      flex-direction: column;
+      background: white;
+      border-radius: 10px;
+      margin-right: 10px;
+      box-shadow: 0 3px 8px 1px rgba(0, 0, 0, 0.1);
+      .pic {
+        height: 100px;
+        width: 100px;
+        margin: auto;
+        margin-top: 10px;
+      }
+      .yesno {
+        width: 100%;
+        margin-bottom: 10px;
+        button {
+          height: 50px;
+        }
+      }
     }
   }
   .add-friend {
@@ -810,6 +935,154 @@ section {
       color: white;
       border-radius: 5px;
       margin: 5px;
+
+      padding: 5px;
+      height: 50px;
+      width: 100px;
     }
+  }
+}
+
+.onboarding {
+  @include absolute;
+  background: $pink;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  h1,
+  h2 {
+    color: $red;
+  }
+  h1 {
+    font-size: 300%;
+  }
+  h2 {
+    font-size: 200%;
+  }
+  color: $black;
+}
+
+.page {
+  background: rgba(white, 0.9);
+  margin: $feed-padding;
+  max-width: 700px;
+  max-height: 850px;
+  box-shadow: 0 10px 50px -15px rgba($black, 0.8);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: none;
+  padding: $feed-padding * 2 $feed-padding * 4 $feed-padding * 6 $feed-padding * 4;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-evenly;
+  img {
+    align-self: center;
+    width: 90%;
+  }
+  .categories {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    button {
+      width: initial;
+      flex: auto;
+      margin-top: $feed-padding/2;
+      color: $light;
+      border-radius: 10px;
+      text-align: left;
+      padding-left: 40px;
+      font-size: 1.1rem;
+      &.mindful {
+        background: #b7a69e;
+      }
+      &.sleep {
+        background: #565e57;
+      }
+      &.food {
+        background: #754067;
+      }
+      &.fitness {
+        background: #d66a63;
+      }
+      &.med {
+        background: #e8cc84;
+      }
+    }
+  }
+
+  #tags {
+    border-radius: 10px;
+    box-shadow: 1px 1px 4px #ccc inset;
+    padding: $feed-padding;
+    background: #fafafa;
+    margin: auto;
+  }
+  #tag-typer {
+    outline: none;
+    border: none;
+    padding: 6px;
+    margin: 3px;
+    margin-right: -25px;
+    width: 100px;
+    background-color: transparent;
+    font-size: 20px;
+    color: #333;
+  }
+  &.one {
+    h1 {
+      margin-bottom: 0;
+    }
+    p {
+      margin-bottom: 2rem;
+      margin-top: 0;
+    }
+  }
+  &.two {
+    justify-content: center;
+    h2 {
+      width: 60%;
+    }
+  }
+
+  &.four {
+
+  }
+  
+  &.five button,
+  &.six button {
+    width: initial;
+    border-radius: 15px;
+    background: $dark;
+    color: $light;
+  }
+
+  &.five {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: auto;
+    .no {
+      width: initial;
+      background: transparent;
+    }
+  }
+}
+
+.cont-onboarding {
+  position: absolute;
+  bottom: $feed-padding;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background: $dark;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  span {
+    font-size: 2rem;
+    color: white;
   }
 }

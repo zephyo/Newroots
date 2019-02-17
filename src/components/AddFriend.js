@@ -2,20 +2,32 @@ import React, { Component } from 'react';
 import plant from '../graphics/icon.png';
 import $ from 'jquery';
 import Avatar from './Avatar';
+import * as firebase from 'firebase';
 
 class AddFriend extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       requests: this.props.requests,
-      requestUsers: null,
+      requestUsers: [],
       loading: false,
       network: this.props.network,
-      networkUsers: this.props.networkUsers,
+      allUsers: [],
       addedFriend: '',
       invitedFriend: '',
       loading: false
     };
+  }
+
+
+  componentDidMount() {
+    let ref = this.props.firebase.user(this.props.uid);
+    ref.onSnapshot((doc) => {
+      let data = doc.data();
+      this.setState({
+        requests: data.requests,
+      })
+    })
   }
 
   setAddedFriend = (mssg) => {
@@ -31,43 +43,49 @@ class AddFriend extends React.Component {
   }
 
   addFriend = () => {
-    if (this.state.loading === true) return;
+    // if (this.state.loading === true) return;
 
-    let users = this.state.networkUsers;
+
     let email = $('#add-friend-email').val();
 
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].email == email) {
-        //are they your friend?
-        let index = users.indexOf(users[i].uid);
-        if (index > -1) {
-          this.setAddedFriend("you're already friends!");
-          break;
-        }
-        //send request
-        this.sendRequest(users[i].uid);
-        break;
-      }
-    }
-    this.setAddedFriend("couldn't find " + email);
-  };
+    let ref = this.props.firebase.users().where("email", "==", email);
 
-  sendRequest = (uid) => {
-    this.props.firebase.user(uid).once('value').then((snapshot) => {
-      let req;
-      if (snapshot.val() == null) {
-        req = [];
-      } else {
-        req = snapshot.val().requests;
-      }
-      req.push(this.props.uid);
-      var keyref = this.props.firebase.user(uid).push();
-      keyref.update({
-        requests: req
+    ref.get()
+      .then(querySnapshot => {
+        // console.log(this.props.uid)
+        this.props.firebase.users().doc(querySnapshot.docs[0].id)
+          .update({
+            "requests": firebase.firestore.FieldValue.arrayUnion(this.props.uid)
+          });
+        this.setAddedFriend('sent request!');
+      })
+      .catch(err => {
+        this.setAddedFriend("couldn't find " + email);
       });
-    });
-    this.setAddedFriend('sent request!');
-  }
+
+    // if (this.state.allUsers.length == 0){
+
+    // }else{
+    //   this.sendRequest(users[i].uid);
+    // }
+
+    // let users = this.state.users;
+
+    // for (var i = 0; i < users.length; i++) {
+    //   console.log(JSON.stringify(users[i]));
+    //   if (users[i].email == email) {
+    //     //are they your friend?
+    //     let index = users.indexOf(users[i].uid);
+    //     if (index > -1) {
+    //       this.setAddedFriend("you're already friends!");
+    //       return;
+    //     }
+    //     //send request
+
+    //     return;
+    //   }
+    // }
+  };
 
   inviteFriend = () => {
     this.setAddedFriend('invited!');
@@ -81,7 +99,7 @@ class AddFriend extends React.Component {
     let network = this.state.network;
     network.push(uid);
 
-    this.state.setState({ network: network });
+    this.setState({ network: network });
 
     this.props.firebase
       .user(this.props.uid)
@@ -89,54 +107,63 @@ class AddFriend extends React.Component {
         network: network
       });
 
-    this.props.firebase.user(uid).get().then((doc) => {
-      let dat = doc.data();
-      dat.push(this.props.uid);
-
-      this.props.firebase
-        .user(uid)
-        .update({
-          network: dat
-        });
-
-    }).catch(function (error) {
-      console.log("Error getting document:", error);
-    });
+    this.props.firebase.user(uid)
+      .update({
+        network: firebase.firestore.FieldValue.arrayUnion(this.props.uid)
+      });
 
   }
 
   removeRequest = (uid) => {
     //remove uid from your requests
-    let requestArr = this.state.requests;
-    let index = requestArr.indexOf(uid);
-    if (index > -1) {
-      requestArr.splice(index, 1);
-    }
-    let usersArr = this.state.requestUsers;
-    for (var i = 0; i < usersArr.length; i++) {
-      if (usersArr[i].uid == uid) {
-        usersArr.splice(i, 1);
+
+    // let requestArr = this.state.requests;
+    // let index = requestArr.indexOf(uid);
+    // if (index > -1) {
+    //   requestArr.splice(index, 1);
+    // }
+    // let usersArr = this.state.requestUsers;
+    // for (var i = 0; i < usersArr.length; i++) {
+    //   if (usersArr[i].uid == uid) {
+    //     usersArr.splice(i, 1);
+    //   }
+    // }
+    // this.setState({ requests: requestArr, requestUsers: usersArr });
+    // this.props.firebase
+    //   .user(this.props.uid)
+    //   .update({
+    //     requests: requestArr
+    //   });
+    this.props.firebase.user(this.props.uid).update({
+      "requests": firebase.firestore.FieldValue.arrayRemove(uid)
+    }).then(() => {
+      let users = this.state.requestUsers;
+      for (var i = 0; i < users.length; i++) {
+        if (users[i].uid == uid) {
+          users.splice(i, 1);
+          this.setState({ requestUsers: users });
+        }
       }
-    }
-    this.setState({ requests: requestArr, requestUsers: usersArr });
-    this.props.firebase
-      .user(this.props.uid)
-      .update({
-        requests: requestArr
-      });
+    });
+
+
   }
 
   loadRequestUsers = () => {
-    this.setState({ loading: true, requestUsers: null });
+    this.setState({ loading: true, requestUsers: [] });
     let users = [];
     let counter = 0;
     for (var i = 0; i < this.state.requests.length; i++) {
+      let req = this.state.requests[i];
+      console.log(req)
       this.props.firebase
-        .user(this.state.requests[i]).get().then((doc) => {
+        .user(req).get().then((doc) => {
           users.push(doc.data());
+          console.log(JSON.stringify(doc.data()));
           this.setState({ requestUsers: users });
           counter++;
           if (counter === this.state.requests.length) {
+            console.log("done loading");
             this.setState({ loading: false });
           }
         });
@@ -144,7 +171,11 @@ class AddFriend extends React.Component {
   }
 
   render() {
-    if (this.state.requestUsers == null && this.state.requests.length > 0) {
+    let { requestUsers, requests } = this.state;
+
+
+
+    if (requestUsers.length == 0 && requests.length > 0) {
       if (this.state.loading == false) {
         this.loadRequestUsers();
       }
@@ -162,10 +193,13 @@ class AddFriend extends React.Component {
       </p>
     );
 
-    let requests = [];
-    for (var i = 0; i < this.state.requestUsers.length; i++) {
-      let uid = this.state.requests[i];
-      let user = this.state.requestUsers[i];
+    let req = [];
+    for (var i = 0; i < requestUsers.length; i++) {
+
+      let uid = requests[i];
+      // console.log('changing request users in addfriends'  + uid);
+
+      let user = requestUsers[i];
       var addEl = (
         <div className="preview">
           <Avatar PpfURL={user.PpfURL} />
@@ -180,24 +214,26 @@ class AddFriend extends React.Component {
           </div>
         </div>
       );
-      requests.push(addEl);
+      req.push(addEl);
     }
 
     return (
       <div className="modal network">
         <button className="close" onClick={() => this.props.setAddFriend(false)}>
 
-          {requests ? <div className="scrolling-row">{requests}</div> : null}
 
           <span className="jam jam-close"></span>
         </button>
         <img src={plant}></img>
+
+        {req ? <div className="scrolling-row">{req}</div> : null}
+
         <div className="add-friend">
           <h2>add friend</h2>
           {addedFriend}
           <div className="network-input">
             <input id="add-friend-email" type="email" placeholder="what's their email?"></input>
-            <button onClick={this.addFriend}>send request</button>
+            <button onClick={this.addFriend}>request</button>
           </div>
         </div>
         <div className="invite-friend">
@@ -205,7 +241,7 @@ class AddFriend extends React.Component {
           {invitedFriend}
           <div className="network-input">
             <input type="email" placeholder="what's their email?"></input>
-            <button onClick={this.inviteFriend}>send invite</button>
+            <button onClick={this.inviteFriend}>invite</button>
           </div>
         </div>
       </div>

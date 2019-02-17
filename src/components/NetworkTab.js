@@ -19,31 +19,16 @@ class NetworkTab extends React.Component {
   }
 
   componentDidMount() {
-    let element = this;
-    let networkRef = this.props.firebase.user(this.props.uid).collection('network');
-    networkRef.onSnapshot(function (querySnapshot) {
-      let network = [];
-      querySnapshot.forEach(function (doc) {
-        network.push(doc.data())
-      })
-      element.setNetworkUsers(network);
-    })
-      .catch(function (error) {
-        console.log("Error getting documents: ", error);
-      });
+    let ref = this.props.firebase.user(this.props.uid);
 
-    var requestsRef = this.props.firebase.user(this.props.uid).collection("requests");
+    console.log(JSON.stringify(this.state.requests));
 
-    requestsRef.onSnapshot(function (querySnapshot) {
-      let requests = [];
-      querySnapshot.forEach(function (doc) {
-        requests.push(doc.data())
-      })
-      element.setRequests(requests);
+    ref.onSnapshot((doc)=> {
+      let data = doc.data();
+      this.setNetworkUsers(data.network);
+      this.setRequests(data.requests);
+      console.log(JSON.stringify(this.state.requests));
     })
-      .catch(function (error) {
-        console.log("Error getting documents: ", error);
-      });
   }
 
   setAddFriend = (bool) => {
@@ -64,7 +49,7 @@ class NetworkTab extends React.Component {
   //expect: array of uids
   setNetworkUsers = (network) => {
     let users = this.state.networkUsers;
-    if (users == null) {
+    if (users == null || users.length == 0) {
       this.setState({ network: network });
       this.loadNetworkUsers();
     }
@@ -74,9 +59,10 @@ class NetworkTab extends React.Component {
 
       let difference = network.filter(function (i) { return prev.indexOf(i) < 0 });
 
-      prev.forEach((val) => {
+      difference.forEach((val) => {
         this.props.firebase
-          .users(val).get().then((doc) => {
+          .user(val)
+          .get().then((doc) => {
             users.push(doc.data());
             this.setState({ networkUsers: users });
           });
@@ -88,17 +74,19 @@ class NetworkTab extends React.Component {
   }
 
   loadNetworkUsers = () => {
-    this.setState({ loading: true, networkUsers: null });
+    this.setState({ loading: true, networkUsers: [] });
     let users = [];
     let counter = 0;
 
     for (var i = 0; i < this.state.network.length; i++) {
+
       this.props.firebase
-        .user(this.state.network[i]).get().then(function (doc) {
+        .user(this.state.network[i])
+        .get().then((doc) => {
           users.push(doc.data());
           this.setState({ networkUsers: users });
           counter++;
-          if (counter === this.state.requests.length) {
+          if (counter === this.state.network.length) {
             this.setState({ loading: false });
           }
         });
@@ -142,9 +130,11 @@ class NetworkTab extends React.Component {
             <button id="search-friends"><span className="jam jam-search" style={{ color: '#9FC6C1' }}></span></button>
           </div>
           <button id="add-friends" onClick={() => this.setAddFriend(true)} disabled={this.state.loading}>
-            <span className="jam jam-user-plus" style={{ color: '#9FC6C1' }}></span>
+            <span className="jam jam-user-plus" style={{ color: '#9FC6C1' }}>
+              {alert}
+            </span>
 
-            {alert}
+          
 
           </button>
         </div>
@@ -157,7 +147,6 @@ class NetworkTab extends React.Component {
             uid={this.props.uid}
             requests={this.state.requests}
             network={this.state.network}
-            networkUsers={this.state.network}
           /> : null)}
       </section>
     );

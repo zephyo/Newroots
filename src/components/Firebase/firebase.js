@@ -50,7 +50,9 @@ class Firebase {
 
   feed = uid => this.fs.collection("users").doc(uid).collection('feed');
 
+
   photos = () => this.store.ref('photos');
+
 }
 
 

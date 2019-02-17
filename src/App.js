@@ -9,6 +9,7 @@ import FeedTab from './components/FeedTab.js';
 import HomePage from './components/HomePage.js';
 import NetworkTab from './components/NetworkTab.js';
 import UserTab from './components/UserTab.js';
+import Onboarding from './components/Onboarding.js';
 
 
 import { withFirebase } from './components/Firebase';
@@ -21,12 +22,15 @@ const NetworkTabFB = withFirebase(NetworkTab);
 const NavBarFB = withFirebase(NavBar);
 
 const FeedTabFB = withFirebase(FeedTab);
+
+const CheckinModalFB = withFirebase(CheckinModal);
 //let feedListen;
 
 var data = {
   baseURL: '',
   activeTab: 0,
   userData: null,
+  onboarding: false,
   feed: []
 },
   userBase = 'users';
@@ -40,7 +44,7 @@ class App extends React.Component {
   componentDidMount() {
 
   }
-  
+
   componentWillUnmount() {
     //feedListen();
   }
@@ -51,6 +55,7 @@ class App extends React.Component {
 
   SignUp = (userData) => {
     this.setState({
+      onboarding: true,
       userData: userData,
     });
   }
@@ -62,11 +67,11 @@ class App extends React.Component {
   }
 
   // update this.state.lastCheckin as well as input checkin data to feed/database
-  updateCheckin = () => {
+  updateCheckin = (lastCheckin) => {
     this.setState({
       userData: {
         ...this.state.userData,
-        lastCheckin: moment().format('L')
+        lastCheckin: lastCheckin
       }
     });
   }
@@ -136,6 +141,10 @@ class App extends React.Component {
     })
   }
 
+  setOnboarding = (bool) => {
+    this.setState({onboarding: bool})
+  }
+
   //logout
   logout = () => {
     this.setState({
@@ -152,6 +161,16 @@ class App extends React.Component {
         />
       );
     }
+    else if (this.state.onboarding){
+      return (
+        <Onboarding 
+          setOnboarding = {this.setOnboarding}
+          name={this.state.userData.name}
+        />
+      );
+    }
+
+
     var activeTab;
     //active tab is feed
     if (this.state.activeTab == 0) {
@@ -164,6 +183,7 @@ class App extends React.Component {
     }
     //active tab is network
     else if (this.state.activeTab == 1) {
+      console.log('app.js req-'+JSON.stringify(this.state.userData.requests));
       activeTab = (
         <NetworkTabFB
           uid={this.state.userData.uid}
@@ -201,7 +221,8 @@ class App extends React.Component {
         />
         {activeTab}
         {this.needToCheckin() ?
-          <CheckinModal
+          <CheckinModalFB
+            uid = {this.state.userData.uid}
             updateCheckin={this.updateCheckin}
             checkins={this.state.userData.checkins ? this.state.userData.checkins : []}
           />

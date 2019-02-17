@@ -27,6 +27,7 @@ h1,
 
 .jam {
   font-size: 1.5rem;
+  position: relative;
 }
 
 button {
@@ -317,6 +318,23 @@ section {
   margin-left: 20px;
 }
 
+.alert {
+  background: #d55c5a;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Rubik", sans-serif;
+  line-height: 18px;
+  border: 1px white solid;
+  position: absolute;
+  bottom: -8px;
+  left: -11px;
+}
+
 .user {
   display: flex;
   flex-direction: column;
@@ -335,22 +353,6 @@ section {
 }
 .user .yesno .no .jam-close {
   color: white;
-}
-.user .add-panel textarea {
-  width: 95%;
-  resize: none;
-  padding: 20px;
-  text-align: center;
-}
-.user .add-panel ul {
-  width: 75%;
-  margin: auto;
-}
-.user .add-panel ul li {
-  background: #eff0da;
-  border-radius: 1rem;
-  display: flex;
-  align-items: center;
 }
 .user .edit-pic {
   background: transparent;
@@ -407,16 +409,28 @@ section {
   text-align: center;
   box-shadow: 0 3px 15px rgba(227, 136, 130, 0.4);
 }
-.user .check-in-edit ul {
+.user .check-in-edit .your-checkins {
   list-style: none;
   padding: 0;
 }
-.user .check-in-edit ul li {
+.user .check-in-edit .your-checkins li {
   position: relative;
   padding: 20px;
+  margin: 10px;
   box-shadow: 0 3px 10px rgba(227, 136, 130, 0.4);
 }
-.user .check-in-edit ul li .delete {
+.user .check-in-edit .your-checkins li .checkicon {
+  position: absolute;
+  width: 60px;
+  height: 100%;
+  top: 0;
+  left: 0;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.user .check-in-edit .your-checkins li .delete {
   position: absolute;
   width: 60px;
   height: 100%;
@@ -435,15 +449,88 @@ section {
   background: #e38882;
   width: 100%;
 }
+.user .add-panel textarea {
+  width: 95%;
+  resize: none;
+  padding: 20px;
+  text-align: center;
+}
+.user .add-panel ul {
+  list-style: none;
+  padding: 0;
+  width: 75%;
+  margin: auto;
+  position: relative;
+}
+.user .add-panel ul li {
+  background: #eff0da;
+  border-radius: 1rem;
+  padding: 0;
+  border: 1px #8a8184 solid;
+}
+.user .add-panel ul li button {
+  background: transparent;
+  color: inherit;
+  display: flex;
+  align-items: center;
+}
+.user .add-panel ul li button .jam-chevron-down {
+  margin-right: 20px;
+  margin-left: auto;
+}
+.user .add-panel ul li:not(:first-child) {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 8;
+}
+.user .add-panel ul li:nth-child(2) {
+  bottom: -100%;
+}
+.user .add-panel ul li:nth-child(3) {
+  bottom: -200%;
+}
+
+.jam.checkicon {
+  margin: 20px;
+  border-radius: 5px;
+}
+.jam.checkicon.jam-align-justify {
+  color: #eff0da;
+  background: #d55c5a;
+}
+.jam.checkicon.jam-brightness {
+  color: #eff0da;
+  background: #91ceec;
+}
+.jam.checkicon.jam-star {
+  color: #eff0da;
+  background: #9fc6c1;
+}
 
 .checkin {
   background: #e38882;
   color: white;
 }
 .checkin.modal {
+  animation-delay: 0.5s;
   padding: 40px;
   background: #eff0da;
   z-index: 10;
+}
+.checkin.modal .checkin-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.checkin.modal .yesno {
+  padding: 20px 0 20px;
+}
+.checkin.modal .ci-question {
+  width: 100%;
 }
 .checkin.modal .bg {
   background: #e38882;
@@ -508,11 +595,12 @@ section {
   align-items: stretch;
   width: 100%;
   position: relative;
+  padding: 40px;
 }
 .mood-measurer .indicator {
   position: absolute;
   left: 92%;
-  top: -70px;
+  top: -30px;
   padding: 0px 20px 0px 20px;
   background: #eff0da;
   color: #e38882;
@@ -587,7 +675,7 @@ section {
 
 .yesno {
   display: flex;
-  width: 80%;
+  width: 100%;
 }
 .yesno button {
   flex: auto;
@@ -607,7 +695,7 @@ section {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(244, 222, 218, 0.6);
+  background: rgba(244, 222, 218, 0.8);
   z-index: 20;
   animation: fadeIn 2s ease;
 }
@@ -631,16 +719,18 @@ section {
   }
 }
 .modal {
-  animation: fadeInUp 1s ease 0.5s;
+  animation: fadeInUp 1s ease;
   animation-fill-mode: both;
   width: 100%;
   max-width: 700px;
-  max-height: 80vh;
+  max-height: 700px;
+  z-index: 20;
   position: absolute;
   background: #eff0da;
   left: 0;
   right: 0;
-  top: 12vh;
+  top: 5rem;
+  bottom: 0;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -751,6 +841,8 @@ section {
 .modal.network {
   width: 90%;
   padding: 20px;
+  max-height: 90vh;
+  top: 5vh;
 }
 .modal.network .close {
   position: absolute;
@@ -761,6 +853,35 @@ section {
 .modal.network .close .jam-close {
   font-size: 2rem;
   color: #8a8184;
+}
+.modal.network .scrolling-row {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+  width: 100%;
+}
+.modal.network .scrolling-row .preview {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 10px;
+  margin-right: 10px;
+  box-shadow: 0 3px 8px 1px rgba(0, 0, 0, 0.1);
+}
+.modal.network .scrolling-row .preview .pic {
+  height: 100px;
+  width: 100px;
+  margin: auto;
+  margin-top: 10px;
+}
+.modal.network .scrolling-row .preview .yesno {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.modal.network .scrolling-row .preview .yesno button {
+  height: 50px;
 }
 .modal.network .add-friend {
   background: #f4deda;
@@ -790,6 +911,146 @@ section {
   color: white;
   border-radius: 5px;
   margin: 5px;
+  padding: 5px;
+  height: 50px;
+  width: 100px;
+}
+
+.onboarding {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #e38882;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #635358;
+}
+.onboarding h1,
+.onboarding h2 {
+  color: #d55c5a;
+}
+.onboarding h1 {
+  font-size: 300%;
+}
+.onboarding h2 {
+  font-size: 200%;
+}
+
+.page {
+  background: rgba(255, 255, 255, 0.9);
+  margin: 20px;
+  max-width: 700px;
+  max-height: 850px;
+  box-shadow: 0 10px 50px -15px rgba(99, 83, 88, 0.8);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: none;
+  padding: 40px 80px 120px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-evenly;
+}
+.page img {
+  align-self: center;
+  width: 90%;
+}
+.page .categories {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.page .categories button {
+  width: initial;
+  flex: auto;
+  margin-top: 10px;
+  color: #eff0da;
+  border-radius: 10px;
+  text-align: left;
+  padding-left: 40px;
+  font-size: 1.1rem;
+}
+.page .categories button.mindful {
+  background: #b7a69e;
+}
+.page .categories button.sleep {
+  background: #565e57;
+}
+.page .categories button.food {
+  background: #754067;
+}
+.page .categories button.fitness {
+  background: #d66a63;
+}
+.page .categories button.med {
+  background: #e8cc84;
+}
+.page #tags {
+  border-radius: 10px;
+  box-shadow: 1px 1px 4px #ccc inset;
+  padding: 20px;
+  background: #fafafa;
+  margin: auto;
+}
+.page #tag-typer {
+  outline: none;
+  border: none;
+  padding: 6px;
+  margin: 3px;
+  margin-right: -25px;
+  width: 100px;
+  background-color: transparent;
+  font-size: 20px;
+  color: #333;
+}
+.page.one h1 {
+  margin-bottom: 0;
+}
+.page.one p {
+  margin-bottom: 2rem;
+  margin-top: 0;
+}
+.page.two {
+  justify-content: center;
+}
+.page.two h2 {
+  width: 60%;
+}
+.page.five button, .page.six button {
+  width: initial;
+  border-radius: 15px;
+  background: #8a8184;
+  color: #eff0da;
+}
+.page.five {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-top: auto;
+}
+.page.five .no {
+  width: initial;
+  background: transparent;
+}
+
+.cont-onboarding {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background: #8a8184;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+}
+.cont-onboarding span {
+  font-size: 2rem;
+  color: white;
 }
 
 /*# sourceMappingURL=App.css.map */

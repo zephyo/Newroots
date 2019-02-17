@@ -50,21 +50,22 @@ class AddCheckin extends React.Component {
             this.setType('text');
             this.setDropdown(false);
             }}>
-            <span className="jam jam-align-justify"></span> Text
+            <span className="jam checkicon jam-align-justify"></span> Text
+            <span className="jam checkicon jam-chevron-down"></span> 
         </button>
           </li>
           <li><button onClick={() => {
             this.setType('yes/no');
             this.setDropdown(false)
             }}>
-            <span className="jam jam-brightness"></span> Yes/No
+            <span className="jam checkicon jam-brightness"></span> Yes/No
           </button>
           </li>
-          <li><button onClick={() => {
+          <li><button onClick={() => { 
             this.setType('scale');
             this.setDropdown(false)
             }}>
-            <span className="jam jam-star"></span> Scale</button>
+            <span className="jam checkicon jam-star"></span> Scale</button>
           </li>
 
         </ul>
@@ -74,7 +75,8 @@ class AddCheckin extends React.Component {
         dropdownEl = (
           <ul>
             <li><button onClick={() => this.setDropdown(true)}>
-              <span className="jam jam-align-justify"></span> Text
+              <span className="jam checkicon jam-align-justify"></span> Text
+              <span className="jam checkicon jam-chevron-down"></span> 
             </button>
             </li>
           </ul>
@@ -84,7 +86,8 @@ class AddCheckin extends React.Component {
         dropdownEl = (
           <ul>
             <li><button onClick={() => this.setDropdown(true)}>
-              <span className="jam jam-brightness"></span> Yes/No
+              <span className="jam checkicon jam-brightness"></span> Yes/No
+              <span className="jam checkicon jam-chevron-down"></span> 
           </button>
             </li>
           </ul>
@@ -93,7 +96,9 @@ class AddCheckin extends React.Component {
         dropdownEl = (
           <ul>
             <li><button onClick={() => this.setDropdown(true)}>
-              <span className="jam jam-star"></span> Scale</button>
+              <span className="jam checkicon jam-star"></span> Scale
+              <span className="jam checkicon jam-chevron-down"></span> 
+              </button>
             </li>
           </ul>
         );

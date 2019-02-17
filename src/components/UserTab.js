@@ -18,6 +18,37 @@ const LogoutButton = (props) => {
 const LogoutButtonFB = withFirebase(LogoutButton);
 
 
+const CheckInRow = (props) => {
+
+  let el = null;
+  if (props.type == 'text') {
+    el = (
+      <span className="jam checkicon jam-align-justify"></span>
+    );
+  }
+  else if (props.type == 'yes/no') {
+    el = (
+      <span className="jam checkicon jam-brightness"></span>
+    );
+  } else {
+    el = (
+      <span className="jam checkicon jam-star"></span>
+    );
+  }
+
+  return <li>
+    {el}
+    {props.q}
+    {
+      props.trash ?
+        <button className="delete" onClick={() => props.removeCheckinAt(props.index)}>
+          <span className="jam jam-trash"></span>
+        </button>
+        : null
+    }
+  </li>;
+};
+
 class UserTab extends React.Component {
   constructor(props) {
     super(props);
@@ -100,12 +131,12 @@ class UserTab extends React.Component {
       task.snapshot.ref.getDownloadURL().then((downloadURL) => {
 
         this.props.firebase
-        .user(this.props.uid)
-        .update({
-          PpfURL: downloadURL
-        });
+          .user(this.props.uid)
+          .update({
+            PpfURL: downloadURL
+          });
 
-        this.setState({PpfURL: downloadURL});
+        this.setState({ PpfURL: downloadURL });
         this.props.setPpfURL(downloadURL);
       });
     });
@@ -128,9 +159,9 @@ class UserTab extends React.Component {
           <input type="file" accept="image/*" id="ppf-upload" onChange={this.uploadPpf} />
           <label className="edit-pic" for="ppf-upload">
             <Avatar PpfURL={this.state.PpfURL}
-              content = {
+              content={
                 <div className="edit-pic-but">
-                <span className="jam jam-pencil"></span>
+                  <span className="jam jam-pencil"></span>
                 </div>
               }
             />
@@ -141,14 +172,15 @@ class UserTab extends React.Component {
         <input type="text" className="profile-name" placeholder={this.state.name}></input>
       );
       checkins = (
-        <ul>
+        <ul className="your-checkins">
           {this.state.checkins.map((checkin, index) => {
-            return <li>
-              {checkin.q}
-              <button className="delete" onClick={() => this.removeCheckinAt(index)}>
-                <span className="jam jam-trash"></span>
-              </button>
-            </li>;
+            return <CheckInRow
+              q={checkin.q}
+              removeCheckinAt={this.removeCheckinAt}
+              index={index}
+              trash={true}
+              type={checkin.type}
+            />;
           })}
         </ul>
       );
@@ -158,15 +190,19 @@ class UserTab extends React.Component {
         <button className="edit" onClick={() => this.setEditMode(true)}><span className="jam jam-pencil" style={{ color: '#9FC6C1' }}></span></button>
       );
       pic = (
-        <Avatar PpfURL={this.state.PpfURL}/>
+        <Avatar PpfURL={this.state.PpfURL} />
       );
       name = (
         <div className="profile-name">{this.state.name}</div>
       );
       checkins = (
-        <ul>
+        <ul className="your-checkins">
           {this.state.checkins.map(function (checkin, index) {
-            return <li>{checkin.q}</li>;
+            return <CheckInRow
+              q={checkin.q}
+              trash={false}
+              type={checkin.type}
+            />;
           })}
         </ul>
       );

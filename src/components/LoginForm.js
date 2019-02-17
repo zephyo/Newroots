@@ -35,6 +35,7 @@ class LoginForm extends React.Component {
             element.setState({
                 ...INITIAL_STATE
             });
+            console.log(JSON.stringify(doc.data()));
             element.props.checkLogin(doc.data());
         });
 
