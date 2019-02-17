@@ -64,29 +64,33 @@ class FeedTab extends React.Component {
             else {
               tempThoughts.push({
                 uid: element.props.uid,
-                name: change.doc.data().author,
+                name: change.doc.data().name,
                 isMyPost: (element.props.uid == change.doc.data().author_uid),
                 message: change.doc.data().message,
                 comments: change.doc.data().comm_cont,
-                conversation: []
+                conversation: [],
+                postid:change.doc.id,
+                  timestamp:change.doc.timestamp
               })
             }
           }
 
         });
         console.log(tempCheckins);
-        element.setState({
-          feed: tempFeed,
+        console.log(tempThoughts);
+        element.setState(prevState => ({
+            checkins: element.state.checkins.concat(tempCheckins),
+            thoughts: element.state.thoughts.concat(tempThoughts)
+        }))
+        /*element.setState({
           checkins: tempCheckins,
           thoughts: tempThoughts
-        })
+        })*/
       });
   }
   componentWillUnmount() {
     feedListen();
   }
-
-  render() {
 
     /*feed = this.props.feed;
 
@@ -99,11 +103,13 @@ class FeedTab extends React.Component {
     );
     */
     //const checkins = this.state.checkins;
+  render() {
+
     const checkinItems = this.state.checkins.map((checkin, index) =>
       <CheckinPost key={toString(index)} name={checkin.name} timestamp={checkin.timestamp} ismyPost={checkin.ismyPost} checkinData={checkin.checkinData} />
     );
     const thoughtItems = this.state.thoughts.map((thought, index) =>
-      <ThoughtPost key={toString(index)} name={thought.name} timestamp={thought.timestamp} ismyPost={thought.ismyPost} checkinData={thought.checkinData} />
+      <ThoughtPost key={toString(index)} name={thought.name} timestamp={thought.timestamp} ismyPost={thought.ismyPost} message={thought.message} postid = {thought.postid} firebase={this.props.firebase} timestamp={moment().startOf('hour').fromNow()} />
     );
 
 
