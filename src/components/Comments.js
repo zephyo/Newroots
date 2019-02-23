@@ -15,7 +15,6 @@ class Comments extends React.Component {
 
 
 render() {
-  console.log('hi ' + this.props.showComments);
 
   if (this.props.showComments == false) {
     return null;

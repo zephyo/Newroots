@@ -36,7 +36,7 @@ class NavBar extends React.Component {
         <div className="nav-content">
           <img className="logo-img" src={icon} />
           <span className="logo">Newroots
-          <span className="sublogo">give and get support.</span>
+          <span className="sublogo">Give and get support.</span>
           </span>
           <button id="feed-but" onClick={() => this.props.setActiveTab(0)}>
             <span className="jam jam-messages-alt" style={{ color: '#e38882' }}></span></button>

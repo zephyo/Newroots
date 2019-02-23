@@ -47,12 +47,12 @@ class HomePage extends React.Component {
       );
     }else{
       content = (
-        <div>
+        <div className="home-content">
           <h2>Newroots</h2>
           <p>Give and get support from your support network. Feel safe with those you trust.</p>
           <div className="buts">
-            <button className="signup-but" onClick={()=>this.setSignUp(true)} >sign up</button>
-            <button className="login-but" onClick={()=>this.setLogin(true) }>login</button>
+            <button className="signup-but" onClick={()=>this.setSignUp(true)} >Sign up</button>
+            <button className="login-but" onClick={()=>this.setLogin(true) }>Login</button>
           </div>
         </div>
       );
@@ -61,7 +61,7 @@ class HomePage extends React.Component {
     return (
       <div className="home-page">
         <img className="bg-texture" src={hero}/>
-        <img src={plants}/>
+        <img className = "plants" src={plants}/>
       {content}
     </div>
     );

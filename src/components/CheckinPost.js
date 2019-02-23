@@ -69,7 +69,6 @@ class CheckinPost extends React.Component {
 
         });
       }
-      console.log(tempConvo);
       this.setState({
         conversation: tempConvo,
         conversationLength: snapshot.size
@@ -104,7 +103,6 @@ class CheckinPost extends React.Component {
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
           let dat = doc.data();
-          console.log('id ' + dat.uid + '\n' + this.props.uid);
           tempConvo.push({
             uid: dat.uid,
             isMyPost: dat.uid == this.props.uid,

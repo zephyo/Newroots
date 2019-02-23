@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Frank+Ruhl+Libre");
+@import url("https://fonts.googleapis.com/css?family=Quicksand:500");
 @import url("https://fonts.googleapis.com/css?family=Rubik:300,700");
 
 $light: #eff0da;
@@ -39,7 +39,7 @@ body {
 
 h1,
 .profile-name {
-  font-family: "Frank Ruhl Libre", serif;
+  font-family: "Quicksand", sans-serif;
   text-transform: uppercase;
   color: $dark;
 }
@@ -57,8 +57,14 @@ button {
   font-size: inherit;
   transition: all 0.3s ease;
   background: white;
+  cursor: pointer;
   &:hover {
-    background: $light-pink;
+    filter: brightness(0.9) contrast(1.2);
+    transform: scale(0.97);
+  }
+  &:disabled {
+    opacity: 0.65;
+    transform: none;
   }
 }
 
@@ -75,6 +81,29 @@ textarea {
   font-family: inherit;
   font-size: inherit;
   border: none;
+}
+
+textarea {
+  resize: none;
+}
+
+*::-webkit-input-placeholder {
+  opacity: 0.6;
+}
+*:-moz-placeholder {
+  opacity: 0.6;
+}
+*::-moz-placeholder {
+  opacity: 0.6;
+}
+*:-ms-input-placeholder {
+  opacity: 0.6;
+}
+*::-ms-input-placeholder {
+  opacity: 0.6;
+}
+*::placeholder {
+  opacity: 0.6;
 }
 
 .container {
@@ -179,7 +208,6 @@ section {
     padding: $feed-padding;
     margin-bottom: $feed-padding/1.5;
     border-radius: 2rem;
-    resize: none;
   }
   #update {
     align-self: flex-end;
@@ -189,10 +217,6 @@ section {
     width: 7rem;
     border-radius: 2rem;
     margin-right: $feed-padding;
-    &:hover {
-      transform: scale(0.97);
-      background: $dark;
-    }
   }
 
   &:before,
@@ -421,12 +445,6 @@ section {
     margin: auto;
     margin-top: 20px;
     margin-bottom: 20px;
-    .no {
-      background: $pink;
-      .jam-close {
-        color: white;
-      }
-    }
   }
 
   .edit-pic {
@@ -458,7 +476,7 @@ section {
     font-size: 1.5rem;
   }
   input[type="text"] {
-    font-family: "Frank Ruhl Libre", serif;
+    font-family: "Quicksand", sans-serif;
     text-align: center;
     border-radius: 8px;
   }
@@ -518,24 +536,17 @@ section {
       width: 100%;
       background: $dark-green;
       color: white;
-      &:hover {
-        background: $dark;
-      }
     }
   }
   #logout-but {
     margin-top: $feed-padding;
     background: $pink;
     width: 100%;
-    &:hover {
-      background: $red;
-    }
   }
 
   .add-panel {
     textarea {
       width: 95%;
-      resize: none;
       padding: 20px;
       text-align: center;
     }
@@ -581,7 +592,8 @@ section {
 .jam.checkicon {
   margin: $feed-padding;
   border-radius: 5px;
-  &.jam-align-justify {
+  padding: 2px;
+  &.jam-write {
     color: $light;
     background: $red;
   }
@@ -589,7 +601,7 @@ section {
     color: $light;
     background: $blue;
   }
-  &.jam-star {
+  &.jam-ruler {
     color: $light;
     background: $green;
   }
@@ -609,7 +621,11 @@ section {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-evenly;
+      justify-content: space-between;
+      .progress-bar {
+        position: relative;
+        margin: initial;
+      }
     }
     .yesno {
       padding: $feed-padding 0 $feed-padding;
@@ -618,7 +634,7 @@ section {
       width: 100%;
     }
     .bg {
-      background: $pink;
+      background: #886766;
       @include absolute;
       z-index: 0;
     }
@@ -764,19 +780,21 @@ section {
     flex: auto;
     border-radius: 3rem;
     margin: 0 10px 0 10px;
+    .jam {
+      color: white;
+    }
   }
   .yes {
     background: $green;
   }
   .no {
-    background: $light-pink;
+    background: $pink;
   }
 
-  .disabled {
-    background: rgba($dark, 0.5);
-    .jam {
-      color: white !important;
-    }
+  .selected {
+    transform: scale(1.05);
+    filter: contrast(1.4);
+    box-shadow: 0 2px 15px -5px rgba($lighter-pink, 0.6);
   }
 }
 
@@ -896,8 +914,9 @@ section {
     border-radius: 5rem;
     margin: 2rem;
     margin-bottom: 0;
-    width: 150px;
-    height: 100px;
+    max-width: 80vw;
+    width: 160px;
+    height: 80px;
   }
 
   .buts {
@@ -908,16 +927,28 @@ section {
 
   .signup-but {
     background: $pink;
+    box-shadow: 0 5px 20px rgba($red, 0.2);
   }
 
   .login-but {
     background: $dark-green;
+    box-shadow: 0 5px 20px rgba($dark-green, 0.2);
   }
   .login-page {
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    justify-content: space-between;
+    align-items: stretch;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 25px;
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+    max-height: 800px;
+
+
     input {
       height: 20vh;
       max-height: 70px;
@@ -927,13 +958,25 @@ section {
     h2 {
       position: relative;
       font-size: 2.5rem;
-      margin-bottom: $feed-padding;
+      margin-bottom: 20px;
+      text-align: left;
+      align-self: flex-start;
+      margin-top: 120px;
+      margin-left: 3rem;
+      margin-right: 3rem;
+    }
+    .signup-but,
+    .login-but {
+      margin-bottom: 2rem;
+      margin-left: 0;
+      margin-right: 0;
+      width: initial;
     }
   }
   .back-but {
     position: absolute;
-    top: -15px;
-    left: -80px;
+    top: -100px;
+    left: -20px;
     margin: 0;
     width: 80px;
     height: 80px;
@@ -943,6 +986,36 @@ section {
     }
   }
 }
+
+
+@media screen and (max-height: 610px) {
+  .login-page {
+    h2 {
+      font-size: 1.9rem !important;
+    }
+  }
+}
+
+
+.progress-bar {
+  position: absolute;
+  width: 80%;
+  height: 8px;
+  background: $black;
+  border-radius: 8px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  margin-top: 5px;
+  .progress {
+    width: 25%;
+    height: 100%;
+    border-radius: inherit;
+    background: $pink;
+    transition: width 0.5s linear;
+  }
+}
+
 
 .modal.network {
   width: 90%;
@@ -1044,7 +1117,105 @@ section {
   color: $black;
 }
 
+@keyframes popUp {
+  0% {
+    transform: scaleX(0.2);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes slideInBottom {
+  0% {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.home-page {
+  .plants {
+    animation: popUp 0.3s cubic-bezier(.22,.68,0,1.71) 0s 1 normal both;
+  }
+  .home-content {
+    h2 {
+      animation: slideInRight 0.5s cubic-bezier(.32,2,.55,.27) 0.4s 1 normal both;
+    }
+    p {
+      animation: slideInLeft 0.5s ease 0.8s 1 normal both;
+    }
+    .buts {
+      animation: slideInBottom 0.5s ease-in 0.8s 1 normal both;
+    }
+  }
+}
+
+@mixin ob-cat-button($bg) {
+  background: $bg;
+
+  box-shadow: 0 10px 25px 5px rgba($bg, 0.2);
+
+  &.ob-cat {
+    box-shadow: 0 10px 25px 5px rgba($bg, 0.5);
+  }
+
+  button {
+    background: $bg;
+    margin-bottom: 0;
+  }
+
+  .ob-cat-opt {
+    background: $bg;
+  }
+}
+
+@keyframes dropdown {
+  0% {
+    transform: none;
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+// @keyframes slideFromRight {
+//   0% {
+//     transform: translateX(100%);
+//   }
+//   100% {
+//     transform: none;
+//   }
+// }
+
 .page {
+  // animation: slideFromRight 0.3s ease;
+  animation-fill-mode: both;
   background: rgba(white, 0.9);
   margin: $feed-padding;
   max-width: 700px;
@@ -1071,40 +1242,55 @@ section {
     flex-direction: column;
     height: 100%;
     overflow-y: scroll;
+    background: rgba($dark, 0.22);
+    padding: 20px;
+    border-radius: 10px;
     button:not(.cont-onboarding) {
       width: initial;
       flex: 0 0 auto;
       margin-bottom: $feed-padding/2;
       color: $light;
-      border-radius: 10px;
+      border-radius: inherit;
       text-align: left;
       padding-left: 40px;
       font-size: 1.1rem;
-      &:nth-child(1) {
-        background: #b7a69e;
-      }
-      &:nth-child(2) {
-        background: #565e57;
-      }
-      &:nth-child(3) {
-        background: #754067;
-      }
-      &:nth-child(4) {
-        background: #d66a63;
-      }
-      &:nth-child(5) {
-        background: #e8cc84;
-      }
+      display: flex;
+      justify-content: space-between;
+      padding-right: 20px;
+    }
+    .mindful {
+      @include ob-cat-button(#487d83);
+    }
+    .relaxation {
+      @include ob-cat-button(#60895c);
+    }
+    .social {
+      @include ob-cat-button(#754067);
+    }
+    .stress {
+      @include ob-cat-button(#ab393c);
+    }
+    .physical {
+      @include ob-cat-button(#d98250);
     }
     .ob-cat {
       flex: none;
       display: flex;
       flex-direction: column;
-      background: $dark;
       border-radius: 10px;
-      box-shadow: 0 0 40px rgba($dark, 0.7);
       margin-bottom: 20px;
+
+      .jam-chevron-down {
+        animation: dropdown 0.3s ease;
+        animation-fill-mode: both;
+      }
+      button:first-child:hover {
+        transform: none;
+      }
       .ob-cat-opt {
+        align-items: center;
+        padding-left: 1rem;
+        justify-content: flex-start;
         margin-bottom: 0;
         &:first-child {
           position: relative;
@@ -1162,6 +1348,13 @@ section {
 
   &.three {
     margin: 40px 50px 120px 50px;
+    h2 {
+      margin-bottom: 0;
+    }
+
+    p {
+      margin-bottom: 2rem;
+    }
   }
 
   &.four {

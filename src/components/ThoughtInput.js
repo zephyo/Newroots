@@ -57,7 +57,7 @@ class ThoughtInput extends React.Component {
         <button
           id="update"
           onClick={this.onSubmit}
-          disabled={this.state.thought == null}>update</button>
+          disabled={this.state.thought == null}>Update</button>
       </div>
     );
   }

@@ -153,6 +153,12 @@ class OnboardingCategories extends React.Component {
 
       let addEl;
 
+      let button =
+        <button onClick={() => this.changeOptions(ii)} className={categories[ii]}>
+          {categories[ii]}
+          <span className="jam jam-chevron-down"></span>
+        </button>;
+
       if (showOptions[ii] === true) {
         // console.log(ii + ' is true')
         var arr = defCheckins[ii];
@@ -171,7 +177,7 @@ class OnboardingCategories extends React.Component {
           let el = null;
           if (item.type == 'text') {
             el = (
-              <span className="jam checkicon jam-align-justify"></span>
+              <span className="jam checkicon jam-write"></span>
             );
           }
           else if (item.type == 'yes/no') {
@@ -180,7 +186,7 @@ class OnboardingCategories extends React.Component {
             );
           } else {
             el = (
-              <span className="jam checkicon jam-star"></span>
+              <span className="jam checkicon jam-ruler"></span>
             );
           }
 
@@ -195,26 +201,21 @@ class OnboardingCategories extends React.Component {
         }
 
         addEl = (
-          <div className="ob-cat">
-            <button onClick={() => this.changeOptions(ii)}>
-              {categories[ii]}
-            </button>
+          <div className={"ob-cat " + categories[ii]}>
+            {button}
             {defCh}
           </div>
         );
       }
       else {
-        addEl = (
-          <button onClick={() => this.changeOptions(ii)}>
-            {categories[ii]}
-          </button>
-        );
+        addEl = button;
       }
       checkins.push(addEl);
     }
     return (
       <div className="page three">
         <h2>What would you like to check in about?</h2>
+        <p>Select questions you'd like to be asked regularly.</p>
         <div className="categories">
           {checkins}
         </div>

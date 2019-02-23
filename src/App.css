@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Frank+Ruhl+Libre");
+@import url("https://fonts.googleapis.com/css?family=Quicksand:500");
 @import url("https://fonts.googleapis.com/css?family=Rubik:300,700");
 * {
   box-sizing: border-box;
@@ -20,7 +20,7 @@ body {
 
 h1,
 .profile-name {
-  font-family: "Frank Ruhl Libre", serif;
+  font-family: "Quicksand", sans-serif;
   text-transform: uppercase;
   color: #8a8184;
 }
@@ -38,9 +38,15 @@ button {
   font-size: inherit;
   transition: all 0.3s ease;
   background: white;
+  cursor: pointer;
 }
 button:hover {
-  background: #f1d0ca;
+  filter: brightness(0.9) contrast(1.2);
+  transform: scale(0.97);
+}
+button:disabled {
+  opacity: 0.65;
+  transform: none;
 }
 
 button:focus,
@@ -56,6 +62,34 @@ textarea {
   font-family: inherit;
   font-size: inherit;
   border: none;
+}
+
+textarea {
+  resize: none;
+}
+
+*::-webkit-input-placeholder {
+  opacity: 0.6;
+}
+
+*:-moz-placeholder {
+  opacity: 0.6;
+}
+
+*::-moz-placeholder {
+  opacity: 0.6;
+}
+
+*:-ms-input-placeholder {
+  opacity: 0.6;
+}
+
+*::-ms-input-placeholder {
+  opacity: 0.6;
+}
+
+*::placeholder {
+  opacity: 0.6;
 }
 
 .container {
@@ -169,7 +203,6 @@ section {
   padding: 20px;
   margin-bottom: 13.3333333333px;
   border-radius: 2rem;
-  resize: none;
 }
 .create-thought #update {
   align-self: flex-end;
@@ -179,10 +212,6 @@ section {
   width: 7rem;
   border-radius: 2rem;
   margin-right: 20px;
-}
-.create-thought #update:hover {
-  transform: scale(0.97);
-  background: #8a8184;
 }
 .create-thought:before, .create-thought:after {
   content: "";
@@ -416,12 +445,6 @@ section {
   margin-top: 20px;
   margin-bottom: 20px;
 }
-.user .yesno .no {
-  background: #e38882;
-}
-.user .yesno .no .jam-close {
-  color: white;
-}
 .user .edit-pic {
   background: transparent;
   width: 100px;
@@ -451,7 +474,7 @@ section {
   font-size: 1.5rem;
 }
 .user input[type=text] {
-  font-family: "Frank Ruhl Libre", serif;
+  font-family: "Quicksand", sans-serif;
   text-align: center;
   border-radius: 8px;
 }
@@ -512,20 +535,13 @@ section {
   background: #899c7d;
   color: white;
 }
-.user .check-in-edit button:hover {
-  background: #8a8184;
-}
 .user #logout-but {
   margin-top: 20px;
   background: #e38882;
   width: 100%;
 }
-.user #logout-but:hover {
-  background: #d55c5a;
-}
 .user .add-panel textarea {
   width: 95%;
-  resize: none;
   padding: 20px;
   text-align: center;
 }
@@ -568,8 +584,9 @@ section {
 .jam.checkicon {
   margin: 20px;
   border-radius: 5px;
+  padding: 2px;
 }
-.jam.checkicon.jam-align-justify {
+.jam.checkicon.jam-write {
   color: #eff0da;
   background: #d55c5a;
 }
@@ -577,7 +594,7 @@ section {
   color: #eff0da;
   background: #91ceec;
 }
-.jam.checkicon.jam-star {
+.jam.checkicon.jam-ruler {
   color: #eff0da;
   background: #9fc6c1;
 }
@@ -598,7 +615,11 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
+}
+.checkin.modal .checkin-content .progress-bar {
+  position: relative;
+  margin: initial;
 }
 .checkin.modal .yesno {
   padding: 20px 0 20px;
@@ -607,7 +628,7 @@ section {
   width: 100%;
 }
 .checkin.modal .bg {
-  background: #e38882;
+  background: #886766;
   position: absolute;
   top: 0;
   left: 0;
@@ -756,17 +777,19 @@ section {
   border-radius: 3rem;
   margin: 0 10px 0 10px;
 }
+.yesno button .jam {
+  color: white;
+}
 .yesno .yes {
   background: #9fc6c1;
 }
 .yesno .no {
-  background: #f1d0ca;
+  background: #e38882;
 }
-.yesno .disabled {
-  background: rgba(138, 129, 132, 0.5);
-}
-.yesno .disabled .jam {
-  color: white !important;
+.yesno .selected {
+  transform: scale(1.05);
+  filter: contrast(1.4);
+  box-shadow: 0 2px 15px -5px rgba(244, 222, 218, 0.6);
 }
 
 .modal-bg {
@@ -890,8 +913,9 @@ section {
   border-radius: 5rem;
   margin: 2rem;
   margin-bottom: 0;
-  width: 150px;
-  height: 100px;
+  max-width: 80vw;
+  width: 160px;
+  height: 80px;
 }
 .home-page .buts {
   display: flex;
@@ -900,15 +924,25 @@ section {
 }
 .home-page .signup-but {
   background: #e38882;
+  box-shadow: 0 5px 20px rgba(213, 92, 90, 0.2);
 }
 .home-page .login-but {
   background: #899c7d;
+  box-shadow: 0 5px 20px rgba(137, 156, 125, 0.2);
 }
 .home-page .login-page {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
+  align-items: stretch;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-top: 25px;
+  width: 100%;
+  max-width: 500px;
+  height: 100%;
+  max-height: 800px;
 }
 .home-page .login-page input {
   height: 20vh;
@@ -920,11 +954,23 @@ section {
   position: relative;
   font-size: 2.5rem;
   margin-bottom: 20px;
+  text-align: left;
+  align-self: flex-start;
+  margin-top: 120px;
+  margin-left: 3rem;
+  margin-right: 3rem;
+}
+.home-page .login-page .signup-but,
+.home-page .login-page .login-but {
+  margin-bottom: 2rem;
+  margin-left: 0;
+  margin-right: 0;
+  width: initial;
 }
 .home-page .back-but {
   position: absolute;
-  top: -15px;
-  left: -80px;
+  top: -100px;
+  left: -20px;
   margin: 0;
   width: 80px;
   height: 80px;
@@ -932,6 +978,30 @@ section {
 }
 .home-page .back-but .jam {
   font-size: 2.2rem;
+}
+
+@media screen and (max-height: 610px) {
+  .login-page h2 {
+    font-size: 1.9rem !important;
+  }
+}
+.progress-bar {
+  position: absolute;
+  width: 80%;
+  height: 8px;
+  background: #635358;
+  border-radius: 8px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  margin-top: 5px;
+}
+.progress-bar .progress {
+  width: 25%;
+  height: 100%;
+  border-radius: inherit;
+  background: #e38882;
+  transition: width 0.5s linear;
 }
 
 .modal.network {
@@ -1035,7 +1105,67 @@ section {
   font-size: 200%;
 }
 
+@keyframes popUp {
+  0% {
+    transform: scaleX(0.2);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes slideInRight {
+  0% {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes slideInBottom {
+  0% {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+.home-page .plants {
+  animation: popUp 0.3s cubic-bezier(0.22, 0.68, 0, 1.71) 0s 1 normal both;
+}
+.home-page .home-content h2 {
+  animation: slideInRight 0.5s cubic-bezier(0.32, 2, 0.55, 0.27) 0.4s 1 normal both;
+}
+.home-page .home-content p {
+  animation: slideInLeft 0.5s ease 0.8s 1 normal both;
+}
+.home-page .home-content .buts {
+  animation: slideInBottom 0.5s ease-in 0.8s 1 normal both;
+}
+
+@keyframes dropdown {
+  0% {
+    transform: none;
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
 .page {
+  animation-fill-mode: both;
   background: rgba(255, 255, 255, 0.9);
   margin: 20px;
   max-width: 700px;
@@ -1062,42 +1192,111 @@ section {
   flex-direction: column;
   height: 100%;
   overflow-y: scroll;
+  background: rgba(138, 129, 132, 0.22);
+  padding: 20px;
+  border-radius: 10px;
 }
 .page .categories button:not(.cont-onboarding) {
   width: initial;
   flex: 0 0 auto;
   margin-bottom: 10px;
   color: #eff0da;
-  border-radius: 10px;
+  border-radius: inherit;
   text-align: left;
   padding-left: 40px;
   font-size: 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  padding-right: 20px;
 }
-.page .categories button:not(.cont-onboarding):nth-child(1) {
-  background: #b7a69e;
+.page .categories .mindful {
+  background: #487d83;
+  box-shadow: 0 10px 25px 5px rgba(72, 125, 131, 0.2);
 }
-.page .categories button:not(.cont-onboarding):nth-child(2) {
-  background: #565e57;
+.page .categories .mindful.ob-cat {
+  box-shadow: 0 10px 25px 5px rgba(72, 125, 131, 0.5);
 }
-.page .categories button:not(.cont-onboarding):nth-child(3) {
+.page .categories .mindful button {
+  background: #487d83;
+  margin-bottom: 0;
+}
+.page .categories .mindful .ob-cat-opt {
+  background: #487d83;
+}
+.page .categories .relaxation {
+  background: #60895c;
+  box-shadow: 0 10px 25px 5px rgba(96, 137, 92, 0.2);
+}
+.page .categories .relaxation.ob-cat {
+  box-shadow: 0 10px 25px 5px rgba(96, 137, 92, 0.5);
+}
+.page .categories .relaxation button {
+  background: #60895c;
+  margin-bottom: 0;
+}
+.page .categories .relaxation .ob-cat-opt {
+  background: #60895c;
+}
+.page .categories .social {
+  background: #754067;
+  box-shadow: 0 10px 25px 5px rgba(117, 64, 103, 0.2);
+}
+.page .categories .social.ob-cat {
+  box-shadow: 0 10px 25px 5px rgba(117, 64, 103, 0.5);
+}
+.page .categories .social button {
+  background: #754067;
+  margin-bottom: 0;
+}
+.page .categories .social .ob-cat-opt {
   background: #754067;
 }
-.page .categories button:not(.cont-onboarding):nth-child(4) {
-  background: #d66a63;
+.page .categories .stress {
+  background: #ab393c;
+  box-shadow: 0 10px 25px 5px rgba(171, 57, 60, 0.2);
 }
-.page .categories button:not(.cont-onboarding):nth-child(5) {
-  background: #e8cc84;
+.page .categories .stress.ob-cat {
+  box-shadow: 0 10px 25px 5px rgba(171, 57, 60, 0.5);
+}
+.page .categories .stress button {
+  background: #ab393c;
+  margin-bottom: 0;
+}
+.page .categories .stress .ob-cat-opt {
+  background: #ab393c;
+}
+.page .categories .physical {
+  background: #d98250;
+  box-shadow: 0 10px 25px 5px rgba(217, 130, 80, 0.2);
+}
+.page .categories .physical.ob-cat {
+  box-shadow: 0 10px 25px 5px rgba(217, 130, 80, 0.5);
+}
+.page .categories .physical button {
+  background: #d98250;
+  margin-bottom: 0;
+}
+.page .categories .physical .ob-cat-opt {
+  background: #d98250;
 }
 .page .categories .ob-cat {
   flex: none;
   display: flex;
   flex-direction: column;
-  background: #8a8184;
   border-radius: 10px;
-  box-shadow: 0 0 40px rgba(138, 129, 132, 0.7);
   margin-bottom: 20px;
 }
+.page .categories .ob-cat .jam-chevron-down {
+  animation: dropdown 0.3s ease;
+  animation-fill-mode: both;
+}
+.page .categories .ob-cat button:first-child:hover {
+  transform: none;
+}
 .page .categories .ob-cat .ob-cat-opt {
+  align-items: center;
+  padding-left: 1rem;
+  justify-content: flex-start;
   margin-bottom: 0;
 }
 .page .categories .ob-cat .ob-cat-opt:first-child {
@@ -1148,6 +1347,12 @@ section {
 }
 .page.three {
   margin: 40px 50px 120px 50px;
+}
+.page.three h2 {
+  margin-bottom: 0;
+}
+.page.three p {
+  margin-bottom: 2rem;
 }
 .page.four > * {
   z-index: 1;

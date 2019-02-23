@@ -50,9 +50,7 @@ class FeedTab extends React.Component {
       .onSnapshot((snapshot) => {
         //let tempFeed = [];
         snapshot.docChanges().forEach((change) => {
-          console.log("changety[e]: " + change.type);
           if (change.type === "added") {
-            console.log("New city: ", change.doc.data());
             tempFeed.push(change.doc.id);
             let dat = change.doc.data();
             if (change.doc.data().checkin) {
@@ -81,8 +79,6 @@ class FeedTab extends React.Component {
           }
 
         });
-        console.log(JSON.stringify(tempCheckins));
-        console.log(JSON.stringify(tempThoughts));
 
 
 

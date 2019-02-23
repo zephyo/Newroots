@@ -23,7 +23,7 @@ const CheckInRow = (props) => {
   let el = null;
   if (props.type == 'text') {
     el = (
-      <span className="jam checkicon jam-align-justify"></span>
+      <span className="jam checkicon jam-write"></span>
     );
   }
   else if (props.type == 'yes/no') {
@@ -32,7 +32,7 @@ const CheckInRow = (props) => {
     );
   } else {
     el = (
-      <span className="jam checkicon jam-star"></span>
+      <span className="jam checkicon jam-ruler"></span>
     );
   }
 

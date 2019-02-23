@@ -42,6 +42,8 @@ class AddCheckin extends React.Component {
 
     let dropdownEl;
 
+    const isInvalid = q === '';
+
     if (dropdown) {
       dropdownEl = (
 
@@ -50,7 +52,7 @@ class AddCheckin extends React.Component {
             this.setType('text');
             this.setDropdown(false);
             }}>
-            <span className="jam checkicon jam-align-justify"></span> Text
+            <span className="jam checkicon jam-write"></span> Text
             <span className="jam checkicon jam-chevron-down"></span> 
         </button>
           </li>
@@ -65,7 +67,7 @@ class AddCheckin extends React.Component {
             this.setType('scale');
             this.setDropdown(false)
             }}>
-            <span className="jam checkicon jam-star"></span> Scale</button>
+            <span className="jam checkicon jam-ruler"></span> Scale</button>
           </li>
 
         </ul>
@@ -75,7 +77,7 @@ class AddCheckin extends React.Component {
         dropdownEl = (
           <ul>
             <li><button onClick={() => this.setDropdown(true)}>
-              <span className="jam checkicon jam-align-justify"></span> Text
+              <span className="jam checkicon jam-write"></span> Text
               <span className="jam checkicon jam-chevron-down"></span> 
             </button>
             </li>
@@ -96,7 +98,7 @@ class AddCheckin extends React.Component {
         dropdownEl = (
           <ul>
             <li><button onClick={() => this.setDropdown(true)}>
-              <span className="jam checkicon jam-star"></span> Scale
+              <span className="jam checkicon jam-ruler"></span> Scale
               <span className="jam checkicon jam-chevron-down"></span> 
               </button>
             </li>
@@ -118,7 +120,7 @@ class AddCheckin extends React.Component {
         <h3>Check-in type</h3>
         {dropdownEl}
         <div className="yesno">
-          <button className="yes" onClick={this.onSubmit}>
+          <button className="yes" onClick={this.onSubmit} disabled = {isInvalid}>
             <span className="jam jam-check" style={{ color: 'white' }}></span></button>
           <button className="no" onClick={this.onCancel}>
             <span className="jam jam-close" style={{ color: '#8A8184' }}> </span></button>

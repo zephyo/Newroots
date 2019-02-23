@@ -72,7 +72,7 @@ class LoginForm extends React.Component {
           placeholder="password"
         />
       {error && <p>{error.message}</p>}
-     <button className="login-but" onClick={this.onSubmit} disabled={isInvalid} >login</button>
+     <button className="login-but" onClick={this.onSubmit} disabled={isInvalid} >Login</button>
    </div>
     );
   }

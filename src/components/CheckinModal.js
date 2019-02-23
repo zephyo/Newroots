@@ -5,30 +5,51 @@ import texture1 from './../graphics/flower.png';
 import texture2 from './../graphics/thing.png';
 
 
+class TextQ extends React.Component {
 
-const TextQ = (props) => {
-  return (
-    <div className="ci-question">
-      <h2>{props.q}</h2>
-      <textarea className="feelings" rows="3" placeholder="I think.."
-        onChange={(event) => props.setAnswer(event.target.value, props.index)}></textarea>
-    </div>
-  );
+  constructor(props) {
+    super(props);
+  }
+
+  clearInput = () => {
+    this.refs.comments.value = ""
+  }
+
+  render() {
+    return (
+      <div className="ci-question">
+        <h2>{this.props.q}</h2>
+        <textarea
+          className="feelings"
+          rows="3"
+          placeholder="I think.."
+          ref="comments"
+          onChange={(event) => this.props.setAnswer(event.target.value, this.props.index)}></textarea>
+      </div>
+    );
+  }
+
 };
 
 class YesNoQ extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      answer: null
+      answer: this.props.answer,
     };
   }
+
+  clearInput = () => {
+    this.setState({ answer: null })
+    this.refs.comments.value = ""
+  }
+
   render() {
     let yesClass = 'yes', noClass = 'no', answer = this.state.answer;
     if (answer == 'yes') {
-      noClass += ' disabled';
+      yesClass += ' selected';
     } else if (answer == 'no') {
-      yesClass += ' disabled';
+      noClass += ' selected';
     }
     return (
       <div className="ci-question">
@@ -39,20 +60,21 @@ class YesNoQ extends React.Component {
               this.setState({ answer: 'yes' })
               this.props.setAnswer('yes', this.props.index)
             }}>
-            <span className="jam jam-check" style={{ color: 'white' }}></span>
+            <span className="jam jam-check" ></span>
           </button>
           <button className={noClass}
             onClick={() => {
               this.setState({ answer: 'no' })
               this.props.setAnswer('no', this.props.index)
             }}>
-            <span className="jam jam-close" style={{ color: '#8A8184' }}> </span>
+            <span className="jam jam-close"> </span>
           </button>
         </div>
         <textarea
           className="feelings"
           rows="1"
           placeholder="Other comments"
+          ref="comments"
           onChange={(event) => this.props.setComment(event, this.props.index)}></textarea>
       </div>
     );
@@ -63,7 +85,16 @@ class YesNoQ extends React.Component {
 class RangeQ extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      range: props.val
+    }
   }
+  clearInput = () => {
+    this.setState({ range: 5 })
+    this.refs.comments.value = ""
+  }
+
+
 
   componentDidMount() {
     $('input[type="range"]').each(function (index) {
@@ -87,25 +118,35 @@ class RangeQ extends React.Component {
     });
   }
 
+  onChangeRange = (event) => {
+    this.props.setAnswer(event.target.value, this.props.index);
+    this.setState({ range: event.target.value });
+  }
+
   render() {
     return (
       <div className="ci-question">
         <h2>{this.props.q}</h2>
         <div className="mood-measurer">
           <input type="range"
-            min="1"
-            max="10"
-            value={this.props.val}
-            onChange={(event) => this.props.setAnswer(event.target.value, this.props.index)} />
+            min={this.props.min}
+            max={this.props.max}
+            value={this.state.range}
+            onChange={this.onChangeRange} />
           <div className="indicator">
             <p>4</p>
           </div>
-          <div className="num"><small>1</small><small>7</small></div>
+          <div className="num">
+            <small>{this.props.min}</small>
+            <small>{this.state.range}</small>
+            <small>{this.props.max}</small>
+          </div>
         </div>
         <textarea
           className="feelings"
           rows="1"
           placeholder="Other comments"
+          ref="comments"
           onChange={(event) => this.props.setComment(event, this.props.index)}></textarea>
       </div>
     );
@@ -119,6 +160,7 @@ class CheckinModal extends React.Component {
       checkins: props.checkins,
       currIndex: 0
     };
+    this.childQ = React.createRef();
   }
 
 
@@ -126,6 +168,7 @@ class CheckinModal extends React.Component {
   incrementCurrIndex = () => {
     let i = this.state.currIndex;
     this.setState({ currIndex: i + 1 });
+    this.childQ.current.clearInput();
   }
 
   setAnswer = (answer, checkinIndex) => {
@@ -179,7 +222,6 @@ class CheckinModal extends React.Component {
       this.props.updateCheckin(time);
     });
 
-
   }
 
   render() {
@@ -189,6 +231,7 @@ class CheckinModal extends React.Component {
       if (checkins[i].type == 'text') {
         addEl = (
           <TextQ
+            ref={this.childQ}
             q={checkins[i].q}
             index={i}
             setAnswer={this.setAnswer}
@@ -198,21 +241,26 @@ class CheckinModal extends React.Component {
       else if (checkins[i].type == 'yes/no') {
         addEl = (
           <YesNoQ
+            ref={this.childQ}
             q={checkins[i].q}
             index={i}
             setAnswer={this.setAnswer}
             setComment={this.setComment}
+            answer={checkins[i].answer}
           />
         );
       }
       else {
         addEl = (
           <RangeQ
+            ref={this.childQ}
             q={checkins[i].q}
             index={i}
             val={checkins[i].answer ? checkins[i].answer : 5}
             setAnswer={this.setAnswer}
             setComment={this.setComment}
+            min={1}
+            max={10}
           />
         );
       }
@@ -252,11 +300,16 @@ class CheckinModal extends React.Component {
           <img className="bg-texture first" src={texture1} />
           <img className="bg-texture second" src={texture2} />
           <div className="bg"></div>
-          <h1>{moment().format('MMMM D')}</h1>
+          <h1>{moment().format('MMMM D') + ":\nDAILY"}</h1>
           <h1 className="title">
             <div className="highlight"></div><span>check-in</span>
           </h1>
           <div className="checkin-content">
+            <div className="progress-bar">
+              <div className="progress" style={{
+                width: (currIndex + 1) / (checkins.length) * 100 + '%'
+              }}></div>
+            </div>
             {checkinQs}
 
             {submitButton}

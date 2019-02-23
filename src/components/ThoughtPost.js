@@ -63,7 +63,6 @@ class ThoughtPost extends React.Component {
 
         });
       }
-      console.log(tempConvo);
       this.setState({
         conversation: tempConvo,
         conversationLength: snapshot.size
@@ -137,7 +136,6 @@ class ThoughtPost extends React.Component {
         </button>
       );
     }
-    console.log('this.props.ismypost' + this.props.posterUid + " \n " + this.props.uid);
     let thought = (
       <Conversation
         isMyPost={this.props.posterUid == this.props.uid}
