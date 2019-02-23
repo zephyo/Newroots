@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import AddFriend from './AddFriend';
+import AddFriend from './Network/AddFriend';
 import { withFirebase } from './Firebase';
 import { request } from 'http';
-import Avatar from './Avatar';
+import Avatar from './Misc/Avatar';
+
+
+import UserPage from './Network/UserPage';
 
 import graphics3 from '../graphics/3.png';
-import ErrorMsg from './ErrorMsg';
+import ErrorMsg from './Misc/ErrorMsg';
 
 const AddFriendFB = withFirebase(AddFriend);
 
@@ -18,6 +21,7 @@ class NetworkTab extends React.Component {
       networkUsers: [],
       loading: false,
       requests: this.props.requests,
+      showUser: null
     };
   }
 
@@ -121,6 +125,17 @@ class NetworkTab extends React.Component {
             console.log("Error getting documents: ", error);
         });
   }*/
+
+
+  closeUserPage = () => {
+    this.setState({ showUser: null })
+  }
+
+  setUser = (user) => {
+    this.setState({ showUser: user })
+  }
+
+
   render() {
     if ((!this.state.networkUsers || this.state.networkUsers.length === 0) &&
       this.state.network.length > 0) {
@@ -141,26 +156,40 @@ class NetworkTab extends React.Component {
       let user = this.state.networkUsers[i];
       if (user == undefined) continue;
       var addEl = (
-        <div className="friend">
+        <button className="friend" onClick={() => this.setUser(user)}>
           <Avatar PpfURL={user.PpfURL} />
           <span>{user.name}</span>
           <button><span className="jam jam-heart" style={{ color: '#e38882' }}></span></button>
-        </div>
+        </button>
       );
       network.push(addEl);
     }
 
 
+
+    let userPage = null;
+    if (this.state.showUser !== null) {
+      userPage = <UserPage
+        closeUserPage={this.closeUserPage}
+        PpfURL={null}
+        name='hi'
+        bio='hi there this is a bio'
+        location='United States'
+      ></UserPage>
+    }
+
+
+
     return (
       <section className="network">
-        <h2>Your network</h2>
+        <h2>Your support network</h2>
         <div className="header">
           <div className="search-bar">
-            <input type="text" placeholder="search" onChange={this.filterNetwork} />
-            <button id="search-friends"><span className="jam jam-search" style={{ color: '#9FC6C1' }}></span></button>
+            <input type="text" placeholder="Search" onChange={this.filterNetwork} />
+            <button><span className="jam jam-search" style={{ color: '#9FC6C1' }}></span></button>
           </div>
           <button id="add-friends" onClick={() => this.setAddFriend(true)} >
-            <span className="jam jam-user-plus" style={{ color: '#9FC6C1' }}>
+            <span className="jam jam-user-plus">
               {alert}
             </span>
 
@@ -169,10 +198,10 @@ class NetworkTab extends React.Component {
           </button>
         </div>
         <div className="friends">
-          {network.length == 0 ?
+          {this.state.network.length == 0 ?
             <ErrorMsg
               src={graphics3}
-              header='No support yet.'
+              header="Your network hasn't been created yet."
               msg='Why not invite someone you trust?'
             />
             : network
@@ -180,11 +209,15 @@ class NetworkTab extends React.Component {
         </div>
         {(this.state.addFriend ?
           <AddFriendFB
+            setUserPage={this.setUser}
             setAddFriend={this.setAddFriend}
             uid={this.props.uid}
             requests={this.state.requests}
             network={this.state.network}
           /> : null)}
+
+        {userPage}
+
       </section>
     );
   }

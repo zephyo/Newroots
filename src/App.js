@@ -93,7 +93,7 @@ class App extends React.Component {
         PpfURL: downloadURL
       }
     });
-    
+
   }
 
   setActiveTab = (index) => {
@@ -156,7 +156,7 @@ class App extends React.Component {
   render() {
 
 
-    
+
     if (this.state.userData === null) {
       return (
         <HomePage
@@ -223,6 +223,7 @@ class App extends React.Component {
       <div className="container">
         <NavBarFB
           setActiveTab={this.setActiveTab}
+          activeTab={this.state.activeTab}
           requestsLength={this.state.userData.requests ? this.state.userData.requests.length : 0}
           uid={this.state.userData.uid}
         />

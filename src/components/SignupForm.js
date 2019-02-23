@@ -104,7 +104,7 @@ class SignupForm extends React.Component {
         <input
           name="name"
           type="text"
-          placeholder="full name"
+          placeholder="Full name"
           value={name}
           onChange={this.onChange}>
         </input>;
@@ -121,7 +121,7 @@ class SignupForm extends React.Component {
         <input
           name="email"
           type="email"
-          placeholder="email"
+          placeholder="Email"
           value={email}
           onChange={this.onChange}>
         </input>;
@@ -138,7 +138,7 @@ class SignupForm extends React.Component {
         <input
           name="passwordOne"
           type="password"
-          placeholder="password"
+          placeholder="Password"
           value={passwordOne}
           onChange={this.onChange}>
         </input>;

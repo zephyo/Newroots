@@ -5,7 +5,8 @@ class NavBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      requestsLength: props.requestsLength
+      requestsLength: props.requestsLength,
+      activeTab: props.activeTab
     };
   }
 
@@ -24,13 +25,100 @@ class NavBar extends React.Component {
     });
   }
 
+  setActiveTab = (index) => {
+    this.props.setActiveTab(index);
+    this.setState({ activeTab: index })
+  }
+
   render() {
     let networkNotif = null;
+    let activeTab = this.state.activeTab;
+
     if (this.state.requestsLength > 0) {
       networkNotif = (
         <span className="alert">{this.state.requestsLength}</span>
       );
     }
+
+    let indcStyle;
+
+    if (activeTab === 0) {
+      indcStyle = {
+        background: '#e38882',
+        left: '0%'
+      };
+    }
+    else if (activeTab === 1) {
+      indcStyle = {
+        background: '#84b3a0',
+        left: '33%'
+      };
+    }
+    else if (activeTab === 2) {
+      indcStyle = {
+        background: '#97c2d4',
+        left: '67%'
+      };
+    }
+
+    let feed, network, user;
+
+    if (activeTab === 0) {
+      feed = (
+        <button className="feed-but activate"
+          onClick={() => this.setActiveTab(0)}>
+          <span className="jam jam-messages" ></span>
+          Feed
+        </button>
+      );
+    } else {
+      feed = (
+        <button className="feed-but" 
+          onClick={() => this.setActiveTab(0)}>
+          <span className="jam jam-messages" ></span>
+
+        </button>
+      );
+    }
+
+    if (activeTab === 1) {
+      network = (
+        <button className="network-but activate"
+          onClick={() => this.setActiveTab(1)}>
+          <span className="jam jam-users" >
+            {networkNotif}
+          </span>
+          Support
+        </button>
+      );
+    } else {
+      network = (
+        <button className="network-but"
+          onClick={() => this.setActiveTab(1)}>
+          <span className="jam jam-users" >
+            {networkNotif}
+          </span>
+        </button>
+      );
+    }
+
+    if (activeTab === 2) {
+      user = (
+        <button className="user-but activate"
+          onClick={() => this.setActiveTab(2)}>
+          <span className="jam jam-user" ></span>
+          Profile
+        </button>
+      );
+    } else {
+      user = (
+        <button className="user-but"
+          onClick={() => this.setActiveTab(2)}>
+          <span className="jam jam-user" ></span>
+        </button>
+      );
+    }
+
     return (
       <nav className="main-nav">
         <div className="nav-content">
@@ -38,16 +126,14 @@ class NavBar extends React.Component {
           <span className="logo">Newroots
           <span className="sublogo">Give and get support.</span>
           </span>
-          <button id="feed-but" onClick={() => this.props.setActiveTab(0)}>
-            <span className="jam jam-messages-alt" style={{ color: '#e38882' }}></span></button>
-          <button id="network-but" onClick={() => this.props.setActiveTab(1)}>
-            <span className="jam jam-users" style={{ color: '#85d0c6' }}>
-              {networkNotif}
-            </span>
+          <div className="nav-but-container">
 
-          </button>
-          <button id="user-but" onClick={() => this.props.setActiveTab(2)}>
-          <span className="jam jam-user" style={{ color: '#94cdea' }}></span></button>
+            {feed}
+            {network}
+            {user}
+
+            <div className="indicator" style={indcStyle}></div>
+          </div>
         </div>
       </nav>
     );

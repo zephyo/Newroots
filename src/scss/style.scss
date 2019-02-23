@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Quicksand:500");
-@import url("https://fonts.googleapis.com/css?family=Rubik:300,700");
+@import url("https://fonts.googleapis.com/css?family=Rubik:300,400,700");
 
 $light: #eff0da;
 $lighter-pink: #f4deda;
@@ -9,7 +9,9 @@ $red: #d55c5a;
 $green: #9fc6c1;
 $dark-green: #899c7d;
 $blue: #91ceec;
+$dark-blue: #63a0da;
 $dark: #8a8184;
+$brown: #886766;
 $black: #635358;
 
 $feed-padding: 20px;
@@ -42,6 +44,13 @@ h1,
   font-family: "Quicksand", sans-serif;
   text-transform: uppercase;
   color: $dark;
+}
+
+.profile-name {
+  margin: $feed-padding;
+  text-transform: initial;
+  font-size: 1.5rem;
+  color: $black;
 }
 
 .jam {
@@ -85,6 +94,8 @@ textarea {
 
 textarea {
   resize: none;
+  box-shadow: inset 0 0 8px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
 }
 
 *::-webkit-input-placeholder {
@@ -156,11 +167,74 @@ textarea {
     align-items: center;
     max-width: 800px;
     margin: auto;
+    .nav-but-container {
+      height: 100%;
+      flex: auto;
+      display: flex;
+      position: relative;
+      button:first-child {
+        border-radius: 2rem 0 0 0;
+      }
+      button:nth-child(3) {
+        border-radius: 0 2rem 0 0;
+      }
+    }
+    .indicator {
+      width: 33%;
+      height: 5px;
+      position: absolute;
+      bottom: 0;
+      transition: all 0.3s ease;
+    }
+    .feed-but {
+      color: #e38882;
+      &:hover {
+        background: $lighter-pink;
+        transform: none;
+        filter: none;
+      }
+      &.activate {
+        background: $lighter-pink;
+        animation: fadeNav1 0.3s ease 0.1s 1 normal both;
+      }
+    }
+    .network-but {
+      color: #84b3a0;
+      &:hover {
+        background: #d2e7e4;
+        transform: none;
+        filter: none;
+      }
+      &.activate {
+        background: #d2e7e4;
+        animation: fadeNav2 0.3s ease 0.1s 1 normal both;
+      }
+    }
+    .user-but {
+      color: #97c2d4;
+      &:hover {
+        background: #d8e7ee;
+        transform: none;
+        filter: none;
+      }
+      &.activate {
+        background: #d8e7ee;
+        animation: fadeNav3 0.3s ease 0.1s 1 normal both;
+      }
+    }
+    .activate {
+      .jam {
+        margin-right: 0.5rem;
+      }
+    }
     button {
       flex: auto;
       border: none;
       height: inherit;
       border-radius: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .logo-img {
       height: 70%;
@@ -180,10 +254,46 @@ textarea {
   }
 }
 
+@media screen and (max-width: 750px) {
+  .main-nav .nav-content .nav-but-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+  }
+}
+
+@keyframes fadeNav1 {
+  0% {
+    color: transparent;
+  }
+  100% {
+    color: #e38882;
+  }
+}
+@keyframes fadeNav2 {
+  0% {
+    color: transparent;
+  }
+  100% {
+    color: #85d0c6;
+  }
+}
+@keyframes fadeNav3 {
+  0% {
+    color: transparent;
+  }
+  100% {
+    color: #94cdea;
+  }
+}
+
 section {
   margin: auto;
   margin-top: $nav-height * 1.5;
   max-width: 800px;
+  padding: $feed-padding;
 }
 
 .pic {
@@ -193,6 +303,19 @@ section {
   border-radius: 50%;
   background-image: url("./graphics/ppf.png");
   background-size: cover;
+}
+
+.thought-provoker {
+  h1 {
+    color: $black;
+    text-transform: initial;
+  }
+  p {
+    font-size: 1.2rem;
+  }
+  .bold {
+    font-weight: 700;
+  }
 }
 
 .feed {
@@ -239,8 +362,11 @@ section {
 }
 
 .activity {
+  animation: fadeTile 0.3s ease-in-out both;
   margin: $feed-padding * 2;
   box-shadow: 0 8px 30px rgba($dark, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
 
   .comment-but {
     width: 100%;
@@ -248,6 +374,8 @@ section {
     align-items: center;
     justify-content: center;
     color: $pink;
+    transform: none;
+
     .jam {
       margin-right: 12px;
     }
@@ -264,11 +392,15 @@ section {
       margin-left: 20px;
       margin-top: 5px;
       font-size: 0.8rem;
+      opacity: 0.5;
     }
   }
   .content {
     padding: $feed-padding;
     padding-top: 0;
+  }
+  .comment {
+    opacity: 0.8;
   }
 
   .name-date,
@@ -285,8 +417,13 @@ section {
     margin-left: auto;
   }
 
+  .check-in-q {
+    margin-bottom: 1.2rem;
+  }
+
   .mood {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+    font-weight: 400;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -296,7 +433,9 @@ section {
 
   .mood-icon {
     display: inline-block;
+    flex: none;
     background: $green;
+    box-shadow: 0 5px 20px rgba($dark-green, 0.5);
     border: 2px solid white;
     border-radius: 50%;
     width: 50px;
@@ -304,14 +443,40 @@ section {
     text-align: center;
     line-height: 50px;
     margin-left: 1rem;
+    &.number {
+      background: $blue;
+      box-shadow: 0 5px 20px rgba($dark-blue, 0.5);
+    }
+    &.no {
+      background: $pink;
+      box-shadow: 0 5px 20px rgba($red, 0.5);
+    }
   }
 }
 
-.user-edit {
+.user-edit,
+.user-filter {
   width: 50px;
   height: 50px;
-  background: transparent;
+  border-radius: 50%;
+  background: rgba($lighter-pink, 0.1);
   margin-left: $feed-padding;
+  &:hover {
+    transform: none;
+    background: rgba($pink, 0.5);
+  }
+}
+
+.checkin.activity .header .jam {
+  color: rgba(white, 0.8);
+}
+
+.thought.activity .header .jam {
+  color: $dark;
+}
+
+.thought {
+  background: $light-pink;
 }
 
 .thought,
@@ -331,6 +496,7 @@ section {
     .bubble {
       padding: $feed-padding;
       margin: $feed-padding/3;
+      box-shadow: 0 10px 35px -5px rgba($black, 0.15);
     }
     .pic {
       flex: none;
@@ -370,9 +536,10 @@ section {
 .leave-comment {
   background: white;
   display: flex;
-  input {
+  textarea {
     flex: auto;
-    padding-left: $feed-padding;
+    padding: 24px;
+    box-shadow: none;
   }
   button {
     height: $feed-padding * 3.5;
@@ -384,34 +551,87 @@ section {
 .network {
   display: flex;
   flex-direction: column;
+  h2 {
+    margin-top: 0;
+  }
   .header {
     display: flex;
+    height: 60px;
     justify-content: space-between;
+    margin-bottom: $feed-padding;
 
     .search-bar {
       flex: auto;
       display: flex;
-      margin-right: 10px;
+
+      border-radius: 5rem;
+      background: white;
+      overflow: hidden;
+      /* padding: 0 5px 0 5px; */
+      padding-left: 10px;
+      /* height: 70px; */
+      margin-right: 35px;
+
       input {
         flex: auto;
         padding: $feed-padding;
       }
+      button {
+        height: 100%;
+      }
     }
-    margin-bottom: $feed-padding;
+
+    #add-friends {
+      border-radius: 8px;
+      height: 100%;
+      width: 100px;
+      background: $red;
+      color: white;
+    }
+  }
+  .friends {
+    display: flex;
+    flex-direction: column;
   }
   .friend {
     background: rgba($lighter-pink, 0.6);
     display: flex;
     align-items: center;
     padding-left: $feed-padding;
-    margin-bottom: $feed-padding/2;
+    margin-bottom: 1px;
+    animation: fadeTile 0.3s ease-in-out both;
+    width: initial;
     button {
       background: transparent;
       margin-left: auto;
     }
     span {
       margin-left: $feed-padding;
+      color: $black;
     }
+  }
+}
+
+@for $i from 1 through 12 {
+  .friend,
+  .activity {
+    // :nth-child(1-12)
+    &:nth-child(#{$i}) {
+      // Delay the animation. Delay increases as items loop.
+      animation-delay: $i * (0.03s);
+    }
+  }
+}
+
+@keyframes fadeTile {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
   }
 }
 
@@ -470,11 +690,6 @@ section {
       position: relative;
     }
   }
-  .profile-name {
-    margin: $feed-padding;
-    text-transform: initial;
-    font-size: 1.5rem;
-  }
   input[type="text"] {
     font-family: "Quicksand", sans-serif;
     text-align: center;
@@ -496,79 +711,95 @@ section {
     position: relative;
   }
   .check-in-edit {
-    margin: $feed-padding;
+    padding: 10px 30px 10px 30px;
     align-self: stretch;
-    background: $light-pink;
-    text-align: center;
-    box-shadow: 0 3px 15px rgba($pink, 0.4);
+    background: white;
+    text-align: left;
+    box-shadow: 0 6px 25px rgba($dark, 0.4);
+    border-radius: 10px;
 
-    .your-checkins {
-      list-style: none;
-      padding: 0;
-      li {
-        position: relative;
-        padding: $feed-padding;
-        margin: $feed-padding/2;
-        box-shadow: 0 3px 10px rgba($pink, 0.4);
-        .checkicon {
-          position: absolute;
-          width: 60px;
-          height: 100%;
-          top: 0;
-          left: 0;
-          margin: auto;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        .delete {
-          position: absolute;
-          width: 60px;
-          height: 100%;
-          top: 0;
-          right: 0;
-          background: #e38882;
-          box-shadow: 0 4px 10px rgba($black, 0.2);
-        }
-      }
-    }
-    button {
-      width: 100%;
-      background: $dark-green;
-      color: white;
+    h3 {
+      margin-top: 2rem;
+      color: rgba($dark, 0.8);
     }
   }
-  #logout-but {
-    margin-top: $feed-padding;
-    background: $pink;
+
+  .your-checkins {
+    list-style: none;
+    padding: 0;
+    li {
+      background: $light-pink;
+      position: relative;
+      margin: $feed-padding/2;
+      box-shadow: 0 3px 10px rgba($pink, 0.4);
+      border-radius: 5px;
+      display: flex;
+      justify-content: flex-start;
+      padding: 0;
+      align-items: center;
+      .checkicon {
+        width: 60px;
+        height: 60px;
+        margin: initial;
+        margin-right: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .delete {
+        border-radius: 5px;
+        position: absolute;
+        width: 60px;
+        height: 100%;
+        top: 0;
+        right: 0;
+        background: #e38882;
+        box-shadow: 0 4px 10px rgba($black, 0.2);
+      }
+    }
+  }
+  button:not(.edit):not(.dropdown) {
+    border-radius: 5rem;
     width: 100%;
+    margin-bottom: 10px;
+    color: white;
+  }
+  .add-checkin {
+    background: $dark-green;
+  }
+  #logout-but {
+    margin-top: 60px;
+    margin-bottom: 100px;
+    color: white;
+    border-radius: 5rem;
+    width: 95%;
+    background: $red;
   }
 
   .add-panel {
+    margin: 40px 30px 40px 30px;
+
     textarea {
       width: 95%;
       padding: 20px;
-      text-align: center;
     }
     ul {
       list-style: none;
       padding: 0;
       width: 75%;
       margin: auto;
+      margin-bottom: 55px;
       position: relative;
       li {
-        background: $light;
-        border-radius: 1rem;
-        padding: 0;
-        border: 1px $dark solid;
+        display: content;
         button {
-          background: transparent;
-          color: inherit;
-          display: flex;
-          align-items: center;
-
-          .jam-chevron-down {
+          height: initial;
+          .jam {
+            margin: 0;
             margin-right: 20px;
+          }
+          .jam-chevron-down {
+            margin: 0;
             margin-left: auto;
           }
         }
@@ -608,7 +839,7 @@ section {
 }
 
 .checkin {
-  background: $pink;
+  background: $brown;
   color: white;
   &.modal {
     animation-delay: 0.5s;
@@ -634,7 +865,7 @@ section {
       width: 100%;
     }
     .bg {
-      background: #886766;
+      background: $brown;
       @include absolute;
       z-index: 0;
     }
@@ -680,7 +911,6 @@ section {
   margin: 0 auto;
   padding: 20px;
   background: #fcfcfc;
-  box-shadow: inset 0 0 8px 1px rgba(0, 0, 0, 0.2);
   text-align: left;
   overflow: hidden;
   word-break: break-all;
@@ -798,6 +1028,34 @@ section {
   }
 }
 
+.all-comments {
+  transform-origin: top;
+  animation: scaleDown 0.5s ease;
+  margin: 0;
+}
+
+.checkin {
+  background: $brown;
+  .comment-but {
+    background: #d6b0b0;
+    color: white;
+  }
+  .all-comments {
+    background: #efece7;
+    color: #907c85;
+  }
+}
+
+.thought {
+  background: #eef2f3;
+  .comment-but {
+    background: #eae4e2;
+  }
+  .all-comments {
+    background: #f3ebe7;
+  }
+}
+
 .modal-bg {
   @include absolute;
   background: rgba($lighter-pink, 0.8);
@@ -823,13 +1081,6 @@ section {
     transform: none;
   }
 }
-
-.all-comments {
-  transform-origin: top;
-  animation: scaleDown 0.5s ease;
-  margin: 10px;
-}
-
 @keyframes scaleDown {
   0% {
     opacity: 0;
@@ -860,7 +1111,7 @@ section {
   align-items: center;
   justify-content: space-evenly;
   margin: auto;
-  box-shadow: 0 5px 30px rgba($pink, 0.8);
+  box-shadow: 0 5px 30px rgba($dark, 0.4);
   .title {
     font-size: 3rem;
   }
@@ -948,7 +1199,6 @@ section {
     height: 100%;
     max-height: 800px;
 
-
     input {
       height: 20vh;
       max-height: 70px;
@@ -987,7 +1237,6 @@ section {
   }
 }
 
-
 @media screen and (max-height: 610px) {
   .login-page {
     h2 {
@@ -995,7 +1244,6 @@ section {
     }
   }
 }
-
 
 .progress-bar {
   position: absolute;
@@ -1016,23 +1264,66 @@ section {
   }
 }
 
-
-.modal.network {
-  width: 90%;
-  padding: $feed-padding;
-  top: 5vh;
-  bottom: initial;
-
-  .close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: transparent;
-    .jam-close {
-      font-size: 2rem;
-      color: $dark;
+.modal.user-page {
+  .pic {
+    height: 180px;
+    width: 180px;
+    position: relative;
+    &:before {
+      content: " ";
+      position: absolute;
+      z-index: -1;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid $dark;
     }
   }
+  .action-buts {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  button:not(.close) {
+    width: 100%;
+  }
+}
+
+.profile-bio {
+  color: $dark;
+  margin-bottom: 2rem;
+}
+
+.modal.network .close,
+.modal.user-page .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: transparent;
+  .jam-close {
+    font-size: 2rem;
+    color: $dark;
+  }
+}
+
+.modal.network {
+  width: 95%;
+  padding: $feed-padding;
+  top: 5%;
+  bottom: initial;
+  max-height: 90%;
+  /* display: inline; */
+  padding-top: 50px;
+  height: initial;
+
+  .plant {
+    position: absolute;
+    top: -35px;
+    height: 60px;
+  }
+
   .scrolling-row {
     padding-top: 20px;
     padding-bottom: 20px;
@@ -1063,13 +1354,19 @@ section {
     }
   }
   .add-friend {
+    padding: 5px;
+    padding-top: 20px;
+    border-radius: 8px;
     background: $lighter-pink;
     width: 100%;
     margin: 20px 0 20px;
     box-shadow: 0 2px 15px rgba($pink, 0.5);
   }
   .invite-friend {
-    background: $dark-green;
+    padding: 5px;
+    padding-top: 20px;
+    border-radius: 8px;
+    background: #bd9595;
     color: white;
     width: 100%;
     box-shadow: 0 2px 15px rgba($dark, 0.5);
@@ -1117,18 +1414,9 @@ section {
   color: $black;
 }
 
-@keyframes popUp {
-  0% {
-    transform: scaleX(0.2);
-  }
-  100% {
-    transform: none;
-  }
-}
-
 @keyframes slideInRight {
   0% {
-    transform: translateX(-100px);
+    transform: translateX(-70px);
     opacity: 0;
   }
   100% {
@@ -1139,7 +1427,7 @@ section {
 
 @keyframes slideInLeft {
   0% {
-    transform: translateX(100px);
+    transform: translateX(70px);
     opacity: 0;
   }
   100% {
@@ -1150,7 +1438,7 @@ section {
 
 @keyframes slideInBottom {
   0% {
-    transform: translateY(100px);
+    transform: translateY(40px);
     opacity: 0;
   }
   100% {
@@ -1161,17 +1449,15 @@ section {
 
 .home-page {
   .plants {
-    animation: popUp 0.3s cubic-bezier(.22,.68,0,1.71) 0s 1 normal both;
+    animation: slideInRight 0.3s ease 0s 1 normal both;
   }
   .home-content {
-    h2 {
-      animation: slideInRight 0.5s cubic-bezier(.32,2,.55,.27) 0.4s 1 normal both;
-    }
+    h2,
     p {
-      animation: slideInLeft 0.5s ease 0.8s 1 normal both;
+      animation: slideInLeft 0.5s ease 0.3s 1 normal both;
     }
     .buts {
-      animation: slideInBottom 0.5s ease-in 0.8s 1 normal both;
+      animation: slideInBottom 0.5s ease-in 0.5s 1 normal both;
     }
   }
 }
@@ -1448,5 +1734,63 @@ section {
   }
   p {
     margin-top: 0;
+  }
+}
+
+.dropdown {
+  background: #e9e3e5;
+  color: $dark;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  padding: $feed-padding;
+  width: 100%;
+
+  &:hover {
+    transform: none;
+  }
+
+  .jam-chevron-down {
+    margin-right: 5px;
+    margin-left: auto;
+  }
+}
+
+.network h2.friend-result-heading {
+  color: $dark;
+  text-align: left;
+  margin-top: $feed-padding * 2;
+  margin-right: auto;
+  margin-bottom: 1.5rem;
+}
+.friend-results {
+  text-align: left;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  .friend-result {
+    width: initial;
+    height: initial;
+    display: flex;
+    height: 85px;
+    margin-bottom: 2px;
+    flex: none;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.7);
+    .pic {
+      margin-left: 15px;
+      margin-right: $feed-padding;
+    }
+    h3 {
+      color: $black;
+      font-weight: 400;
+    }
+    button {
+      margin-left: auto;
+      background: $pink;
+      color: white;
+      border-radius: 8px;
+    }
   }
 }

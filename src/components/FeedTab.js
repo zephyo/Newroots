@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import autosize from 'autosize';
-import CheckinPost from './CheckinPost';
-import ThoughtPost from './ThoughtPost';
+import CheckinPost from './Feed/CheckinPost';
+import ThoughtPost from './Feed/ThoughtPost';
 import moment from 'moment';
-import ThoughtInput from './ThoughtInput';
+import ThoughtInput from './Feed/ThoughtInput';
+import ThoughtProvoker from './Feed/ThoughtProvoker';
 
 import graphics1 from '../graphics/1.png';
-import ErrorMsg from './ErrorMsg';
+import ErrorMsg from './Misc/ErrorMsg';
 
 let feedListen;
 
@@ -79,7 +80,7 @@ class FeedTab extends React.Component {
               })
             }
             tempFeed.push(struct);
-            console.log(struct.timestamp);
+            // console.log(struct.timestamp);
           }
 
         });
@@ -87,11 +88,11 @@ class FeedTab extends React.Component {
         console.log(JSON.stringify(tempThoughts));*/
 
 
-        
+
         element.setState({
           /*checkins: tempCheckins,
           thoughts: tempThoughts*/
-            feed:tempFeed
+          feed: tempFeed
         })
         /*element.setState({
           checkins: tempCheckins,
@@ -122,47 +123,47 @@ class FeedTab extends React.Component {
     let last_date = "";
     let header = <h1 className="date-marker">February 17</h1>;
     let feedItems = local_feed.map((f, index) => {
-        if(f.timestamp.split(",")[0] !== last_date){
-            last_date = f.timestamp.split(",")[0];
-            console.log("last date " + last_date);
-             header = <h1 className="date-marker">{last_date}</h1>;
-        }
-        else{
-             header = "";
-        }
-        if (f.checkinData) {
-            return <div>{header} <CheckinPost
-            uid={this.props.uid}
-            posterUid={f.uid}
-            
-            PpfURL={f.PpfURL}
-            yourPpfURL={this.props.PpfURL}
-            key={index.toString()+"_checkin"}
-            name={f.name}
-            timestamp={f.timestamp}
+      if (f.timestamp.split(",")[0] !== last_date) {
+        last_date = f.timestamp.split(",")[0];
+        // console.log("last date " + last_date);
+        header = <h1 className="date-marker">{last_date}</h1>;
+      }
+      else {
+        header = "";
+      }
+      if (f.checkinData) {
+        return <div>{header} <CheckinPost
+          uid={this.props.uid}
+          posterUid={f.uid}
 
-            postid={f.postid}
-            checkinData={f.checkinData}
-            firebase={this.props.firebase}
-            /></div>;
-        } else {
-            return <div>{header} <ThoughtPost
-            uid={this.props.uid}
-            posterUid={f.uid}
-            
-            PpfURL={f.PpfURL}
-            yourPpfURL={this.props.PpfURL}
+          PpfURL={f.PpfURL}
+          yourPpfURL={this.props.PpfURL}
+          key={index.toString() + "_checkin"}
+          name={f.name}
+          timestamp={f.timestamp}
 
-            key={index.toString()+"_thought"}
-            name={f.name}
-            thought={f.thought}
-            timestamp={f.timestamp}
+          postid={f.postid}
+          checkinData={f.checkinData}
+          firebase={this.props.firebase}
+        /></div>;
+      } else {
+        return <div>{header} <ThoughtPost
+          uid={this.props.uid}
+          posterUid={f.uid}
 
-            message={f.message}
-            postid={f.postid}
-            firebase={this.props.firebase
-            } /></div>;
-        }
+          PpfURL={f.PpfURL}
+          yourPpfURL={this.props.PpfURL}
+
+          key={index.toString() + "_thought"}
+          name={f.name}
+          thought={f.thought}
+          timestamp={f.timestamp}
+
+          message={f.message}
+          postid={f.postid}
+          firebase={this.props.firebase
+          } /></div>;
+      }
     }
     );
 
@@ -207,6 +208,11 @@ class FeedTab extends React.Component {
     return (
 
       <section className="feed">
+
+        <ThoughtProvoker 
+          name={this.props.name}
+        />
+
         <ThoughtInput
           PpfURL={this.props.PpfURL}
           name={this.props.name}

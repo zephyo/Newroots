@@ -1,9 +1,10 @@
 
 import React, { Component } from 'react';
-import AddCheckin from './AddCheckin';
+import AddCheckin from './Network/AddCheckin';
 import $ from 'jquery';
 import { withFirebase } from './Firebase';
-import Avatar from './Avatar';
+import Avatar from './Misc/Avatar';
+import CheckInRow from './Network/CheckinRow';
 
 const LogoutButton = (props) => {
   return (
@@ -11,43 +12,14 @@ const LogoutButton = (props) => {
       onClick={() => {
         props.logout();
         props.firebase.doSignOut();
-      }}>logout</button>
+      }}>Logout</button>
   )
 };
 
 const LogoutButtonFB = withFirebase(LogoutButton);
 
 
-const CheckInRow = (props) => {
 
-  let el = null;
-  if (props.type == 'text') {
-    el = (
-      <span className="jam checkicon jam-write"></span>
-    );
-  }
-  else if (props.type == 'yes/no') {
-    el = (
-      <span className="jam checkicon jam-brightness"></span>
-    );
-  } else {
-    el = (
-      <span className="jam checkicon jam-ruler"></span>
-    );
-  }
-
-  return <li>
-    {el}
-    {props.q}
-    {
-      props.trash ?
-        <button className="delete" onClick={() => props.removeCheckinAt(props.index)}>
-          <span className="jam jam-trash"></span>
-        </button>
-        : null
-    }
-  </li>;
-};
 
 class UserTab extends React.Component {
   constructor(props) {
@@ -146,6 +118,7 @@ class UserTab extends React.Component {
     this.setState({ name: event.target.value })
   }
 
+
   render() {
     let cornerButton;
     let pic;
@@ -222,18 +195,46 @@ class UserTab extends React.Component {
       );
     } else {
       addQ = (
-        <button onClick={() => { this.setAddMode(true) }}>add more
+        <button className="add-checkin" onClick={() => { this.setAddMode(true) }}>Add check-in
         </button>
       );
     }
+
+    let freq;
+    freq = (
+      <button onClick={() => {
+
+      }} className="freq dropdown">
+        Every day
+        <span className="jam jam-chevron-down"></span>
+      </button>
+    );
+
 
     return (
       <section className="user">
         {cornerButton}
         {pic}
         {name}
+
+        <div className="profile-location">
+          <span className="jam checkicon jam-map-marker"></span>
+          {this.state.location ? this.state.location : 'Unknown'}
+        </div>
+
+        <p className="profile-bio">
+          {this.state.bio ? this.state.bio : "Here be an empty bio"}
+        </p>
+
+
         <div className="check-in-edit">
-          <h2>Your Daily Check-in</h2>
+          <h2>Your check-in</h2>
+
+
+          <h3>Check-in frequency</h3>
+          {freq}
+
+          <h3>Check-in questions</h3>
           {checkins}
           {addQ}
         </div>

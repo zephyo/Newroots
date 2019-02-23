@@ -70,6 +70,7 @@ class YesNoQ extends React.Component {
             <span className="jam jam-close"> </span>
           </button>
         </div>
+        <h3>Leave an explanation</h3>
         <textarea
           className="feelings"
           rows="1"
@@ -142,6 +143,7 @@ class RangeQ extends React.Component {
             <small>{this.props.max}</small>
           </div>
         </div>
+        <h3>Leave an explanation</h3>
         <textarea
           className="feelings"
           rows="1"
