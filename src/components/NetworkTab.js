@@ -95,7 +95,32 @@ class NetworkTab extends React.Component {
         });
     }
   }
-
+  /*addName = (id, name) => {
+      return this.props.firebase.user(id).update({
+            easy_name: name.toLowerCase()
+        })
+        .then(function() {
+            console.log("Document successfully updated!");
+        })
+        .catch(function(error) {
+            // The document probably doesn't exist.
+            console.error("Error updating document: ", error);
+        });
+  }
+  easyName = () => {
+      let element = this;
+      this.props.firebase.users().get()
+        .then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                // doc.data() is never undefined for query doc snapshots
+                console.log(doc.id, " => ", doc.data());
+                element.addName(doc.id,doc.data().name);
+            });
+        })
+        .catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
+  }*/
   render() {
     if ((!this.state.networkUsers || this.state.networkUsers.length === 0) &&
       this.state.network.length > 0) {

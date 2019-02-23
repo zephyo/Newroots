@@ -15,7 +15,8 @@ class AddFriend extends React.Component {
       allUsers: [],
       addedFriend: '',
       invitedFriend: '',
-      loading: false
+      loading: false,
+      suggestions: []
     };
   }
 
@@ -41,16 +42,64 @@ class AddFriend extends React.Component {
       invitedFriend: mssg
     });
   }
-
+  validateEmail = (email) => {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
+  genList = (ref, search_val) => {
+      let tempSug = [];
+      ref.get()
+      .then(querySnapshot => {
+        // console.log(this.props.uid)
+        /*this.props.firebase.users().doc(querySnapshot.docs[0].id)
+          .update({
+            "requests": firebase.firestore.FieldValue.arrayUnion(this.props.uid)
+          });
+        this.setAddedFriend('sent request!');*/
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+            tempSug.push({
+                uid:doc.id,
+                name:doc.data().name,
+                url:doc.data().PpfURL
+            })
+        });
+        this.setState({
+            suggestions:tempSug
+        })
+      })
+      .catch(err => {
+        this.setAddedFriend("couldn't find " + search_val);
+      });
+  }
+  confirmAdd = (uid) => {
+      console.log("adding " + uid);
+      this.props.firebase.user(uid).update({
+            "requests": firebase.firestore.FieldValue.arrayUnion(this.props.uid)
+          });
+        this.setAddedFriend('sent request!');
+  }
   addFriend = () => {
     // if (this.state.loading === true) return;
 
+    /*let email = "";
+    let name = "";*/
+    let ref = "";
+    let search_val  = $('#add-friend-email').val();
+    if(this.validateEmail(search_val)){
+        //email = $('#add-friend-email').val();
+        ref = this.props.firebase.users().where("email", "==", search_val);
+    }
+    else{
+        //name = $('#add-friend-email').val();
+        search_val = search_val.toLowerCase();
+        ref = this.props.firebase.users().where("easy_name", "==", search_val);
+    }
 
-    let email = $('#add-friend-email').val();
-
-    let ref = this.props.firebase.users().where("email", "==", email);
-
-    ref.get()
+    
+    this.genList(ref, search_val);
+    /*ref.get()
       .then(querySnapshot => {
         // console.log(this.props.uid)
         this.props.firebase.users().doc(querySnapshot.docs[0].id)
@@ -58,10 +107,11 @@ class AddFriend extends React.Component {
             "requests": firebase.firestore.FieldValue.arrayUnion(this.props.uid)
           });
         this.setAddedFriend('sent request!');
+        
       })
       .catch(err => {
-        this.setAddedFriend("couldn't find " + email);
-      });
+        this.setAddedFriend("couldn't find " + search_val);
+      });*/
 
 
 
@@ -241,7 +291,9 @@ class AddFriend extends React.Component {
       );
       req.push(addEl);
     }
-
+    const suggestions = this.state.suggestions.map((sug, index) =>
+        <div><Avatar PpfURL={sug.url} /><h1>{sug.name}</h1><button onClick={() => this.confirmAdd(sug.uid)} className="yes"><span className="jam jam-close" style={{ color: '#8A8184' }}></span></button></div>
+    );
     return (
       <div className="modal network">
         <button className="close" onClick={() => this.props.setAddFriend(false)}>
@@ -259,6 +311,9 @@ class AddFriend extends React.Component {
           <div className="network-input">
             <input id="add-friend-email" type="email" placeholder="what's their email?"></input>
             <button onClick={this.addFriend}>request</button>
+          </div>
+          <div>
+            {suggestions}
           </div>
         </div>
         <div className="invite-friend">
