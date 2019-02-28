@@ -61,8 +61,11 @@ class App extends React.Component {
   }
 
   checkLogin = (userData) => {
+      console.log("USER data " + JSON.stringify(userData));
     this.setState({
       userData: userData,
+    },()=>{
+        console.log(this.state.userData.bio)
     });
   }
 
@@ -110,6 +113,16 @@ class App extends React.Component {
         name: name
       }
     })
+  }
+  
+  setBio = (bio) => {
+      this.setState({
+          userData:
+          {
+              ...this.state.userData,
+              bio: bio
+          }
+      })
   }
 
   setCheckins = (checkins) => {
@@ -210,10 +223,12 @@ class App extends React.Component {
           logout={this.logout}
           checkins={this.state.userData.checkins}
           name={this.state.userData.name}
+          bio = {this.state.userData.bio}
           uid={this.state.userData.uid}
           PpfURL={this.state.userData.PpfURL}
           setPpfURL={this.setPpfURL}
           setName={this.setName}
+          setBio={this.setBio}
           setCheckins={this.setCheckins}
         />
       );

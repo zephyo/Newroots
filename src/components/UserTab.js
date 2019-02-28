@@ -28,6 +28,7 @@ class UserTab extends React.Component {
       editMode: false,
       checkins: this.props.checkins,
       name: this.props.name,
+      bio: this.props.bio,
       addMode: false,
       PpfURL: this.props.PpfURL,
     };
@@ -42,14 +43,19 @@ class UserTab extends React.Component {
     if (bool === false) {
       if ($('.profile-name').val() != this.state.name) {
         let NameVal = $('.profile-name').val();
+        let BioVal = $('.profile-bio').val();
         this.setState({
-          name: NameVal
+            name: NameVal,
+            bio: BioVal
         });
         this.props.setName(NameVal);
+        this.props.setBio(BioVal);
+          
         this.props.firebase
           .user(this.props.uid)
           .update({
-            name: NameVal
+            name: NameVal,
+            bio: BioVal
           });
       }
     }
@@ -117,12 +123,16 @@ class UserTab extends React.Component {
   setName = (event) => {
     this.setState({ name: event.target.value })
   }
-
+  
+  setBio = (event) => {
+      this.setState({bio: event.target.value })
+  }
 
   render() {
     let cornerButton;
     let pic;
     let name;
+    let bio;
     let checkins;
     let addQ;
 
@@ -148,6 +158,11 @@ class UserTab extends React.Component {
       name = (
         <input type="text" className="profile-name" onChange={this.setName} value={this.state.name}></input>
       );
+      
+      bio = (
+        <input type="text" className="profile-bio" onChange={this.setBio} value={this.state.bio}></input>
+      );
+      
       checkins = (
         <ul className="your-checkins">
           {this.state.checkins.map((checkin, index) => {
@@ -172,6 +187,10 @@ class UserTab extends React.Component {
       name = (
         <div className="profile-name">{this.state.name}</div>
       );
+      bio = <p className="profile-bio">
+        {this.state.bio ? this.state.bio : "Here be an empty bio"}
+      </p>
+
       checkins = (
         <ul className="your-checkins">
           {this.state.checkins.map(function (checkin, index) {
@@ -216,16 +235,13 @@ class UserTab extends React.Component {
         {cornerButton}
         {pic}
         {name}
-
+        {bio}
         <div className="profile-location">
           <span className="jam checkicon jam-map-marker"></span>
           {this.state.location ? this.state.location : 'Unknown'}
         </div>
 
-        <p className="profile-bio">
-          {this.state.bio ? this.state.bio : "Here be an empty bio"}
-        </p>
-
+        
 
         <div className="check-in-edit">
           <h2>Your check-in</h2>

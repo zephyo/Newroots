@@ -67,6 +67,7 @@ class FeedTab extends React.Component {
               })
             }
             else {
+                console.log("new thought");
               struct = ({
                 uid: data.uid,
                 name: data.name,
@@ -87,7 +88,7 @@ class FeedTab extends React.Component {
         /*console.log(JSON.stringify(tempCheckins));
         console.log(JSON.stringify(tempThoughts));*/
 
-
+        
 
         element.setState({
           /*checkins: tempCheckins,
@@ -116,10 +117,8 @@ class FeedTab extends React.Component {
   render() {
 
 
-    //let feed = this.state.checkins.concat(this.state.thoughts);
     let local_feed = this.state.feed;
     local_feed.sort(this.compare);
-    //console.log("local_feed " + local_feed[0].timestamp);
     let last_date = "";
     let header = <h1 className="date-marker">February 17</h1>;
     let feedItems = local_feed.map((f, index) => {
