@@ -3,6 +3,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import texture1 from './../graphics/flower.png';
 import texture2 from './../graphics/thing.png';
+import frontGraphic from './../graphics/3.png';
 
 
 class TextQ extends React.Component {
@@ -160,7 +161,9 @@ class CheckinModal extends React.Component {
     super(props);
     this.state = {
       checkins: props.checkins,
-      currIndex: 0
+      currIndex: 0,
+      started: false,
+      freq: 'daily'
     };
     this.childQ = React.createRef();
   }
@@ -187,10 +190,17 @@ class CheckinModal extends React.Component {
     this.setState({ checkins: checkins });
   }
 
+  setStart = () => {
+    this.setState({ started: true })
+  }
+
+  getTime = () => {
+    return moment().format('L');
+  }
 
   //TOOD - SAVE CHECKIN DATA
   saveCheckinData = () => {
-    let time = moment().format('L');
+    let time = this.getTime();
 
     if (this.state.checkins.length !== 0) {
       //save to feed of every person in the network
@@ -227,8 +237,10 @@ class CheckinModal extends React.Component {
   }
 
   render() {
-    let checkinQs = [], checkins = this.state.checkins, currIndex = this.state.currIndex;
-    for (var i = currIndex; i < checkins.length && i < currIndex + 1; i++) {
+    let checkinQs = [], checkins = this.state.checkins, currIndex = this.state.currIndex, freq = this.state.freq;
+
+
+    for (let i = currIndex; i < checkins.length && i < currIndex + 1; i++) {
       let addEl;
       if (checkins[i].type == 'text') {
         addEl = (
@@ -270,11 +282,15 @@ class CheckinModal extends React.Component {
     }
 
     if (checkins.length === 0) {
+      let freqTime;
+      if (freq == 'daily'){
+        freqTime = 'day';
+      }
       checkinQs.push(
         <div className="ci-question">
           <h2>{'Good day, ' + this.props.name + '.'}</h2>
           <p>
-            You've got nothing to check-in - have a great rest of the day.
+            {"You've got nothing to check-in - have a great rest of your "+freqTime + "."}
           </p>
         </div>
       );
@@ -282,19 +298,60 @@ class CheckinModal extends React.Component {
 
 
     let submitButton = null;
-    if (currIndex + 1 >= checkins.length) {
-      submitButton = (
-        <button id="submit" onClick={this.saveCheckinData}>
-          <span className="jam jam-check" style={{ color: '#9FC6C1' }}></span>
-        </button>
-      );
-    } else {
-      submitButton = (
-        <button id="submit" onClick={this.incrementCurrIndex}>
-          <span className="jam jam-arrow-right" style={{ color: '#9FC6C1' }}></span>
-        </button>
-      );
+
+    let content;
+
+    if (!this.state.started) {
+      content = 
+      <div className="ci-question front">
+      
+      <img src={frontGraphic} />
+        <h2>{'Ready for your '+freq+' check-in, ' + this.props.name + '?'}</h2>
+        <p>
+          {'Reflect on what happened today as you answer your '+checkins.length+' questions.'}
+      </p>
+      </div>
+      submitButton = <div className="front-butts">
+        <button
+          id="submit"
+          onClick={this.setStart}
+        >
+          Start
+          </button>
+
+        <button
+          className="remind"
+          onClick={() => { this.props.updateCheckin(this.getTime()) }}
+        >
+          Remind me later
+          </button>
+      </div>;
     }
+    else {
+      content = checkinQs;
+      if (currIndex + 1 >= checkins.length) {
+        submitButton = (
+          <button
+            id="submit"
+            onClick={this.saveCheckinData}
+            disabled={checkins[currIndex].answer == undefined}
+          >
+            <span className="jam jam-check" style={{ color: '#9FC6C1' }}></span>
+          </button>
+        );
+      } else {
+        submitButton = (
+          <button
+            id="submit"
+            onClick={this.incrementCurrIndex}
+            disabled={checkins[currIndex].answer == undefined}
+          >
+            <span className="jam jam-arrow-right" style={{ color: '#9FC6C1' }}></span>
+          </button>
+        );
+      }
+    }
+
 
     return (
       <div className="modal-bg">
@@ -302,7 +359,7 @@ class CheckinModal extends React.Component {
           <img className="bg-texture first" src={texture1} />
           <img className="bg-texture second" src={texture2} />
           <div className="bg"></div>
-          <h1>{moment().format('MMMM D') + ":\nDAILY"}</h1>
+          <h1>{moment().format('MMMM D') + ":\n"+freq.toUpperCase()}</h1>
           <h1 className="title">
             <div className="highlight"></div><span>check-in</span>
           </h1>
@@ -312,7 +369,7 @@ class CheckinModal extends React.Component {
                 width: (currIndex + 1) / (checkins.length) * 100 + '%'
               }}></div>
             </div>
-            {checkinQs}
+            {content}
 
             {submitButton}
           </div>

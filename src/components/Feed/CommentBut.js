@@ -14,9 +14,10 @@ class CommentBut extends React.Component {
   render() {
     let style;
     let commentSubstr = " comments";
-    if (this.props.commentLength === 0) {
+    let disabled = this.props.commentLength === 0;
+    if (disabled) {
       style = {
-        opacity: '0.7',
+        opacity: '0.6',
         filter: 'saturation(0%)'
       };
     }
@@ -28,7 +29,8 @@ class CommentBut extends React.Component {
       <button
         onClick={this.props.loadComments}
         style={style}
-        className="comment-but">
+        className="comment-but"
+        >
         <span className="jam jam-message-alt" ></span>
         <span>{this.props.commentLength + commentSubstr}</span>
         <span className="jam checkicon jam-chevron-down"></span>

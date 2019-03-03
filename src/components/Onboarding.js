@@ -16,8 +16,9 @@ setOnboarding(true)
 
 */
 const Button = (props) => {
+  let name = props.className != undefined ? props.className : '';
   return (
-    <button className="cont-onboarding" onClick={props.Listener}>
+    <button className={"cont-onboarding " + name} onClick={props.Listener}>
       <span className={props.Classes}></span>
     </button>
   );
@@ -33,6 +34,10 @@ class Onboarding extends React.Component {
 
   incrementPage = () => {
     this.setState({ page: this.state.page + 1 })
+  }
+
+  decrementPage = () => {
+    this.setState({ page: this.state.page - 1 })
   }
 
   enableNotif = () => {
@@ -86,22 +91,30 @@ class Onboarding extends React.Component {
         {
 
           page = (
-           
-              <OnboardingCategoriesFB
-                uid = {this.props.uid}
-                setCheckins={this.props.setCheckins}
-                incrementPage={this.incrementPage}
-              />
+
+            <OnboardingCategoriesFB
+              uid={this.props.uid}
+              setCheckins={this.props.setCheckins}
+              incrementPage={this.incrementPage}
+            />
           );
           break;
         }
       case 3:
         {
           button = (
-            <Button
-              Listener={this.incrementPage}
-              Classes="jam jam-arrow-right"
-            />
+            <div className="ob-butts">
+              <Button
+                className="back"
+                Listener={this.decrementPage}
+                Classes="jam jam-arrow-left"
+              />
+              <Button
+                className="forward"
+                Listener={this.incrementPage}
+                Classes="jam jam-arrow-right"
+              />
+            </div>
           );
 
           page = (

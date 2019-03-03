@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 
 const INITIAL_STATE = {
   name: '',
+  lastName: '',
   email: '',
   passwordOne: '',
-  error: null,
+  error: '',
   page: 0,
+  hidePass: true
 };
 
 class SignupForm extends React.Component {
@@ -19,10 +21,10 @@ class SignupForm extends React.Component {
   };
 
   onSubmit = () => {
-    const { name, email, passwordOne } = this.state;
+    const { name, lastName, email, passwordOne } = this.state;
     let element = this;
     const default_vals = {
-      name: name,
+      name: name + ' ' + lastName,
       easy_name: name.toLowerCase(),
       email: email,
       network: [],
@@ -57,22 +59,38 @@ class SignupForm extends React.Component {
           });
       })
       .catch(error => {
-        this.setState({ error });
+        this.setState({ error: error.message });
       });
 
   };
 
   increasePage = () => {
-    this.setState({ page: this.state.page + 1 })
+
+    //form validation
+    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (this.state.page === 1 && !re.test(this.state.email)) {
+      this.setState({ error: "Please enter a valid email address." })
+      return;
+    }
+
+    //increase page if inputs are valid
+    this.setState({ page: this.state.page + 1, error: '' })
+  }
+
+  hidePassword = () => {
+    this.setState({ hidePass: !this.state.hidePass })
   }
 
   render() {
     const {
       name,
+      lastName,
       email,
       passwordOne,
       error,
-      page
+      page,
+      hidePass
     } = this.state;
 
     const maxPages = 2;
@@ -84,35 +102,49 @@ class SignupForm extends React.Component {
     let header;
     let input;
 
+    let small;
+
 
     progressbar = <div className="progress-bar">
       <div className="progress" style={{
-        width: (page+1) / (maxPages+1) * 100 + '%'
+        width: (page + 1) / (maxPages + 1) * 100 + '%'
       }}></div>
     </div>;
 
 
     if (page === 0) {
-      isInvalid = name === '';
+      isInvalid = name === '' || lastName === '';
       header =
-        <h2>My full name is
+        <h2 className="sign-up-header">My name is
           <button className="back-but" onClick={() => this.props.setSignUp(false)}>
             <span className="jam jam-arrow-left" style={{ color: '#635358' }}></span>
           </button>
         </h2>;
       input =
-        <input
-          name="name"
-          type="text"
-          placeholder="Full name"
-          value={name}
-          onChange={this.onChange}>
-        </input>;
+        <div>
+          <input
+            name="name"
+            type="text"
+            placeholder="First name"
+            value={name}
+            onChange={this.onChange}>
+          </input>
+
+          <input
+            name="lastName"
+            type="text"
+            placeholder="Last name"
+            value={lastName}
+            onChange={this.onChange}
+         >
+          </input>
+        </div>
+        ;
     }
     else if (page === 1) {
       isInvalid = email === '';
       header =
-        <h2>My email is
+        <h2 className="sign-up-header">My email is
           <button className="back-but" onClick={() => this.props.setSignUp(false)}>
             <span className="jam jam-arrow-left" style={{ color: '#635358' }}></span>
           </button>
@@ -129,19 +161,45 @@ class SignupForm extends React.Component {
     else if (page === 2) {
       isInvalid = passwordOne === '';
       header =
-        <h2>My password is
+        <h2 className="sign-up-header">My password is
           <button className="back-but" onClick={() => this.props.setSignUp(false)}>
             <span className="jam jam-arrow-left" style={{ color: '#635358' }}></span>
           </button>
         </h2>;
+
+      let passIcon, passType;
+      if (hidePass) {
+        passIcon = "jam jam-eye-close";
+        passType = "password";
+      } else {
+        passIcon = "jam jam-eye";
+        passType = "text";
+      }
       input =
-        <input
-          name="passwordOne"
-          type="password"
-          placeholder="Password"
-          value={passwordOne}
-          onChange={this.onChange}>
-        </input>;
+        <div className="pass-input">
+          <input
+            name="passwordOne"
+            type={passType}
+            placeholder="Password"
+            value={passwordOne}
+            onChange={this.onChange}>
+          </input>
+          <button className="hidePassword" onClick={this.hidePassword}>
+            <span className={passIcon}></span>
+          </button>
+        </div>
+        ;
+
+      small =
+        <small>
+          Use 6 or more characters with a mix of letters, numbers, & symbols
+       </small>;
+    }
+
+    if (error.length > 0) {
+      small = <small className="error">
+        {error}
+      </small>
     }
 
 
@@ -151,7 +209,7 @@ class SignupForm extends React.Component {
       button = <button disabled={isInvalid}
         className="signup-but"
         onClick={() => this.increasePage()}>
-        Continue
+        Next
       </button>;
     } else {
       button = <button disabled={isInvalid}
@@ -168,7 +226,8 @@ class SignupForm extends React.Component {
         {header}
         {input}
 
-        {error && <p>{error.message}</p>}
+        {small}
+
         {button}
 
       </div>
