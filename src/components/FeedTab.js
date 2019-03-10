@@ -20,6 +20,7 @@ class FeedTab extends React.Component {
       thoughts: [],
       checkins: [],
       feed: [],
+      newItems: [],
       lastSeen: ''
       //initial: true
     }
@@ -65,20 +66,21 @@ class FeedTab extends React.Component {
   */
   compare = (a, b) => {
     if (a.timestamp < b.timestamp)
-      return -1;
-    if (a.timestamp > b.timestamp)
       return 1;
+    if (a.timestamp > b.timestamp)
+      return -1;
     return 0;
   }
   
   loadMore = () => {
+      console.log("LOAD MORE");
       const element = this;
       var first = this.props.firebase.user(this.props.uid).collection("feed")
         .orderBy("realtime","desc")
         .limit(20)
         .startAfter(this.state.lastSeen);
       
-      let tempFeed = this.state.feed;
+      let tempFeed = [];
         first.get().then(function (documentSnapshots) {
             if(documentSnapshots.docs[documentSnapshots.docs.length-1]){
                 element.setState({
@@ -117,13 +119,15 @@ class FeedTab extends React.Component {
                 }
                 tempFeed.push(struct);
             });
-            tempFeed.reverse();
+            //tempFeed.reverse();
             element.setState({
-                feed:tempFeed
+                //feed:tempFeed
+                feed: element.state.feed.concat(tempFeed)
             })
             tempFeed = [];
             initial = false;
         })
+        
   }
 
   componentDidMount() {
@@ -193,9 +197,15 @@ class FeedTab extends React.Component {
           feed: tempFeed
             
         })*/
+        
+        //
         if(!initial){
+            tempFeed.sort(element.compare);
+            tempFeed.reverse();
+            console.log("bee bones");
             element.setState({
-                feed: element.state.feed.concat(tempFeed)
+                //newItems: element.state.newItems.concat(tempFeed)
+                newItems: tempFeed
             })
         }
         /*element.setState({
@@ -210,10 +220,15 @@ class FeedTab extends React.Component {
         var first = this.props.firebase.user(this.props.uid).collection("feed")
         .orderBy("realtime","desc")
         .limit(20);
-        first.get().then(function (documentSnapshots) {
-            element.setState({
-                lastSeen: documentSnapshots.docs[documentSnapshots.docs.length-1]
-            })
+          
+        first.get().then((documentSnapshots) => {
+            if(documentSnapshots.docs[documentSnapshots.docs.length-1]){
+                this.setState({
+                    lastSeen: documentSnapshots.docs[documentSnapshots.docs.length-1]
+                },() =>{
+                    console.log("last seen " + this.state.lastSeen.id);
+                })
+            }
             documentSnapshots.forEach(function(doc) {
                 // doc.data() is never undefined for query doc snapshots
                 //console.log(doc.id, " => ", doc.data());
@@ -232,16 +247,16 @@ class FeedTab extends React.Component {
                 }
                 else {
                     console.log("new thought");
-                  struct = ({
-                    uid: data.uid,
-                    name: data.name,
-                    PpfURL: data.PpfURL,
-                    thought: data.thought,
-                    message: data.message,
-                    comments: data.comm_cont,
-                    conversation: [],
-                    postid: doc.id,
-                    timestamp: moment(data.timestamp).format('lll'),
+                    struct = ({
+                        uid: data.uid,
+                        name: data.name,
+                        PpfURL: data.PpfURL,
+                        thought: data.thought,
+                        message: data.message,
+                        comments: data.comm_cont,
+                        conversation: [],
+                        postid: doc.id,
+                        timestamp: moment(data.timestamp).format('lll'),
                   })
                 }
                 tempFeed.push(struct);
@@ -253,11 +268,15 @@ class FeedTab extends React.Component {
             tempFeed = [];
             initial = false;
         })
-        /*this.props.firebase.user(this.props.uid).collection("feed").get().then((documentSnapshots) => {
+        /*this.props.firebase.user(this.props.uid).collection("feed").orderBy("realtime").get().then((documentSnapshots) => {
             let ids = {}
-            documentSnapshots.forEach(function(doc) {
+            let counter = 0;
+            documentSnapshots.docs.forEach((doc, index) => {
+                //function(doc) {
                 //ids.push(doc.id);
+                console.log("index " + index);
                 ids[doc.id] = doc.data().timestamp;
+                //counter++;
             })
             Object.keys(ids).forEach((doc) => {
                 //console.log(doc, dictionary[key]);
@@ -266,8 +285,8 @@ class FeedTab extends React.Component {
                 })
             });
 
-        })
-      }*/
+        })*/
+      }
         /*return first.get().then(function (documentSnapshots) {
           // Get the last visible document
           var lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
@@ -317,14 +336,14 @@ class FeedTab extends React.Component {
         })
         //local_feed.sort(this.compare);
     }*/
-    let local_feed = this.state.feed;
+    let local_feed = (this.state.newItems.concat (this.state.feed));
     //let local_feed = this.state.feed;
     
     //local_feed.sort(this.compare);
     let last_date = "";
     let header = <h1 className="date-marker">February 17</h1>;
     let feedItems = local_feed.map((f, index) => {
-        f = local_feed[local_feed.length - 1 - index];
+        //f = local_feed[local_feed.length - 1 - index];
       if (f.timestamp.split(",")[0] !== last_date) {
         last_date = f.timestamp.split(",")[0];
         // console.log("last date " + last_date);

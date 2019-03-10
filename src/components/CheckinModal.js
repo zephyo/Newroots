@@ -212,7 +212,8 @@ class CheckinModal extends React.Component {
         uid: this.props.uid,
         checkin: true,
         checkinData: this.state.checkins,
-        timestamp: new Date().toString()
+        timestamp: new Date().toString(),
+        realtime: + new Date()
       };
 
       //save to your feed

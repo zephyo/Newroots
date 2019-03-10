@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import $ from 'jquery';
-
+import moment from 'moment';
 
 class ThoughtInput extends React.Component {
   constructor(props) {
@@ -20,11 +20,14 @@ class ThoughtInput extends React.Component {
     let network = this.props.network;
     let thought = this.state.thought;
     let PpfURL = this.props.PpfURL === undefined ? null : this.props.PpfURL;
+    const date = new Date().toString();
     let data = {
       PpfURL: PpfURL,
       name: this.props.name,
       uid: this.props.uid,
       timestamp: new Date().toString(),
+      realtime: + new Date(),
+      //realtime: moment(date).format('lll'),
       thought: thought
     };
 
