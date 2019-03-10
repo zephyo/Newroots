@@ -31,10 +31,11 @@ var data = {
   activeTab: 0,
   userData: null,
   onboarding: false,
-  feed: []
+  feed: [],
+  loadMore:false
 },
   userBase = 'users';
-
+let loadMore = false;
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -52,7 +53,7 @@ class App extends React.Component {
   fillFeed = () => {
 
   }
-
+  
   SignUp = (userData) => {
     this.setState({
       onboarding: true,
@@ -166,6 +167,29 @@ class App extends React.Component {
     });
   }
 
+  handleScroll = (e) => {
+       //console.log("skkitteskeet");
+      const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+      //loadMore = true;
+      if (bottom) { 
+          //loadMore = true;
+          this.setState({
+              loadMore:true
+          })
+          console.log("bees") 
+      }
+      else{
+          if(this.state.loadMore){
+            this.setState({
+              loadMore:false
+            })
+          }
+      }
+  }
+  
+  /*resetScroll = () => {
+    this.setState({})
+  }*/
   render() {
 
 
@@ -195,6 +219,7 @@ class App extends React.Component {
     if (this.state.activeTab == 0) {
       activeTab = (
         <FeedTabFB
+          loadMore={this.state.loadMore}
           PpfURL={this.state.userData.PpfURL}
           name={this.state.userData.name}
           uid={this.state.userData.uid}
@@ -235,7 +260,7 @@ class App extends React.Component {
     }
 
     return (
-      <div className="container">
+      <div className="container"  onScroll={(e) => {this.handleScroll(e)}}>
         <NavBarFB
           setActiveTab={this.setActiveTab}
           activeTab={this.state.activeTab}
