@@ -109,22 +109,15 @@ class App extends React.Component {
     });
   }
 
-  setName = (name) => {
+  setUserInfo = (name, bio, location, pronouns) => {
     this.setState({
       userData:
       {
         ...this.state.userData,
-        name: name
-      }
-    })
-  }
-
-  setBio = (bio) => {
-    this.setState({
-      userData:
-      {
-        ...this.state.userData,
-        bio: bio
+        name: name,
+        bio: bio,
+        location: location,
+        pronouns: pronouns
       }
     })
   }
@@ -258,8 +251,7 @@ class App extends React.Component {
           uid={this.state.userData.uid}
           PpfURL={this.state.userData.PpfURL}
           setPpfURL={this.setPpfURL}
-          setName={this.setName}
-          setBio={this.setBio}
+          setUserInfo={this.setUserInfo}
           setCheckins={this.setCheckins}
         />
       );

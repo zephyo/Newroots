@@ -69,6 +69,7 @@ class UserTab extends React.Component {
       pronouns: this.props.pronouns,
       addMode: false,
       PpfURL: this.props.PpfURL,
+      madeChanges: false
     };
   }
 
@@ -84,25 +85,30 @@ class UserTab extends React.Component {
 
     //TODO: save changes
     if (bool === false) {
-      if ($('.profile-name').val() != this.state.name) {
-        let NameVal = $('.profile-name').val();
-        let BioVal = $('.profile-bio').val();
-        this.setState({
-          name: NameVal,
-          bio: BioVal
-        });
-        this.props.setName(NameVal);
-        this.props.setBio(BioVal);
+      if (this.state.madeChanges) {
+
+        this.props.setUserInfo(this.state.name, this.state.bio, this.state.location, this.state.pronouns);
 
         this.props.firebase
           .user(this.props.uid)
           .update({
-            name: NameVal,
-            bio: BioVal
+            name: this.state.name,
+            bio: this.state.bio,
+            location: this.state.location,
+            pronouns: this.state.pronouns
           });
+
+        this.setMadeChanges(false)
       }
     }
   };
+
+  setMadeChanges = (bool) => {
+    this.setState({
+      madeChanges: bool
+    });
+  };
+
 
   setAddMode = (bool) => {
     this.setState({
@@ -163,17 +169,10 @@ class UserTab extends React.Component {
     });
   }
 
-  setName = (event) => {
-    this.setState({ name: event.target.value })
-  }
-
-  setBio = (event) => {
-    this.setState({ bio: event.target.value })
-  }
-
-  setLocation = (event) => {
-    this.setState({ location: event.target.value })
-  }
+  onChangeUserInfo = event => {
+    this.setState({ [event.target.name]: event.target.value });
+    this.setMadeChanges(true)
+  };
 
   setPronouns = (pronoun) => {
     if (pronoun == NULL_PRONOUN) {
@@ -182,6 +181,7 @@ class UserTab extends React.Component {
     }
 
     this.setState({ pronouns: pronoun })
+    this.setMadeChanges(true)
   }
 
   render() {
@@ -205,7 +205,7 @@ class UserTab extends React.Component {
       pic = (
         <div>
           <input type="file" accept="image/*" id="ppf-upload" onChange={this.uploadPpf} />
-          <label className="edit-pic" for="ppf-upload">
+          <label className="edit-pic" htmlFor="ppf-upload">
             <Avatar PpfURL={this.state.PpfURL}
               content={
                 <div className="edit-pic-but">
@@ -217,20 +217,32 @@ class UserTab extends React.Component {
         </div>
       );
       name = (
-        <input type="text" className="profile-name" onChange={this.setName} value={this.state.name}></input>
+        <input
+          name="name"
+          type="text"
+          className="profile-name"
+          onChange={this.onChangeUserInfo}
+          value={this.state.name}></input>
       );
 
       bioEl = (
-        <textarea rows="2"
+        <textarea
+          name="bio"
+          rows="2"
           className="profile-bio"
           placeholder="Bio"
           value={this.state.bio}
-          onChange={this.setBio}>
-          </textarea>
+          onChange={this.onChangeUserInfo}>
+        </textarea>
       );
 
       locationEl = (
-        <input type="text" className="profile-location" onChange={this.setLocation} value={this.state.location}></input>
+        <input
+          name="location"
+          type="text"
+          className="profile-location"
+          onChange={this.onChangeUserInfo}
+          value={this.state.location}></input>
       );
 
       pronounsEl = (
@@ -250,6 +262,7 @@ class UserTab extends React.Component {
         <ul className="your-checkins">
           {this.state.checkins.map((checkin, index) => {
             return <CheckInRow
+              key={'key' + index}
               q={checkin.q}
               removeCheckinAt={this.removeCheckinAt}
               index={index}
@@ -305,6 +318,7 @@ class UserTab extends React.Component {
         <ul className="your-checkins">
           {this.state.checkins.map(function (checkin, index) {
             return <CheckInRow
+              key={'key' + index}
               q={checkin.q}
               trash={false}
               type={checkin.type}

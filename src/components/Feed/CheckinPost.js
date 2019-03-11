@@ -144,7 +144,9 @@ class CheckinPost extends React.Component {
 
       if (checkin.type == 'range') {
         el = (
-          <div className="check-in-q">
+          <div
+            key={'key' + i}
+            className="check-in-q">
             <div className="mood">
               <span>{checkin.q} </span>
               <div className="mood-icon number">{checkin.answer}</div>
@@ -155,7 +157,9 @@ class CheckinPost extends React.Component {
       }
       else if (checkin.type == 'yes/no') {
         el = (
-          <div className="check-in-q">
+          <div
+            key={'key' + i}
+            className="check-in-q">
             <div className="mood">
               <span>{checkin.q}</span>
               {checkin.answer == 'yes' ?
@@ -178,7 +182,9 @@ class CheckinPost extends React.Component {
       }
       else if (checkin.type == 'text') {
         el = (
-          <div className="check-in-q">
+          <div
+            key={'key' + i}
+            className="check-in-q">
             <div className="mood">
               <span>{checkin.q} </span>
             </div>
@@ -220,7 +226,7 @@ class CheckinPost extends React.Component {
           conversation={this.state.conversation}
         />
         <CommentBox
-         showComments={this.state.showComments}
+          showComments={this.state.showComments}
           uid={this.props.uid}
           PpfURL={this.props.yourPpfURL}
           poster={this.props.name}
