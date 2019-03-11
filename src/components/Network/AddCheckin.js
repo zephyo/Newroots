@@ -1,11 +1,27 @@
 
 import React, { Component } from 'react';
+import Dropdown from './Misc/Dropdown';
 
 const INITIAL_STATE = {
   q: '',
   type: 'text',
-  dropdown: false
 };
+
+const options = [
+  {
+    icon: 'write',
+    text: 'Text'
+  },
+  {
+    icon: 'brightness',
+    text: 'Yes/No'
+  },
+  {
+    icon: 'ruler',
+    text: 'Scale'
+  },
+
+];
 
 class AddCheckin extends React.Component {
   constructor(props) {
@@ -18,7 +34,7 @@ class AddCheckin extends React.Component {
   };
 
   setType = (type) => {
-    this.setState({ type: type });
+    this.setState({ type: type.toLowerCase() });
   }
 
   onSubmit = () => {
@@ -29,89 +45,16 @@ class AddCheckin extends React.Component {
     });
   }
 
-  setDropdown = (bool) => {
-    this.setState({ dropdown: bool });
-  }
-
   onCancel = () => {
     this.props.setAddMode(false);
   }
 
   render() {
-    const { q, dropdown, type } = this.state;
+    const { q } = this.state;
 
-    let dropdownEl;
 
     const isInvalid = q === '';
 
-    if (dropdown) {
-      dropdownEl = (
-
-        <ul>
-          <li>
-            <button className="dropdown" onClick={() => {
-              this.setType('text');
-              this.setDropdown(false);
-            }}>
-              <span className="jam checkicon jam-write"></span> Text
-            <span className="jam checkicon jam-chevron-down"></span>
-            </button>
-          </li>
-          <li>
-            <button className="dropdown" onClick={() => {
-              this.setType('yes/no');
-              this.setDropdown(false)
-            }}>
-              <span className="jam checkicon jam-brightness"></span> Yes/No
-          </button>
-          </li>
-          <li>
-            <button className="dropdown" onClick={() => {
-              this.setType('scale');
-              this.setDropdown(false)
-            }}>
-              <span className="jam checkicon jam-ruler"></span> Scale</button>
-          </li>
-
-        </ul>
-      );
-    } else {
-      if (type == 'text') {
-        dropdownEl = (
-          <ul>
-            <li>
-              <button className="dropdown" onClick={() => this.setDropdown(true)}>
-                <span className="jam checkicon jam-write"></span> Text
-              <span className="jam checkicon jam-chevron-down"></span>
-              </button>
-            </li>
-          </ul>
-        );
-      }
-      else if (type == 'yes/no') {
-        dropdownEl = (
-          <ul>
-            <li>
-              <button className="dropdown" onClick={() => this.setDropdown(true)}>
-                <span className="jam checkicon jam-brightness"></span> Yes/No
-              <span className="jam checkicon jam-chevron-down"></span>
-              </button>
-            </li>
-          </ul>
-        );
-      } else {
-        dropdownEl = (
-          <ul>
-            <li>
-              <button className="dropdown" onClick={() => this.setDropdown(true)}>
-                <span className="jam checkicon jam-ruler"></span> Scale
-              <span className="jam checkicon jam-chevron-down"></span>
-              </button>
-            </li>
-          </ul>
-        );
-      }
-    }
 
     return (
       <div className="add-panel">
@@ -125,7 +68,14 @@ class AddCheckin extends React.Component {
           onChange={this.onChange}>
         </textarea>
         <h3>Question type</h3>
-        {dropdownEl}
+
+
+        <Dropdown
+          options = {options}
+          onChange= {this.setType}
+          ></Dropdown>
+
+
         <div className="yesno">
           <button className="yes" onClick={this.onSubmit} disabled={isInvalid}>
             Submit</button>

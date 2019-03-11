@@ -24,23 +24,23 @@ class FeedTab extends React.Component {
       //initial: true
     }
     //this.processTime = this.processTime.bind(this);
-      this.handleScroll = this.handleScroll.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
   }
   handleScroll() {
     const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
     const body = document.body;
     const html = document.documentElement;
-    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,  html.scrollHeight, html.offsetHeight);
+    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
     const windowBottom = windowHeight + window.pageYOffset;
     if (windowBottom >= docHeight) {
-        console.log("bootm "); 
+      console.log("bootm ");
       this.setState({
-        message:'bottom reached'
+        message: 'bottom reached'
       });
     } else {
-        console.log("noot bootm "); 
+      console.log("noot bootm ");
       this.setState({
-        message:'not at bottom'
+        message: 'not at bottom'
       });
     }
   }
@@ -70,65 +70,65 @@ class FeedTab extends React.Component {
       return 1;
     return 0;
   }
-  
+
   loadMore = () => {
-      const element = this;
-      var first = this.props.firebase.user(this.props.uid).collection("feed")
-        .orderBy("realtime","desc")
-        .limit(20)
-        .startAfter(this.state.lastSeen);
-      
-      let tempFeed = this.state.feed;
-        first.get().then(function (documentSnapshots) {
-            if(documentSnapshots.docs[documentSnapshots.docs.length-1]){
-                element.setState({
-                    lastSeen : documentSnapshots.docs[documentSnapshots.docs.length-1]
-                })
-            }
-            documentSnapshots.forEach(function(doc) {
-                // doc.data() is never undefined for query doc snapshots
-                //console.log(doc.id, " => ", doc.data());
-                //
-                let data = doc.data();
-                let struct;
-                if (doc.data().checkin) {
-                  struct = ({
-                    uid: data.uid,
-                    name: data.name,
-                    PpfURL: data.PpfURL,
-                    timestamp: moment(data.timestamp).format('lll'),
-                    postid: doc.id,
-                    checkinData: data.checkinData
-                  })
-                }
-                else {
-                    console.log("new thought");
-                  struct = ({
-                    uid: data.uid,
-                    name: data.name,
-                    PpfURL: data.PpfURL,
-                    thought: data.thought,
-                    message: data.message,
-                    comments: data.comm_cont,
-                    conversation: [],
-                    postid: doc.id,
-                    timestamp: moment(data.timestamp).format('lll'),
-                  })
-                }
-                tempFeed.push(struct);
-            });
-            tempFeed.reverse();
-            element.setState({
-                feed:tempFeed
-            })
-            tempFeed = [];
-            initial = false;
+    const element = this;
+    var first = this.props.firebase.user(this.props.uid).collection("feed")
+      .orderBy("realtime", "desc")
+      .limit(20)
+      .startAfter(this.state.lastSeen);
+
+    let tempFeed = this.state.feed;
+    first.get().then(function (documentSnapshots) {
+      if (documentSnapshots.docs[documentSnapshots.docs.length - 1]) {
+        element.setState({
+          lastSeen: documentSnapshots.docs[documentSnapshots.docs.length - 1]
         })
+      }
+      documentSnapshots.forEach(function (doc) {
+        // doc.data() is never undefined for query doc snapshots
+        //console.log(doc.id, " => ", doc.data());
+        //
+        let data = doc.data();
+        let struct;
+        if (doc.data().checkin) {
+          struct = ({
+            uid: data.uid,
+            name: data.name,
+            PpfURL: data.PpfURL,
+            timestamp: moment(data.timestamp).format('lll'),
+            postid: doc.id,
+            checkinData: data.checkinData
+          })
+        }
+        else {
+          console.log("new thought");
+          struct = ({
+            uid: data.uid,
+            name: data.name,
+            PpfURL: data.PpfURL,
+            thought: data.thought,
+            message: data.message,
+            comments: data.comm_cont,
+            conversation: [],
+            postid: doc.id,
+            timestamp: moment(data.timestamp).format('lll'),
+          })
+        }
+        tempFeed.push(struct);
+      });
+      tempFeed.reverse();
+      element.setState({
+        feed: tempFeed
+      })
+      tempFeed = [];
+      initial = false;
+    })
   }
 
   componentDidMount() {
     //this.state.initial = true;
-      document.addEventListener("scroll", this.handleScroll);
+    document.addEventListener("scroll", this.handleScroll);
     initial = true;
     autosize($('textarea'));
     let element = this;
@@ -158,7 +158,7 @@ class FeedTab extends React.Component {
               })
             }
             else {
-                console.log("new thought");
+              console.log("new thought");
               struct = ({
                 uid: data.uid,
                 name: data.name,
@@ -171,8 +171,8 @@ class FeedTab extends React.Component {
                 timestamp: moment(data.timestamp).format('lll'),
               })
             }
-            if(!initial){
-                tempFeed.push(struct);
+            if (!initial) {
+              tempFeed.push(struct);
             }
             // console.log(struct.timestamp);
           }
@@ -193,110 +193,111 @@ class FeedTab extends React.Component {
           feed: tempFeed
             
         })*/
-        if(!initial){
-            element.setState({
-                feed: element.state.feed.concat(tempFeed)
-            })
+        if (!initial) {
+          element.setState({
+            feed: element.state.feed.concat(tempFeed)
+          })
         }
         /*element.setState({
           checkins: tempCheckins,
           thoughts: tempThoughts
         })*/
       });
-      
-      
-      //var first = db.collection("cities")
-      if(initial){
-        var first = this.props.firebase.user(this.props.uid).collection("feed")
-        .orderBy("realtime","desc")
+
+
+    //var first = db.collection("cities")
+    if (initial) {
+      var first = this.props.firebase.user(this.props.uid).collection("feed")
+        .orderBy("realtime", "desc")
         .limit(20);
-        first.get().then(function (documentSnapshots) {
-            element.setState({
-                lastSeen: documentSnapshots.docs[documentSnapshots.docs.length-1]
-            })
-            documentSnapshots.forEach(function(doc) {
-                // doc.data() is never undefined for query doc snapshots
-                //console.log(doc.id, " => ", doc.data());
-                //
-                let data = doc.data();
-                let struct;
-                if (doc.data().checkin) {
-                  struct = ({
-                    uid: data.uid,
-                    name: data.name,
-                    PpfURL: data.PpfURL,
-                    timestamp: moment(data.timestamp).format('lll'),
-                    postid: doc.id,
-                    checkinData: data.checkinData
-                  })
-                }
-                else {
-                    console.log("new thought");
-                  struct = ({
-                    uid: data.uid,
-                    name: data.name,
-                    PpfURL: data.PpfURL,
-                    thought: data.thought,
-                    message: data.message,
-                    comments: data.comm_cont,
-                    conversation: [],
-                    postid: doc.id,
-                    timestamp: moment(data.timestamp).format('lll'),
-                  })
-                }
-                tempFeed.push(struct);
-            });
-            //tempFeed.reverse();
-            element.setState({
-                feed:tempFeed
-            })
-            tempFeed = [];
-            initial = false;
+      first.get().then(function (documentSnapshots) {
+        element.setState({
+          lastSeen: documentSnapshots.docs[documentSnapshots.docs.length - 1]
         })
-        /*this.props.firebase.user(this.props.uid).collection("feed").get().then((documentSnapshots) => {
-            let ids = {}
-            documentSnapshots.forEach(function(doc) {
-                //ids.push(doc.id);
-                ids[doc.id] = doc.data().timestamp;
+        documentSnapshots.forEach(function (doc) {
+          // doc.data() is never undefined for query doc snapshots
+          //console.log(doc.id, " => ", doc.data());
+          //
+          let data = doc.data();
+          let struct;
+          if (doc.data().checkin) {
+            struct = ({
+              uid: data.uid,
+              name: data.name,
+              PpfURL: data.PpfURL,
+              timestamp: moment(data.timestamp).format('lll'),
+              postid: doc.id,
+              checkinData: data.checkinData
             })
-            Object.keys(ids).forEach((doc) => {
-                //console.log(doc, dictionary[key]);
-                this.props.firebase.user(this.props.uid).collection("feed").doc(doc).update({
-                    realtime: moment(ids[doc]).format('lll')
-                })
-            });
-
+          }
+          else {
+            console.log("new thought");
+            struct = ({
+              uid: data.uid,
+              name: data.name,
+              PpfURL: data.PpfURL,
+              thought: data.thought,
+              message: data.message,
+              comments: data.comm_cont,
+              conversation: [],
+              postid: doc.id,
+              timestamp: moment(data.timestamp).format('lll'),
+            })
+          }
+          tempFeed.push(struct);
+        });
+        //tempFeed.reverse();
+        element.setState({
+          feed: tempFeed
         })
-      }*/
-        /*return first.get().then(function (documentSnapshots) {
-          // Get the last visible document
-          var lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
-          console.log("last", lastVisible);
+        tempFeed = [];
+        initial = false;
+      })
+      /*this.props.firebase.user(this.props.uid).collection("feed").get().then((documentSnapshots) => {
+          let ids = {}
+          documentSnapshots.forEach(function(doc) {
+              //ids.push(doc.id);
+              ids[doc.id] = doc.data().timestamp;
+          })
+          Object.keys(ids).forEach((doc) => {
+              //console.log(doc, dictionary[key]);
+              this.props.firebase.user(this.props.uid).collection("feed").doc(doc).update({
+                  realtime: moment(ids[doc]).format('lll')
+              })
+          });
 
-          // Construct a new query starting at this document,
-          // get the next 25 cities.
-          var next = db.collection("cities")
-                  .orderBy("population")
-                  .startAfter(lastVisible)
-                  .limit(10);
-        });*/
-      
+      })
+    }*/
+      /*return first.get().then(function (documentSnapshots) {
+        // Get the last visible document
+        var lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
+        console.log("last", lastVisible);
+
+        // Construct a new query starting at this document,
+        // get the next 25 cities.
+        var next = db.collection("cities")
+                .orderBy("population")
+                .startAfter(lastVisible)
+                .limit(10);
+      });*/
+
+    }
   }
 
 
   componentWillReceiveProps(nextProps) {
-      console.log(this.props.loadMore);
-      console.log(nextProps.loadMore);
-      if(nextProps.loadMore === true){
-          this.loadMore();
-      }
+    console.log(this.props.loadMore);
+    console.log(nextProps.loadMore);
+    if (nextProps.loadMore === true) {
+      this.loadMore();
+    }
     /*if (props.params.id !== nextProps.params.id) {
       doSomething(nextProps.params.id);
     }*/
   }
 
   componentWillUnmount() {
-      document.removeEventListener("scroll", this.handleScroll);
+    document.removeEventListener("scroll", this.handleScroll);
     feedListen();
   }
 
@@ -319,12 +320,12 @@ class FeedTab extends React.Component {
     }*/
     let local_feed = this.state.feed;
     //let local_feed = this.state.feed;
-    
+
     //local_feed.sort(this.compare);
     let last_date = "";
     let header = <h1 className="date-marker">February 17</h1>;
     let feedItems = local_feed.map((f, index) => {
-        f = local_feed[local_feed.length - 1 - index];
+      f = local_feed[local_feed.length - 1 - index];
       if (f.timestamp.split(",")[0] !== last_date) {
         last_date = f.timestamp.split(",")[0];
         // console.log("last date " + last_date);
@@ -411,7 +412,7 @@ class FeedTab extends React.Component {
 
       <section className="feed">
 
-        <ThoughtProvoker 
+        <ThoughtProvoker
           name={this.props.name}
         />
 

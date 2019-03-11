@@ -32,7 +32,7 @@ var data = {
   userData: null,
   onboarding: false,
   feed: [],
-  loadMore:false
+  loadMore: false
 },
   userBase = 'users';
 let loadMore = false;
@@ -53,7 +53,7 @@ class App extends React.Component {
   fillFeed = () => {
 
   }
-  
+
   SignUp = (userData) => {
     this.setState({
       onboarding: true,
@@ -62,11 +62,11 @@ class App extends React.Component {
   }
 
   checkLogin = (userData) => {
-      console.log("USER data " + JSON.stringify(userData));
+    console.log("USER data " + JSON.stringify(userData));
     this.setState({
       userData: userData,
-    },()=>{
-        console.log(this.state.userData.bio)
+    }, () => {
+      console.log(this.state.userData.bio)
     });
   }
 
@@ -115,15 +115,15 @@ class App extends React.Component {
       }
     })
   }
-  
+
   setBio = (bio) => {
-      this.setState({
-          userData:
-          {
-              ...this.state.userData,
-              bio: bio
-          }
-      })
+    this.setState({
+      userData:
+      {
+        ...this.state.userData,
+        bio: bio
+      }
+    })
   }
 
   setCheckins = (checkins) => {
@@ -168,25 +168,25 @@ class App extends React.Component {
   }
 
   handleScroll = (e) => {
-       //console.log("skkitteskeet");
-      const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    //console.log("skkitteskeet");
+    const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    //loadMore = true;
+    if (bottom) {
       //loadMore = true;
-      if (bottom) { 
-          //loadMore = true;
-          this.setState({
-              loadMore:true
-          })
-          console.log("bees") 
+      this.setState({
+        loadMore: true
+      })
+      console.log("bees")
+    }
+    else {
+      if (this.state.loadMore) {
+        this.setState({
+          loadMore: false
+        })
       }
-      else{
-          if(this.state.loadMore){
-            this.setState({
-              loadMore:false
-            })
-          }
-      }
+    }
   }
-  
+
   /*resetScroll = () => {
     this.setState({})
   }*/
@@ -248,7 +248,9 @@ class App extends React.Component {
           logout={this.logout}
           checkins={this.state.userData.checkins}
           name={this.state.userData.name}
-          bio = {this.state.userData.bio}
+          bio={this.state.userData.bio}
+          location={this.state.userData.location}
+          pronouns={this.state.userData.pronouns}
           uid={this.state.userData.uid}
           PpfURL={this.state.userData.PpfURL}
           setPpfURL={this.setPpfURL}
@@ -260,7 +262,7 @@ class App extends React.Component {
     }
 
     return (
-      <div className="container"  onScroll={(e) => {this.handleScroll(e)}}>
+      <div className="container" onScroll={(e) => { this.handleScroll(e) }}>
         <NavBarFB
           setActiveTab={this.setActiveTab}
           activeTab={this.state.activeTab}

@@ -5,6 +5,8 @@ import $ from 'jquery';
 import { withFirebase } from './Firebase';
 import Avatar from './Misc/Avatar';
 import CheckInRow from './Network/CheckinRow';
+import Dropdown from './Misc/Dropdown';
+
 
 const LogoutButton = (props) => {
   return (
@@ -29,6 +31,8 @@ class UserTab extends React.Component {
       checkins: this.props.checkins,
       name: this.props.name,
       bio: this.props.bio,
+      location: this.props.location,
+      pronouns: this.props.pronouns,
       addMode: false,
       PpfURL: this.props.PpfURL,
     };
@@ -45,12 +49,12 @@ class UserTab extends React.Component {
         let NameVal = $('.profile-name').val();
         let BioVal = $('.profile-bio').val();
         this.setState({
-            name: NameVal,
-            bio: BioVal
+          name: NameVal,
+          bio: BioVal
         });
         this.props.setName(NameVal);
         this.props.setBio(BioVal);
-          
+
         this.props.firebase
           .user(this.props.uid)
           .update({
@@ -123,18 +127,20 @@ class UserTab extends React.Component {
   setName = (event) => {
     this.setState({ name: event.target.value })
   }
-  
+
   setBio = (event) => {
-      this.setState({bio: event.target.value })
+    this.setState({ bio: event.target.value })
   }
 
   render() {
-    let cornerButton;
-    let pic;
-    let name;
-    let bio;
-    let checkins;
-    let addQ;
+    let cornerButton,
+      pic,
+      name,
+      bio,
+      location,
+      pronouns,
+      checkins,
+      addQ;
 
 
     if (this.state.editMode) {
@@ -158,11 +164,19 @@ class UserTab extends React.Component {
       name = (
         <input type="text" className="profile-name" onChange={this.setName} value={this.state.name}></input>
       );
-      
+
       bio = (
         <input type="text" className="profile-bio" onChange={this.setBio} value={this.state.bio}></input>
       );
-      
+
+      location = (
+        <input type="text" className="profile-bio" onChange={this.setBio} value={this.state.bio}></input>
+      );
+
+      pronouns = (
+        null
+      );
+
       checkins = (
         <ul className="your-checkins">
           {this.state.checkins.map((checkin, index) => {
@@ -187,9 +201,34 @@ class UserTab extends React.Component {
       name = (
         <div className="profile-name">{this.state.name}</div>
       );
-      bio = <p className="profile-bio">
-        {this.state.bio ? this.state.bio : "Here be an empty bio"}
-      </p>
+
+      if (this.state.bio) {
+        bio = <p className="profile-bio">
+          {this.state.bio ? this.state.bio : null}
+        </p>
+      } else {
+        bio = null;
+      }
+
+      if (this.state.location) {
+        location = <div className="profile-location">
+          <span className="jam checkicon jam-map-marker"></span>
+          {this.state.location}
+        </div>;
+      } else {
+        location = null;
+      }
+
+      if (this.state.pronouns) {
+        pronouns = <div className="profile-pronouns">
+          <span className="jam checkicon jam-help"></span>
+          {this.state.pronouns}
+        </div>;
+      }
+      else {
+        pronouns = null;
+      }
+
 
       checkins = (
         <ul className="your-checkins">
@@ -236,12 +275,11 @@ class UserTab extends React.Component {
         {pic}
         {name}
         {bio}
-        <div className="profile-location">
-          <span className="jam checkicon jam-map-marker"></span>
-          {this.state.location ? this.state.location : 'Unknown'}
-        </div>
+        {location}
+        {pronouns}
 
-        
+
+
 
         <div className="check-in-edit">
           <h2>Your check-in</h2>
