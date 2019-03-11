@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import Dropdown from './Misc/Dropdown';
+import Dropdown from '../Misc/Dropdown';
 
 const INITIAL_STATE = {
   q: '',

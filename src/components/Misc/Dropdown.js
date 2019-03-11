@@ -43,7 +43,7 @@ class Dropdown extends React.Component {
         <li>
           <button className="dropdown" onClick={() => {
             this.onChange(item.text);
-            this.setSelected(index)
+            this.setSelected(i)
             this.setDropdown(false);
           }}>
             <span className={"jam checkicon jam-" + item.icon}></span>{' ' + item.text}

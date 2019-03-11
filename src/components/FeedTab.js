@@ -25,23 +25,23 @@ class FeedTab extends React.Component {
       //initial: true
     }
     //this.processTime = this.processTime.bind(this);
-    this.handleScroll = this.handleScroll.bind(this);
+      this.handleScroll = this.handleScroll.bind(this);
   }
   handleScroll() {
     const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
     const body = document.body;
     const html = document.documentElement;
-    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,  html.scrollHeight, html.offsetHeight);
     const windowBottom = windowHeight + window.pageYOffset;
     if (windowBottom >= docHeight) {
-      console.log("bootm ");
+        console.log("bootm "); 
       this.setState({
-        message: 'bottom reached'
+        message:'bottom reached'
       });
     } else {
-      console.log("noot bootm ");
+        console.log("noot bootm "); 
       this.setState({
-        message: 'not at bottom'
+        message:'not at bottom'
       });
     }
   }
@@ -71,7 +71,7 @@ class FeedTab extends React.Component {
       return -1;
     return 0;
   }
-
+  
   loadMore = () => {
       console.log("LOAD MORE");
       const element = this;
@@ -132,7 +132,7 @@ class FeedTab extends React.Component {
 
   componentDidMount() {
     //this.state.initial = true;
-    document.addEventListener("scroll", this.handleScroll);
+      document.addEventListener("scroll", this.handleScroll);
     initial = true;
     autosize($('textarea'));
     let element = this;
@@ -162,7 +162,7 @@ class FeedTab extends React.Component {
               })
             }
             else {
-              console.log("new thought");
+                console.log("new thought");
               struct = ({
                 uid: data.uid,
                 name: data.name,
@@ -175,8 +175,8 @@ class FeedTab extends React.Component {
                 timestamp: moment(data.timestamp).format('lll'),
               })
             }
-            if (!initial) {
-              tempFeed.push(struct);
+            if(!initial){
+                tempFeed.push(struct);
             }
             // console.log(struct.timestamp);
           }
@@ -213,12 +213,12 @@ class FeedTab extends React.Component {
           thoughts: tempThoughts
         })*/
       });
-
-
-    //var first = db.collection("cities")
-    if (initial) {
-      var first = this.props.firebase.user(this.props.uid).collection("feed")
-        .orderBy("realtime", "desc")
+      
+      
+      //var first = db.collection("cities")
+      if(initial){
+        var first = this.props.firebase.user(this.props.uid).collection("feed")
+        .orderBy("realtime","desc")
         .limit(20);
           
         first.get().then((documentSnapshots) => {
@@ -265,12 +265,8 @@ class FeedTab extends React.Component {
             element.setState({
                 feed:tempFeed
             })
-          }
-          tempFeed.push(struct);
-        });
-        //tempFeed.reverse();
-        element.setState({
-          feed: tempFeed
+            tempFeed = [];
+            initial = false;
         })
         /*this.props.firebase.user(this.props.uid).collection("feed").orderBy("realtime").get().then((documentSnapshots) => {
             let ids = {}
@@ -308,18 +304,18 @@ class FeedTab extends React.Component {
 
 
   componentWillReceiveProps(nextProps) {
-    console.log(this.props.loadMore);
-    console.log(nextProps.loadMore);
-    if (nextProps.loadMore === true) {
-      this.loadMore();
-    }
+      console.log(this.props.loadMore);
+      console.log(nextProps.loadMore);
+      if(nextProps.loadMore === true){
+          this.loadMore();
+      }
     /*if (props.params.id !== nextProps.params.id) {
       doSomething(nextProps.params.id);
     }*/
   }
 
   componentWillUnmount() {
-    document.removeEventListener("scroll", this.handleScroll);
+      document.removeEventListener("scroll", this.handleScroll);
     feedListen();
   }
 
@@ -342,7 +338,7 @@ class FeedTab extends React.Component {
     }*/
     let local_feed = (this.state.newItems.concat (this.state.feed));
     //let local_feed = this.state.feed;
-
+    
     //local_feed.sort(this.compare);
     let last_date = "";
     let header = <h1 className="date-marker">February 17</h1>;
@@ -434,7 +430,7 @@ class FeedTab extends React.Component {
 
       <section className="feed">
 
-        <ThoughtProvoker
+        <ThoughtProvoker 
           name={this.props.name}
         />
 
