@@ -15,10 +15,37 @@ class HomePage extends React.Component {
     super(props);
     this.state = {
       signingUp: false,
-      loggingIn: false
+      loggingIn: false,
+      show:false
     };
   }
+  componentDidMount() {
+      const element = this;
+      this.props.firebase.auth.onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+          console.log("user! ");
+          let ID = user.uid;
 
+        /*this.props.firebase
+          .user(ID).once('value').then((snapshot)=>{
+            this.setState({ ...INITIAL_STATE });
+            this.props.checkLogin(snapshot.val());
+
+          });*/
+        element.props.firebase.user(ID).get().then(function(doc){
+            element.props.checkLogin(doc.data());
+        });
+          
+      } else {
+        // No user is signed in.
+          console.log("no user ):")
+          element.setState({
+              show:true
+          })
+      }
+    });
+  }
   setSignUp = (bool) => {
     this.setState({
       signingUp: bool
@@ -59,11 +86,19 @@ class HomePage extends React.Component {
     }
 
     return (
-      <div className="home-page">
-        <img className="bg-texture" src={hero}/>
-        <img className = "plants" src={plants}/>
-      {content}
-    </div>
+        <div>
+        {this.state.show &&
+         <div className="home-page">
+        
+            
+            <img className="bg-texture" src={hero}/>
+            <img className = "plants" src={plants}/>
+            {content}
+            
+        
+        </div>
+        }
+        </div>
     );
   }
 }

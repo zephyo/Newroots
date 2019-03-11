@@ -43,6 +43,7 @@ class Firebase {
   users = () => this.db.ref('users');
 
   feed = () => this.db.ref('feed');*/
+  auth = () => this.fs.auth();
 
   user = uid => this.fs.collection('users').doc(uid);
 
