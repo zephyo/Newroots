@@ -24,6 +24,9 @@ const NavBarFB = withFirebase(NavBar);
 const FeedTabFB = withFirebase(FeedTab);
 
 const CheckinModalFB = withFirebase(CheckinModal);
+
+const HomePageFB = withFirebase(HomePage);
+
 //let feedListen;
 
 var data = {
@@ -43,7 +46,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-
+    
   }
 
   componentWillUnmount() {
@@ -166,7 +169,7 @@ class App extends React.Component {
       userData: null
     });
   }
-
+  
   handleScroll = (e) => {
     //console.log("skkitteskeet");
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -186,7 +189,8 @@ class App extends React.Component {
       }
     }
   }
-
+  
+  
   /*resetScroll = () => {
     this.setState({})
   }*/
@@ -196,7 +200,7 @@ class App extends React.Component {
 
     if (this.state.userData === null) {
       return (
-        <HomePage
+        <HomePageFB
           checkLogin={this.checkLogin}
           SignUp={this.SignUp}
         />
