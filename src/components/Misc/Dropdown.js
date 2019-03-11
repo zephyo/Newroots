@@ -13,16 +13,13 @@ import React, { Component } from 'react';
 * onChange function
 */
 
-const INITIAL_STATE = {
-  dropdown: false,
-  selected: 0
-};
-
-
 class Dropdown extends React.Component {
   constructor(props) {
     super(props);
-    this.state = INITIAL_STATE;
+    this.state =  {
+      dropdown: false,
+      selected: this.props.selected ? this.props.selected : 0
+    };
   }
 
   setDropdown = (bool) => {
@@ -36,13 +33,12 @@ class Dropdown extends React.Component {
   render() {
     const { dropdown, selected } = this.state;
 
-    let dropdownEl;
 
     if (dropdown) {
       let options = this.props.options.map((item, i) =>
         <li>
           <button className="dropdown" onClick={() => {
-            this.onChange(item.text);
+            this.props.onChange(item.text);
             this.setSelected(i)
             this.setDropdown(false);
           }}>
@@ -51,15 +47,15 @@ class Dropdown extends React.Component {
           </button>
         </li>);
 
-      dropdownEl = (
+      return (
         <ul>
           {options}
         </ul>
       );
-      
+
     } else {
 
-      dropdownEl = (
+      return (
         <ul>
           <li>
             <button className="dropdown" onClick={() => this.setDropdown(true)}>
@@ -74,9 +70,6 @@ class Dropdown extends React.Component {
 
 
 
-    return (
-      { dropdownEl }
-    );
   }
 }
 

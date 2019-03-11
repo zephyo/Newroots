@@ -6,6 +6,7 @@ import { withFirebase } from './Firebase';
 import Avatar from './Misc/Avatar';
 import CheckInRow from './Network/CheckinRow';
 import Dropdown from './Misc/Dropdown';
+import autosize from 'autosize';
 
 
 const LogoutButton = (props) => {
@@ -20,7 +21,40 @@ const LogoutButton = (props) => {
 
 const LogoutButtonFB = withFirebase(LogoutButton);
 
+let NULL_PRONOUN = 'Select..',
+  FEMALE_PRONOUN = 'She / her',
+  MALE_PRONOUN = 'He / him',
+  NON_PRONOUN = 'They / them';
 
+let allPronouns = {};
+
+allPronouns[NULL_PRONOUN] =
+  {
+    text: NULL_PRONOUN,
+    icon: 'help',
+    index: 0
+  };
+
+allPronouns[FEMALE_PRONOUN] =
+  {
+    text: FEMALE_PRONOUN,
+    icon: 'female',
+    index: 1
+  };
+
+allPronouns[MALE_PRONOUN] =
+  {
+    text: MALE_PRONOUN,
+    icon: 'male',
+    index: 2
+  };
+
+allPronouns[NON_PRONOUN] =
+  {
+    text: NON_PRONOUN,
+    icon: 'triangle',
+    index: 3
+  };
 
 
 class UserTab extends React.Component {
@@ -37,6 +71,11 @@ class UserTab extends React.Component {
       PpfURL: this.props.PpfURL,
     };
   }
+
+  componentDidMount() {
+    autosize($('textarea'));
+  }
+
 
   setEditMode = (bool) => {
     this.setState({
@@ -132,13 +171,29 @@ class UserTab extends React.Component {
     this.setState({ bio: event.target.value })
   }
 
+  setLocation = (event) => {
+    this.setState({ location: event.target.value })
+  }
+
+  setPronouns = (pronoun) => {
+    if (pronoun == NULL_PRONOUN) {
+      this.setState({ pronouns: null })
+      return;
+    }
+
+    this.setState({ pronouns: pronoun })
+  }
+
   render() {
+    const { pronouns } = this.state;
+
+
     let cornerButton,
       pic,
       name,
-      bio,
-      location,
-      pronouns,
+      bioEl,
+      locationEl,
+      pronounsEl,
       checkins,
       addQ;
 
@@ -165,16 +220,30 @@ class UserTab extends React.Component {
         <input type="text" className="profile-name" onChange={this.setName} value={this.state.name}></input>
       );
 
-      bio = (
-        <input type="text" className="profile-bio" onChange={this.setBio} value={this.state.bio}></input>
+      bioEl = (
+        <textarea rows="2"
+          className="profile-bio"
+          placeholder="Bio"
+          value={this.state.bio}
+          onChange={this.setBio}>
+          </textarea>
       );
 
-      location = (
-        <input type="text" className="profile-bio" onChange={this.setBio} value={this.state.bio}></input>
+      locationEl = (
+        <input type="text" className="profile-location" onChange={this.setLocation} value={this.state.location}></input>
       );
 
-      pronouns = (
-        null
+      pronounsEl = (
+        <Dropdown
+          options={[
+            allPronouns[NULL_PRONOUN],
+            allPronouns[FEMALE_PRONOUN],
+            allPronouns[MALE_PRONOUN],
+            allPronouns[NON_PRONOUN]
+          ]}
+          onChange={this.setPronouns}
+          selected={allPronouns[pronouns != null ? pronouns : NULL_PRONOUN].index}
+        ></Dropdown>
       );
 
       checkins = (
@@ -202,31 +271,33 @@ class UserTab extends React.Component {
         <div className="profile-name">{this.state.name}</div>
       );
 
-      if (this.state.bio) {
-        bio = <p className="profile-bio">
+      if (this.state.bio != null) {
+        bioEl = <p className="profile-bio">
           {this.state.bio ? this.state.bio : null}
         </p>
       } else {
-        bio = null;
+        bioEl = null;
       }
 
-      if (this.state.location) {
-        location = <div className="profile-location">
+      if (this.state.location != null) {
+        locationEl = <div className="profile-location">
           <span className="jam checkicon jam-map-marker"></span>
           {this.state.location}
         </div>;
       } else {
-        location = null;
+        locationEl = null;
       }
 
-      if (this.state.pronouns) {
-        pronouns = <div className="profile-pronouns">
-          <span className="jam checkicon jam-help"></span>
-          {this.state.pronouns}
+
+      if (pronouns != null) {
+
+        pronounsEl = <div className="profile-pronouns">
+          <span className={"jam checkicon jam-" + allPronouns[pronouns].icon}></span>
+          {' ' + pronouns}
         </div>;
       }
       else {
-        pronouns = null;
+        pronounsEl = null;
       }
 
 
@@ -274,9 +345,9 @@ class UserTab extends React.Component {
         {cornerButton}
         {pic}
         {name}
-        {bio}
-        {location}
-        {pronouns}
+        {bioEl}
+        {locationEl}
+        {pronounsEl}
 
 
 
