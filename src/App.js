@@ -45,18 +45,6 @@ class App extends React.Component {
     this.state = data;
   }
 
-  componentDidMount() {
-    
-  }
-
-  componentWillUnmount() {
-    //feedListen();
-  }
-
-  fillFeed = () => {
-
-  }
-
   SignUp = (userData) => {
     this.setState({
       onboarding: true,
@@ -85,7 +73,9 @@ class App extends React.Component {
 
   //check this.state.lastCheckin and see whether user has checked in today
   needToCheckin = () => {
-    if (this.state.userData.lastCheckin != moment().format('L')) {
+    if (this.state.userData.checkinFreq &&
+      this.state.userData.checkinFreq[new Date().getDay()] == true &&
+      this.state.userData.lastCheckin != moment().format('L')) {
       return true;
     }
     else {
@@ -113,11 +103,11 @@ class App extends React.Component {
     this.setState({
       userData:
       {
-        ...this.state.userData,
         name: name,
         bio: bio,
         location: location,
-        pronouns: pronouns
+        pronouns: pronouns,
+        ...this.state.userData,
       }
     })
   }
@@ -162,7 +152,7 @@ class App extends React.Component {
       userData: null
     });
   }
-  
+
   handleScroll = (e) => {
     //console.log("skkitteskeet");
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -182,8 +172,8 @@ class App extends React.Component {
       }
     }
   }
-  
-  
+
+
   /*resetScroll = () => {
     this.setState({})
   }*/
@@ -248,6 +238,8 @@ class App extends React.Component {
           bio={this.state.userData.bio}
           location={this.state.userData.location}
           pronouns={this.state.userData.pronouns}
+          checkinFreq={this.state.userData.checkinFreq}
+          checkinCategories={this.state.userData.checkinCategories}
           uid={this.state.userData.uid}
           PpfURL={this.state.userData.PpfURL}
           setPpfURL={this.setPpfURL}
@@ -265,6 +257,7 @@ class App extends React.Component {
           requestsLength={this.state.userData.requests ? this.state.userData.requests.length : 0}
           uid={this.state.userData.uid}
         />
+
         {activeTab}
 
         <div className="bg"></div>

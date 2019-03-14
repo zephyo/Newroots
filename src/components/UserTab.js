@@ -7,7 +7,7 @@ import Avatar from './Misc/Avatar';
 import CheckInRow from './Network/CheckinRow';
 import Dropdown from './Misc/Dropdown';
 import autosize from 'autosize';
-
+import StaticUserData from '../data/StaticUserData'
 
 const LogoutButton = (props) => {
   return (
@@ -21,41 +21,6 @@ const LogoutButton = (props) => {
 
 const LogoutButtonFB = withFirebase(LogoutButton);
 
-let NULL_PRONOUN = 'Select..',
-  FEMALE_PRONOUN = 'She / her',
-  MALE_PRONOUN = 'He / him',
-  NON_PRONOUN = 'They / them';
-
-let allPronouns = {};
-
-allPronouns[NULL_PRONOUN] =
-  {
-    text: NULL_PRONOUN,
-    icon: 'help',
-    index: 0
-  };
-
-allPronouns[FEMALE_PRONOUN] =
-  {
-    text: FEMALE_PRONOUN,
-    icon: 'female',
-    index: 1
-  };
-
-allPronouns[MALE_PRONOUN] =
-  {
-    text: MALE_PRONOUN,
-    icon: 'male',
-    index: 2
-  };
-
-allPronouns[NON_PRONOUN] =
-  {
-    text: NON_PRONOUN,
-    icon: 'triangle',
-    index: 3
-  };
-
 
 class UserTab extends React.Component {
   constructor(props) {
@@ -67,9 +32,11 @@ class UserTab extends React.Component {
       bio: this.props.bio,
       location: this.props.location,
       pronouns: this.props.pronouns,
+      checkinFreq: this.props.checkinFreq,
       addMode: false,
       PpfURL: this.props.PpfURL,
-      madeChanges: false
+      madeChanges: false,
+
     };
   }
 
@@ -83,19 +50,23 @@ class UserTab extends React.Component {
       editMode: bool
     });
 
+
     //TODO: save changes
     if (bool === false) {
-      if (this.state.madeChanges) {
+      if (this.state.madeChanges == true) {
 
-        this.props.setUserInfo(this.state.name, this.state.bio, this.state.location, this.state.pronouns);
+        let { name, bio, location, pronouns } = this.state;
+
+        this.props.setUserInfo(name, bio, location, pronouns);
 
         this.props.firebase
           .user(this.props.uid)
           .update({
-            name: this.state.name,
-            bio: this.state.bio,
-            location: this.state.location,
-            pronouns: this.state.pronouns
+            name: name,
+            bio: bio == null ? null : bio,
+            location: location == null ? null : location,
+            pronouns: pronouns == null ? null : pronouns,
+            checkinFreq: this.state.checkinFreq
           });
 
         this.setMadeChanges(false)
@@ -175,12 +146,21 @@ class UserTab extends React.Component {
   };
 
   setPronouns = (pronoun) => {
-    if (pronoun == NULL_PRONOUN) {
+    if (pronoun == StaticUserData.NULL_PRONOUN) {
       this.setState({ pronouns: null })
       return;
     }
 
     this.setState({ pronouns: pronoun })
+    this.setMadeChanges(true)
+  }
+
+  setCheckinFreq = (triggeredIndex) => {
+    let tempFreq = this.state.checkinFreq;
+
+    tempFreq[triggeredIndex] = !tempFreq[triggeredIndex];
+
+    this.setState({ checkinFreq: tempFreq })
     this.setMadeChanges(true)
   }
 
@@ -195,7 +175,8 @@ class UserTab extends React.Component {
       locationEl,
       pronounsEl,
       checkins,
-      addQ;
+      addQ,
+      freq;
 
 
     if (this.state.editMode) {
@@ -217,61 +198,92 @@ class UserTab extends React.Component {
         </div>
       );
       name = (
-        <input
-          name="name"
-          type="text"
-          className="profile-name"
-          onChange={this.onChangeUserInfo}
-          value={this.state.name}></input>
+        <div className="input-container">
+          <span className="input-label">
+            Full name
+        </span>
+          <input
+            name="name"
+            type="text"
+            className="profile-name"
+            placeholder="Full name"
+            onChange={this.onChangeUserInfo}
+            value={this.state.name}></input>
+        </div>
+
       );
 
       bioEl = (
-        <textarea
-          name="bio"
-          rows="2"
-          className="profile-bio"
-          placeholder="Bio"
-          value={this.state.bio}
-          onChange={this.onChangeUserInfo}>
-        </textarea>
+        <div className="input-container">
+          <span className="input-label">
+            About me
+        </span>
+          <textarea
+            name="bio"
+            rows="2"
+            className="profile-bio"
+            placeholder="Write about yourself."
+            value={this.state.bio}
+            onChange={this.onChangeUserInfo}>
+          </textarea>
+        </div>
+
       );
 
       locationEl = (
-        <input
-          name="location"
-          type="text"
-          className="profile-location"
-          onChange={this.onChangeUserInfo}
-          value={this.state.location}></input>
+        <div className="input-container">
+          <span className="input-label">
+            Location
+        </span>
+          <input
+            name="location"
+            type="text"
+            className="profile-location"
+            placeholder="Where are you?"
+            onChange={this.onChangeUserInfo}
+            value={this.state.location}></input>
+
+        </div>
+
       );
 
       pronounsEl = (
-        <Dropdown
-          options={[
-            allPronouns[NULL_PRONOUN],
-            allPronouns[FEMALE_PRONOUN],
-            allPronouns[MALE_PRONOUN],
-            allPronouns[NON_PRONOUN]
-          ]}
-          onChange={this.setPronouns}
-          selected={allPronouns[pronouns != null ? pronouns : NULL_PRONOUN].index}
-        ></Dropdown>
+        <div className="input-container">
+          <span className="input-label">
+            Pronouns
+          </span>
+          <Dropdown
+            options={[
+              StaticUserData.allPronouns[StaticUserData.NULL_PRONOUN],
+              StaticUserData.allPronouns[StaticUserData.FEMALE_PRONOUN],
+              StaticUserData.allPronouns[StaticUserData.MALE_PRONOUN],
+              StaticUserData.allPronouns[StaticUserData.NON_PRONOUN]
+            ]}
+            onChange={this.setPronouns}
+            selected={StaticUserData.allPronouns[pronouns != null ? pronouns : StaticUserData.NULL_PRONOUN].index}
+          ></Dropdown>
+        </div>
       );
 
-      checkins = (
-        <ul className="your-checkins">
-          {this.state.checkins.map((checkin, index) => {
-            return <CheckInRow
-              key={'key' + index}
-              q={checkin.q}
-              removeCheckinAt={this.removeCheckinAt}
-              index={index}
-              trash={true}
-              type={checkin.type}
-            />;
-          })}
-        </ul>
+      let freqButtons = StaticUserData.getDaysOfWeek().map((item, index) => {
+        let className = "";
+        if (this.state.checkinFreq[index] == false) {
+          className = "disable";
+        }
+        return <button
+          key={'freq_' + index}
+          className={className}
+          onClick={() => this.setCheckinFreq(index)}>
+          {item}
+        </button>;
+      }
       );
+      freq = (
+        <div className="freq-days">
+          {freqButtons}
+        </div>
+      );
+
     }
     else {
       cornerButton = (
@@ -305,7 +317,7 @@ class UserTab extends React.Component {
       if (pronouns != null) {
 
         pronounsEl = <div className="profile-pronouns">
-          <span className={"jam checkicon jam-" + allPronouns[pronouns].icon}></span>
+          <span className={"jam checkicon jam-" + StaticUserData.allPronouns[pronouns].icon}></span>
           {' ' + pronouns}
         </div>;
       }
@@ -314,17 +326,22 @@ class UserTab extends React.Component {
       }
 
 
-      checkins = (
-        <ul className="your-checkins">
-          {this.state.checkins.map(function (checkin, index) {
-            return <CheckInRow
-              key={'key' + index}
-              q={checkin.q}
-              trash={false}
-              type={checkin.type}
-            />;
-          })}
-        </ul>
+      let freqButtons = StaticUserData.getDaysOfWeek().map((item, index) => {
+        let className = "";
+        if (this.state.checkinFreq != null && this.state.checkinFreq[index] == false) {
+          className = "disable";
+        }
+        return <div
+          key={'freq_' + index}
+          className={className}>
+          {item}
+        </div>;
+      }
+      );
+      freq = (
+        <div className="freq-days">
+          {freqButtons}
+        </div>
       );
     }
 
@@ -334,6 +351,7 @@ class UserTab extends React.Component {
           setAddMode={this.setAddMode}
           uid={this.props.uid}
           addCheckin={this.addCheckin}
+          categories={this.props.checkinCategories}
         />
       );
     } else {
@@ -343,16 +361,48 @@ class UserTab extends React.Component {
       );
     }
 
-    let freq;
-    freq = (
-      <button onClick={() => {
+    checkins = {};
+    for (let i = 0; i < this.state.checkins.length; i++) {
+      let checkin = this.state.checkins[i];
 
-      }} className="freq dropdown">
-        Every day
-        <span className="jam jam-chevron-down"></span>
-      </button>
-    );
+      if (checkin.category == null || checkin.category == '') {
+        checkin.category = 'misc';
+      }
 
+      if (!(checkin.category in checkins)) {
+        checkins[checkin.category] = [];
+      }
+
+      checkins[checkin.category].push(
+        <CheckInRow
+          checkin={checkin}
+          removeCheckinAt={this.removeCheckinAt}
+          index={i}
+          trash={this.state.editMode}
+        />
+      );
+    }
+
+    let checkinsEl = [];
+    for (let category in checkins) {
+      checkinsEl.push(
+        <div className={"qcat " + category}>
+          <h2>{category}</h2>
+          <ul className="your-checkins">
+            {checkins[category]}
+          </ul>
+        </div>
+      );
+    }
+
+    // console.log(JSON.stringify(checkinsEl));
+
+    let style = {};
+    if (this.state.editMode) {
+      style = {
+        display: 'contents'
+      }
+    }
 
     return (
       <section className="user">
@@ -360,8 +410,10 @@ class UserTab extends React.Component {
         {pic}
         {name}
         {bioEl}
-        {locationEl}
-        {pronounsEl}
+        <div className="profile-footer" style={style}>
+          {locationEl}
+          {pronounsEl}
+        </div>
 
 
 
@@ -374,7 +426,9 @@ class UserTab extends React.Component {
           {freq}
 
           <h3>Check-in questions</h3>
-          {checkins}
+          <div className="checkinQs">
+            {checkinsEl}
+          </div>
           {addQ}
         </div>
         <LogoutButtonFB

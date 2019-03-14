@@ -59,7 +59,7 @@ class HomePage extends React.Component {
   }
 
   render (){
-    var content;
+    let content, plantsEl = null; 
     if (this.state.loggingIn){
       content = (
         <LoginFormFB 
@@ -83,6 +83,7 @@ class HomePage extends React.Component {
           </div>
         </div>
       );
+      plantsEl = <img className = "plants" src={plants}/>;
     }
 
     return (
@@ -92,7 +93,7 @@ class HomePage extends React.Component {
         
             
             <img className="bg-texture" src={hero}/>
-            <img className = "plants" src={plants}/>
+            {plantsEl}
             {content}
             
         

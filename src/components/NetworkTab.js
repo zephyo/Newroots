@@ -166,37 +166,42 @@ class NetworkTab extends React.Component {
     }
 
 
-
     let userPage = null;
-    if (this.state.showUser !== null) {
-      userPage = <UserPage
-        closeUserPage={this.closeUserPage}
-        PpfURL={null}
-        name='hi'
-        bio='hi there this is a bio'
-        location='United States'
-      ></UserPage>
-    }
 
+    if (this.state.showUser !== null) {
+      let showUser = this.state.showUser;
+      userPage =
+        <UserPage
+          closeUserPage={this.closeUserPage}
+          PpfURL={showUser.PpfURL}
+          name={showUser.name}
+          bio={showUser.bio}
+          location={showUser.location}
+          pronouns={showUser.pronouns}
+          checkins={showUser.checkinData}
+          network={showUser.network}
+          myUID={this.props.uid}
+        ></UserPage>
+    }
 
 
     return (
       <section className="network">
-        <h2>Your support network</h2>
-        <div className="header">
-          <div className="search-bar">
-            <input type="text" placeholder="Search" onChange={this.filterNetwork} />
-            <button><span className="jam jam-search" style={{ color: '#9FC6C1' }}></span></button>
+        <div className="network-header">
+          <h2>Your support network</h2>
+          <div className="header">
+            <div className="search-bar">
+              <input type="text" placeholder="Search" onChange={this.filterNetwork} />
+              <button><span className="jam jam-search" style={{ color: '#9FC6C1' }}></span></button>
+            </div>
+            <button id="add-friends" onClick={() => this.setAddFriend(true)} >
+              <span className="jam jam-user-plus">
+                {alert}
+              </span>
+            </button>
           </div>
-          <button id="add-friends" onClick={() => this.setAddFriend(true)} >
-            <span className="jam jam-user-plus">
-              {alert}
-            </span>
-
-
-
-          </button>
         </div>
+
         <div className="friends">
           {this.state.network.length == 0 ?
             <ErrorMsg

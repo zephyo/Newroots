@@ -2,30 +2,67 @@ import React, { Component } from 'react';
 import Avatar from '../Misc/Avatar';
 import CheckInRow from './CheckinRow';
 
+import StaticUserData from '../../data/StaticUserData'
+
 class UserPage extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  render() {
+  inNetwork = (myUID, theirNetwork) => {
+    return theirNetwork.indexOf(myUID) > -1;
+  }
 
-    let checkinData = [
-      {
-        q: 'hi there this a q',
-        type: 'text'
-      }
-    ];
-    let checkins = (
-      <ul className="your-checkins">
-        {checkinData.map(function (checkin, index) {
-          return <CheckInRow
-            q={checkin.q}
+  render() {
+    const {
+      name,
+      checkins,
+      network,
+      location,
+      myUID,
+      bio,
+      pronouns,
+      PpfURL,
+    } = this.props;
+
+    let checkinsEl = [];
+    for (let i = 0; i < checkins.length; i++) {
+      const checkin = checkins[i];
+
+      if (checkin.visibility == StaticUserData.VIS_PUBLIC ||
+        (checkin.visibility == StaticUserData.VIS_NETWORK && this.inNetwork(myUID, network))) {
+        checkinsEl.push(
+          <CheckInRow
+            checkin={checkin}
             trash={false}
-            type={checkin.type}
-          />;
-        })}
-      </ul>
-    );
+          />
+        );
+      }
+    }
+
+    let locationEl = null,
+      bioEl = null,
+      pronounEl = null;
+
+    if (location != null) {
+      locationEl =
+        <div className="profile-location">
+          <span className="jam checkicon jam-map-marker"></span>
+          {location}
+        </div>;
+    }
+
+    if (bio != null) {
+      bioEl = <p className="profile-bio"> {bio}</p>
+    }
+
+    if (pronouns != null) {
+      pronounEl =
+        <p className="profile-pronoun">
+          <span className={"jam checkicon jam-" + StaticUserData.allPronouns[pronouns]}></span>
+          {pronouns}
+        </p>
+    }
 
 
     return (
@@ -34,20 +71,15 @@ class UserPage extends React.Component {
           <span className="jam jam-close"></span>
         </button>
 
-        <Avatar PpfURL={this.props.PpfURL}
-          content={null
-          }
+        <Avatar PpfURL={PpfURL}
+          content={null}
         />
 
-        <div className="profile-name">{this.props.name}</div>
+        <div className="profile-name">{name}</div>
 
-
-        <div className="profile-location">
-          <span className="jam checkicon jam-map-marker"></span>
-          {this.props.location}
-        </div>
-
-        <p className="profile-bio"> {this.props.bio}</p>
+        {locationEl}
+        {pronounEl}
+        {bioEl}
 
         <div className="action-buts">
           <button
@@ -71,7 +103,9 @@ class UserPage extends React.Component {
           <h2>Their check-in</h2>
 
           <h3>Check-in questions</h3>
-          {checkins}
+          <ul className="your-checkins">
+            {checkinsEl}
+          </ul>
         </div>
 
 

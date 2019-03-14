@@ -9,6 +9,7 @@ import ThoughtProvoker from './Feed/ThoughtProvoker';
 
 import graphics1 from '../graphics/1.png';
 import ErrorMsg from './Misc/ErrorMsg';
+import Loading from './Misc/Loading';
 
 let feedListen;
 let initial = true;
@@ -21,7 +22,8 @@ class FeedTab extends React.Component {
       checkins: [],
       feed: [],
       newItems: [],
-      lastSeen: ''
+      lastSeen: '',
+      loading: false,
       //initial: true
     }
     //this.processTime = this.processTime.bind(this);
@@ -36,7 +38,7 @@ class FeedTab extends React.Component {
     if (windowBottom >= docHeight) {
       console.log("bootm ");
       this.setState({
-        message: 'bottom reached'
+        message: 'bottom reached',
       });
     } else {
       console.log("noot bootm ");
@@ -45,25 +47,6 @@ class FeedTab extends React.Component {
       });
     }
   }
-  /*
-    -PpfURL : string (optional)
-    -name : string
-    -isMyPost : bool
-    -timestamp : string - e.g. a few seconds ago
-    -conversation : array
-
-  - example of conversation: 
-  [
-    {
-      uid: 'fdsadsadaad'
-      PpfURL: '...'
-      poster: true //is message from poster
-      message: 'hi i love'
-      
-    },
-   ...
-  ]
-  */
   compare = (a, b) => {
     if (a.timestamp < b.timestamp)
       return 1;
@@ -74,6 +57,9 @@ class FeedTab extends React.Component {
 
   loadMore = () => {
     console.log("LOAD MORE");
+
+    this.setState({loading:true});
+
     const element = this;
     var first = this.props.firebase.user(this.props.uid).collection("feed")
       .orderBy("realtime", "desc")
@@ -122,7 +108,8 @@ class FeedTab extends React.Component {
       //tempFeed.reverse();
       element.setState({
         //feed:tempFeed
-        feed: element.state.feed.concat(tempFeed)
+        feed: element.state.feed.concat(tempFeed),
+        loading: false
       })
       tempFeed = [];
       initial = false;
@@ -182,23 +169,6 @@ class FeedTab extends React.Component {
           }
 
         });
-        /*console.log(JSON.stringify(tempCheckins));
-        console.log(JSON.stringify(tempThoughts));*/
-
-        /*console.log("NOthing but  " + initial);
-        if(initial === true){
-            console.log("SORT");
-            tempFeed.sort(this.compare)
-        }
-        initial = false;
-        //console.log(tempfeed);
-        element.setState({
-            
-          feed: tempFeed
-            
-        })*/
-
-        //
         if (!initial) {
           tempFeed.sort(element.compare);
           tempFeed.reverse();
@@ -208,10 +178,6 @@ class FeedTab extends React.Component {
             newItems: tempFeed
           })
         }
-        /*element.setState({
-          checkins: tempCheckins,
-          thoughts: tempThoughts
-        })*/
       });
 
 
@@ -268,37 +234,7 @@ class FeedTab extends React.Component {
         tempFeed = [];
         initial = false;
       })
-      /*this.props.firebase.user(this.props.uid).collection("feed").orderBy("realtime").get().then((documentSnapshots) => {
-          let ids = {}
-          let counter = 0;
-          documentSnapshots.docs.forEach((doc, index) => {
-              //function(doc) {
-              //ids.push(doc.id);
-              console.log("index " + index);
-              ids[doc.id] = doc.data().timestamp;
-              //counter++;
-          })
-          Object.keys(ids).forEach((doc) => {
-              //console.log(doc, dictionary[key]);
-              this.props.firebase.user(this.props.uid).collection("feed").doc(doc).update({
-                  realtime: moment(ids[doc]).format('lll')
-              })
-          });
-
-      })*/
     }
-    /*return first.get().then(function (documentSnapshots) {
-      // Get the last visible document
-      var lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
-      console.log("last", lastVisible);
-
-      // Construct a new query starting at this document,
-      // get the next 25 cities.
-      var next = db.collection("cities")
-              .orderBy("population")
-              .startAfter(lastVisible)
-              .limit(10);
-    });*/
 
   }
 
@@ -324,112 +260,70 @@ class FeedTab extends React.Component {
 
   render() {
 
-    /*let local_feed = [];
-      console.log("this.state " + this.state.initial);
-    if(this.state.initial){
-        console.log("SORT");
-        this.setState({
-            feed:this.state.feed.sort(this.compare),
-            initial:false
-        },()=>{
-            local_feed = this.state.feed;
-        })
-        //local_feed.sort(this.compare);
-    }*/
     let local_feed = (this.state.newItems.concat(this.state.feed));
-    //let local_feed = this.state.feed;
 
-    //local_feed.sort(this.compare);
-    let last_date = "";
-    let header = <h1 className="date-marker">February 17</h1>;
-    let feedItems = local_feed.map((f, index) => {
-      //f = local_feed[local_feed.length - 1 - index];
-      if (f.timestamp.split(",")[0] !== last_date) {
-        last_date = f.timestamp.split(",")[0];
+    let last_date = null;
+    let feedItems = [];
+
+    for (let index = 0; index < local_feed.length; index++) {
+      let post = local_feed[index];
+
+      if (post.timestamp.split(",")[0] !== last_date) {
+        last_date = post.timestamp.split(",")[0];
         // console.log("last date " + last_date);
-        header = <h1 className="date-marker">{last_date}</h1>;
+        feedItems.push(<h1 className="date-marker">{last_date}</h1>);
       }
-      else {
-        header = "";
-      }
-      if (f.checkinData) {
-        return <div key={'key' + index}>
-          {header}
+
+      if (post.checkinData) {
+        feedItems.push(
           <CheckinPost
             uid={this.props.uid}
-            posterUid={f.uid}
+            yourNetwork={this.props.network}
+            posterUid={post.uid}
 
-            PpfURL={f.PpfURL}
+            PpfURL={post.PpfURL}
             yourPpfURL={this.props.PpfURL}
             key={index.toString() + "_checkin"}
-            name={f.name}
-            timestamp={f.timestamp}
+            name={post.name}
+            timestamp={post.timestamp}
 
-            postid={f.postid}
-            checkinData={f.checkinData}
+            postid={post.postid}
+            checkinData={post.checkinData}
             firebase={this.props.firebase}
-          /></div>;
+          />);
       } else {
-        return <div key={'key' + index}>
-          {header}
+        feedItems.push(
           <ThoughtPost
             uid={this.props.uid}
-            posterUid={f.uid}
+            posterUid={post.uid}
 
-            PpfURL={f.PpfURL}
+            PpfURL={post.PpfURL}
             yourPpfURL={this.props.PpfURL}
 
             key={index.toString() + "_thought"}
-            name={f.name}
-            thought={f.thought}
-            timestamp={f.timestamp}
+            name={post.name}
+            thought={post.thought}
+            timestamp={post.timestamp}
 
-            message={f.message}
-            postid={f.postid}
+            message={post.message}
+            postid={post.postid}
             firebase={this.props.firebase
-            } /></div>;
+            } />);
       }
     }
-    );
 
-    // let feedItems = this.state.checkins.map((checkin, index) =>
-    //   <CheckinPost
-    //     uid={this.props.uid}
-    //     posterUid={checkin.uid}
 
-    //     PpfURL={checkin.PpfURL}
-    //     yourPpfURL={this.props.PpfURL}
-    //     key={toString(index)}
-    //     name={checkin.name}
-    //     timestamp={checkin.timestamp}
+    let loadingEl = null;
+    if (this.state.loading) {
+      loadingEl = <Loading />;
+    } else {
+      loadingEl = <ErrorMsg
+        src={graphics1}
+        header='Nothing more.'
+        msg='Why not post a thought?'
+      />;
+    }
 
-    //     postid={checkin.postid}
-    //     checkinData={checkin.checkinData}
-    //     firebase={this.props.firebase}
-    //   />
-    // );
-
-    // let thoughtItems = this.state.thoughts.map((thought, index) =>
-    //   <ThoughtPost
-    //     uid={this.props.uid}
-    //     posterUid={thought.uid}
-
-    //     PpfURL={thought.PpfURL}
-    //     yourPpfURL={this.props.PpfURL}
-
-    //     key={toString(index)}
-    //     name={thought.name}
-    //     thought={thought.thought}
-    //     timestamp={thought.timestamp}
-
-    //     message={thought.message}
-    //     postid={thought.postid}
-    //     firebase={this.props.firebase
-    //     } />
-    // );
-    // console.log(checkinItems);
-    //combine checkinItems and thoughtItems then sort then render
-    //        <h1 className="date-marker">February 17</h1>
     return (
 
       <section className="feed">
@@ -448,12 +342,8 @@ class FeedTab extends React.Component {
 
         {feedItems}
 
+        {loadingEl}
 
-        <ErrorMsg
-          src={graphics1}
-          header='Nothing more.'
-          msg='Why not post a thought?'
-        />
 
       </section>
     );

@@ -5,6 +5,7 @@ import texture1 from './../graphics/flower.png';
 import texture2 from './../graphics/thing.png';
 import frontGraphic from './../graphics/3.png';
 
+import StaticUserData from '../data/StaticUserData'
 
 class TextQ extends React.Component {
 
@@ -243,7 +244,7 @@ class CheckinModal extends React.Component {
 
     for (let i = currIndex; i < checkins.length && i < currIndex + 1; i++) {
       let addEl;
-      if (checkins[i].type == 'text') {
+      if (checkins[i].type == StaticUserData.QTYPE_TEXT) {
         addEl = (
           <TextQ
             ref={this.childQ}
@@ -253,7 +254,7 @@ class CheckinModal extends React.Component {
           />
         );
       }
-      else if (checkins[i].type == 'yes/no') {
+      else if (checkins[i].type == StaticUserData.QTYPE_YESNO) {
         addEl = (
           <YesNoQ
             ref={this.childQ}
@@ -302,7 +303,7 @@ class CheckinModal extends React.Component {
 
     let content;
 
-    if (!this.state.started) {
+    if (!this.state.started && checkins.length > 0) {
       content = 
       <div className="ci-question front">
       
@@ -335,7 +336,7 @@ class CheckinModal extends React.Component {
           <button
             id="submit"
             onClick={this.saveCheckinData}
-            disabled={checkins[currIndex].answer == undefined}
+            disabled={checkins.length > 0 && checkins[currIndex].answer == null}
           >
             <span className="jam jam-check" style={{ color: '#9FC6C1' }}></span>
           </button>

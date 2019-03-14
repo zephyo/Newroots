@@ -4,6 +4,7 @@ import CommentBox from './CommentBox';
 import CommentBut from './CommentBut';
 import Comments from './Comments';
 import EditButton from './EditButton';
+import StaticUserData from '../../data/StaticUserData';
 
 
 /*
@@ -20,19 +21,19 @@ import EditButton from './EditButton';
     [
       {
         q: 'How are you feeling today?'
-        type: 'range'
+        type: StaticUserData.QTYPE_SCALE
         answer: '5',
         comment: 'hi'
       },
       {
         q: 'Did you take your medication?'
-        type: 'yes/no'
+        type: StaticUserData.QTYPE_YESNO
         answer: 'yes'
         comment: 'hi'
       },
       {
         q: 'u gey?'
-        type: 'text'
+        type: StaticUserData.QTYPE_TEXT
         answer: 'dsadsdsaadadada'
       }
     ]
@@ -140,9 +141,16 @@ class CheckinPost extends React.Component {
 
     for (var i = 0; i < checkinData.length; i++) {
       let checkin = checkinData[i];
+
+      if (this.props.posterUid != this.props.uid &&
+        (checkin.visibility == StaticUserData.VIS_PRIVATE ||
+          (checkin.visibility == StaticUserData.VIS_NETWORK && this.props.yourNetwork.indexOf(this.props.posterUid) < 0))) {
+        continue;
+      }
+
       let el = null;
 
-      if (checkin.type == 'range') {
+      if (checkin.type == StaticUserData.QTYPE_SCALE) {
         el = (
           <div
             key={'key' + i}
@@ -155,7 +163,7 @@ class CheckinPost extends React.Component {
           </div>
         );
       }
-      else if (checkin.type == 'yes/no') {
+      else if (checkin.type == StaticUserData.QTYPE_YESNO) {
         el = (
           <div
             key={'key' + i}
@@ -180,7 +188,7 @@ class CheckinPost extends React.Component {
           </div>
         );
       }
-      else if (checkin.type == 'text') {
+      else if (checkin.type == StaticUserData.QTYPE_TEXT) {
         el = (
           <div
             key={'key' + i}

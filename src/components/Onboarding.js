@@ -28,7 +28,7 @@ class Onboarding extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      page: 0
+      page: 0,
     }
   }
 
@@ -91,11 +91,11 @@ class Onboarding extends React.Component {
         {
 
           page = (
-
             <OnboardingCategoriesFB
               uid={this.props.uid}
               setCheckins={this.props.setCheckins}
               incrementPage={this.incrementPage}
+              onboarding={true}
             />
           );
           break;

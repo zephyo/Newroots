@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import StaticUserData from '../data/StaticUserData'
+
 
 const Button = (props) => {
   return (
@@ -8,80 +10,10 @@ const Button = (props) => {
   );
 }
 
-const defCheckins =
-  [
-    [
-      {
-        q: 'Have you made time to do something you love?',
-        type: 'yes/no'
-      },
-      {
-        q: 'How loving were you towards yourself?',
-        type: 'range'
-      },
-      {
-        q: 'What are you grateful for?',
-        type: 'text'
-      }
-    ],
-    [
-      {
-        q: 'Have you taken a deep breath today?',
-        type: 'yes/no'
-      },
-      {
-        q: 'Have you listened to relaxing music?',
-        type: 'yes/no'
-      },
-      {
-        q: 'Did you spend time in nature?',
-        type: 'yes/no'
-      }
-    ],
-    [
-      {
-        q: 'What was a memorable interaction from today?',
-        type: 'text'
-      },
-      {
-        q: 'Have you done something for someone else?',
-        type: 'yes/no'
-      }
-    ],
-    [
-      {
-        q: 'How overwhelmed do you feel?',
-        type: 'range'
-      },
-      {
-        q: 'Did you feel anxious about something?',
-        type: 'yes/no'
-      }
-    ],
-    [
-      {
-        q: 'How hydrated are you?',
-        type: 'range'
-      },
-      {
-        q: 'Have you stretched and moved your body?',
-        type: 'yes/no'
-      },
-      {
-        q: 'How was your sleep?',
-        type: 'range'
-      },
-    ],
-  ];
+const defCheckins = StaticUserData.getDefCheckins();
 
 const INITIAL_STATE = {
-  categories: [
-    'mindful',
-    'relaxation',
-    'social',
-    'stress',
-    'physical'
-  ],
+  categories: StaticUserData.getDefCheckinCategories(),
   showOptions: [
     false,
     false,
@@ -101,7 +33,9 @@ const INITIAL_STATE = {
 class OnboardingCategories extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = INITIAL_STATE;
+
   }
 
 
@@ -122,15 +56,16 @@ class OnboardingCategories extends React.Component {
     const checkins = [], s = this.state.selectedCheckins;
     for (let i = 0; i < s.length; i++) {
       let arr = s[i];
-      // console.log(JSON.stringify(arr));
       for (let j = 0; j < arr.length; j++) {
         if (arr[j] === true) {
-          checkins.push(defCheckins[i][j])
+          let checkin = defCheckins[i][j];
+          checkin['visibility'] = StaticUserData.VIS_PRIVATE
+          checkin['category'] = this.state.categories[i]
+          checkins.push(checkin)
         }
       }
     }
 
-    // console.log(JSON.stringify(checkins));
     this.props.setCheckins(checkins);
     this.props.firebase
       .user(this.props.uid)
@@ -153,9 +88,11 @@ class OnboardingCategories extends React.Component {
 
       let addEl;
 
+      let categoryName = categories[ii];
+
       let button =
-        <button onClick={() => this.changeOptions(ii)} className={categories[ii]}>
-          {categories[ii]}
+        <button onClick={() => this.changeOptions(ii)} className={categoryName}>
+          {categoryName}
           <span className="jam jam-chevron-down"></span>
         </button>;
 
@@ -166,7 +103,7 @@ class OnboardingCategories extends React.Component {
         for (let j = 0; j < arr.length; j++) {
           let className = '';
           let item = arr[j];
-          let tru = selectedCheckins[ii][j];
+          let tru = selectedCheckins != null ? selectedCheckins[ii][j] : false;
 
           if (tru) {
             className = 'ob-cat-opt selected'
@@ -175,12 +112,12 @@ class OnboardingCategories extends React.Component {
           }
 
           let el = null;
-          if (item.type == 'text') {
+          if (item.type == StaticUserData.QTYPE_TEXT) {
             el = (
               <span className="jam checkicon jam-write"></span>
             );
           }
-          else if (item.type == 'yes/no') {
+          else if (item.type == StaticUserData.QTYPE_YESNO) {
             el = (
               <span className="jam checkicon jam-brightness"></span>
             );
@@ -190,10 +127,21 @@ class OnboardingCategories extends React.Component {
             );
           }
 
-          defCh.push(<button className={className} onClick={() => {
-            this.changeSelected(ii, j);
+          let onClick;
+          if (this.props.onboarding == true) {
+            onClick = () => {
+              this.changeSelected(ii, j);
+            }
+          } else {
+            onClick = () => {
+              this.props.select(item, categoryName)
+            }
+          }
 
-          }}>
+          defCh.push(<button 
+          key = {ii+ '_'+j}
+          className={className} 
+          onClick={onClick}>
             {tru ? <span class="jam jam-check"></span> : null}
             {el}
             {item.q}
@@ -201,7 +149,9 @@ class OnboardingCategories extends React.Component {
         }
 
         addEl = (
-          <div className={"ob-cat " + categories[ii]}>
+          <div 
+          key = {ii+ '_'}
+          className={"ob-cat " + categoryName}>
             {button}
             {defCh}
           </div>
@@ -212,6 +162,15 @@ class OnboardingCategories extends React.Component {
       }
       checkins.push(addEl);
     }
+
+    if (this.props.onboarding == false) {
+      return (
+        <div className="categories">
+          {checkins}
+        </div>
+      );
+    }
+
     return (
       <div className="page three">
         <h2>What would you like to check in about?</h2>
@@ -225,8 +184,6 @@ class OnboardingCategories extends React.Component {
           Classes="jam jam-check"
         />
       </div>
-
-
     );
   }
 };

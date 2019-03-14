@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import StaticUserData from '../data/StaticUserData';
+
 
 const INITIAL_STATE = {
   name: '',
@@ -23,20 +25,7 @@ class SignupForm extends React.Component {
   onSubmit = () => {
     const { name, lastName, email, passwordOne } = this.state;
     let element = this;
-    const default_vals = {
-      name: name + ' ' + lastName,
-      easy_name: name.toLowerCase(),
-      email: email,
-      network: [],
-      requests: [],
-      checkins: [
-        {
-          q: 'How are you feeling today?',
-          type: 'range',
-        }
-      ],
-      PpfURL: null
-    };
+    const default_vals = StaticUserData.getDefaultData(name, lastName, email);
     let ID;
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
@@ -136,7 +125,7 @@ class SignupForm extends React.Component {
             placeholder="Last name"
             value={lastName}
             onChange={this.onChange}
-         >
+          >
           </input>
         </div>
         ;
@@ -224,9 +213,10 @@ class SignupForm extends React.Component {
         {progressbar}
 
         {header}
-        {input}
-
-        {small}
+        <div className="input-container">
+          {input}
+          {small}
+        </div>
 
         {button}
 

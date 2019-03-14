@@ -73,7 +73,7 @@ class NavBar extends React.Component {
       );
     } else {
       feed = (
-        <button className="feed-but" 
+        <button className="feed-but"
           onClick={() => this.setActiveTab(0)}>
           <span className="jam jam-messages" ></span>
 
@@ -120,7 +120,7 @@ class NavBar extends React.Component {
     }
 
     return (
-      <nav className="main-nav">
+      <nav className={"main-nav " + "active" + activeTab}>
         <div className="nav-content">
           <img className="logo-img" src={icon} />
           <span className="logo">Newroots
