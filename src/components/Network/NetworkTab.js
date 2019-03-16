@@ -1,14 +1,12 @@
-import React, { Component } from 'react';
-import AddFriend from './Network/AddFriend';
-import { withFirebase } from './Firebase';
-import { request } from 'http';
-import Avatar from './Misc/Avatar';
+import React from 'react';
+import AddFriend from './AddFriend';
+import { withFirebase } from '../Firebase';
+import Avatar from '../Misc/Avatar';
+import UserPage from './UserPage';
+import UserRow from './UserRow'
 
-
-import UserPage from './Network/UserPage';
-
-import graphics3 from '../graphics/3.png';
-import ErrorMsg from './Misc/ErrorMsg';
+import graphics3 from '../../graphics/3.png';
+import ErrorMsg from '../Misc/ErrorMsg';
 
 const AddFriendFB = withFirebase(AddFriend);
 
@@ -28,13 +26,10 @@ class NetworkTab extends React.Component {
   componentDidMount() {
     let ref = this.props.firebase.user(this.props.uid);
 
-    // console.log(JSON.stringify(this.state.requests));
-
     ref.onSnapshot((doc) => {
       let data = doc.data();
       this.setNetworkUsers(data.network);
-      this.setRequests(data.requests);
-      // console.log(JSON.stringify(this.state.requests));
+      this.props.updateUserData('requests', data.requests);
     })
   }
 
@@ -74,10 +69,9 @@ class NetworkTab extends React.Component {
             this.setState({ networkUsers: users });
           });
       });
-
       this.setState({ network: network });
     }
-    this.props.setNetwork(network);
+    this.props.updateUserData('network', network);
   }
 
   loadNetworkUsers = () => {
@@ -99,32 +93,6 @@ class NetworkTab extends React.Component {
         });
     }
   }
-  /*addName = (id, name) => {
-      return this.props.firebase.user(id).update({
-            easy_name: name.toLowerCase()
-        })
-        .then(function() {
-            console.log("Document successfully updated!");
-        })
-        .catch(function(error) {
-            // The document probably doesn't exist.
-            console.error("Error updating document: ", error);
-        });
-  }
-  easyName = () => {
-      let element = this;
-      this.props.firebase.users().get()
-        .then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-                // doc.data() is never undefined for query doc snapshots
-                console.log(doc.id, " => ", doc.data());
-                element.addName(doc.id,doc.data().name);
-            });
-        })
-        .catch(function(error) {
-            console.log("Error getting documents: ", error);
-        });
-  }*/
 
 
   closeUserPage = () => {
@@ -156,11 +124,12 @@ class NetworkTab extends React.Component {
       let user = this.state.networkUsers[i];
       if (user == undefined) continue;
       var addEl = (
-        <button className="friend" onClick={() => this.setUser(user)}>
-          <Avatar PpfURL={user.PpfURL} />
-          <span>{user.name}</span>
-          <button><span className="jam jam-heart" style={{ color: '#e38882' }}></span></button>
-        </button>
+        <UserRow
+          onProfileClick={() => this.setUser(user)}
+          PpfURL={user.PpfURL}
+          name={user.name}
+          rightElement={<button><span className="jam jam-heart" ></span></button>}
+        />
       );
       network.push(addEl);
     }

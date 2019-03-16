@@ -1,22 +1,78 @@
-import React, { Component } from 'react';
+import React from 'react';
+
+/*
+  modalOptions: [
+    {
+      text: 'Edit',
+      onClick: this.?,
+      class: 'green'
+    },
+    ...
+  ]
+*/
+
+//edit / delete
+
+//report / mute
+
+class EditButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showModal: false
+    }
+  }
+
+  setModal = (bool) => {
+    this.setState({ showModal: bool })
+    if (bool == false) {
+      document.removeEventListener('mousedown', this.handleClickOutside, false);
+    } else {
+      document.addEventListener('mousedown', this.handleClickOutside, false);
+    }
+  }
+
+  handleClickOutside = (e) => {
+    if (this.node.contains(e.target)) {
+      return;
+    }
+
+    this.setModal(false);
+  }
 
 
+  render() {
+    let modal = null;
 
+    if (this.state.showModal) {
+      let opts = this.props.modalOptions.map((item, index) => {
+        return <button
+          className={item.class}
+          onClick={() => {
+            item.onClick();
+            this.setModal(false);
+          }}
+        >
+          {item.text}
+        </button>
 
-const EditButton = (props) => {
-  if (props.isOwnPost) {
+      });
+
+      modal = <div className='post-modal'>{opts}</div>;
+    }
+
     return (
-      <button className="user-edit">
-        <span className="jam jam-pencil" ></span>
-      </button>
-    );
-  } else {
-    return (
-      <button className="user-filter">
-        <span className="jam jam-more-vertical-f" ></span>
-      </button>
+      <div
+        ref={node => this.node = node}
+      >
+        <button className="user-filter" onClick={() => this.setModal(!this.state.showModal)}>
+          <span className="jam jam-more-horizontal-f" ></span>
+        </button>
+        {modal}
+      </div>
     );
   }
-};
+}
+
 
 export default EditButton;

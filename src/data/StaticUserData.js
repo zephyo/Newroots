@@ -1,11 +1,11 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 
 
 class StaticUserData extends React.Component {
   constructor() { }
 
-  static NULL_PRONOUN = 'Select..';
+  static NULL_KEY = 'Select..';
   static FEMALE_PRONOUN = 'She / her';
   static MALE_PRONOUN = 'He / him';
   static NON_PRONOUN = 'They / them';
@@ -74,15 +74,21 @@ class StaticUserData extends React.Component {
     return data;
   }
 
+  static getMiscCategory() {
+    return 'Misc';
+  }
+
   static getDefCheckinCategories() {
     return [
-      'mindful',
-      'relaxation',
-      'social',
-      'stress',
-      'physical'
+      'Mindful',
+      'Relaxation',
+      'Social',
+      'Stress',
+      'Physical'
     ];
   }
+
+  static commentPlaceholder = () => "Comment..";
 
   static getDefCheckins() {
     return [
@@ -156,9 +162,9 @@ class StaticUserData extends React.Component {
 
 
 
-StaticUserData.allPronouns[StaticUserData.NULL_PRONOUN] =
+StaticUserData.allPronouns[StaticUserData.NULL_KEY] =
   {
-    text: StaticUserData.NULL_PRONOUN,
+    text: StaticUserData.NULL_KEY,
     icon: 'help',
     index: 0
   };

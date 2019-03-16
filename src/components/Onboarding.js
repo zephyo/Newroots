@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import graphics1 from '../graphics/1.png';
 import graphics2 from '../graphics/2.png';
 import graphics3 from '../graphics/3.png';
@@ -93,7 +93,7 @@ class Onboarding extends React.Component {
           page = (
             <OnboardingCategoriesFB
               uid={this.props.uid}
-              setCheckins={this.props.setCheckins}
+              setCheckins={(checkins) => this.props.updateUserData('checkins', checkins)}
               incrementPage={this.incrementPage}
               onboarding={true}
             />

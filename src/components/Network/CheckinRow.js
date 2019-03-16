@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import StaticUserData from '../../data/StaticUserData'
 
 
@@ -27,29 +27,30 @@ const CheckInRow = (props) => {
 
   switch (props.checkin.visibility) {
     case StaticUserData.VIS_PUBLIC:
-    visEl = (
+      visEl = (
         <span className="jam privacy checkicon jam-world"></span>
       );
       break;
     case StaticUserData.VIS_NETWORK:
-    visEl = (
+      visEl = (
         <span className="jam privacy checkicon jam-users"></span>
       );
       break;
     default:
-    visEl = (
+      visEl = (
         <span className="jam privacy checkicon jam-padlock"></span>
       );
       break;
   }
 
-  return <li>
+  return <li
+  >
     {el}
     {props.checkin.q}
     {visEl}
     {
       props.trash ?
-        <button className="delete" onClick={() => props.removeCheckinAt(props.index)}>
+        <button className="delete" onClick={() => props.removeCheckin(props.checkin)}>
           <span className="jam jam-trash"></span>
         </button>
         : null

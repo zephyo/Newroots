@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import $ from 'jquery';
 import autosize from 'autosize';
-
+import StaticUserData from '../../data/StaticUserData';
 /*
   {
         uid: 'fdsadsadaad'
@@ -49,7 +49,7 @@ class CommentBox extends React.Component {
       message: comment
     };
 
-    this.props.firebase.post(this.props.postid).collection('conversation').add(data);
+    this.props.firebase.postConversation(this.props.postid).add(data);
 
     this.setState({ commentBox: null });
     this.comment.value = "";
@@ -64,7 +64,7 @@ class CommentBox extends React.Component {
     return (
       <div className="leave-comment">
         <textarea rows="1"
-          placeholder="Comment.."
+          placeholder={StaticUserData.commentPlaceholder()}
           ref={el => this.comment = el}
           onChange={this.onChange}></textarea>
 

@@ -16,33 +16,18 @@ class HomePage extends React.Component {
     this.state = {
       signingUp: false,
       loggingIn: false,
-      show:false
+      show: false
     };
   }
   componentDidMount() {
-      const element = this;
-      this.props.firebase.auth.onAuthStateChanged(function(user) {
+    const element = this;
+    this.props.firebase.auth.onAuthStateChanged(function (user) {
       if (user) {
-        // User is signed in.
-          console.log("user! ");
-          let ID = user.uid;
-
-        /*this.props.firebase
-          .user(ID).once('value').then((snapshot)=>{
-            this.setState({ ...INITIAL_STATE });
-            this.props.checkLogin(snapshot.val());
-
-          });*/
-        element.props.firebase.user(ID).get().then(function(doc){
-            element.props.checkLogin(doc.data());
-        });
-          
+        element.props.checkLogin(user.uid);
       } else {
-        // No user is signed in.
-          console.log("no user ):")
-          element.setState({
-              show:true
-          })
+        element.setState({
+          show: true
+        })
       }
     });
   }
@@ -58,48 +43,48 @@ class HomePage extends React.Component {
     });
   }
 
-  render (){
-    let content, plantsEl = null; 
-    if (this.state.loggingIn){
+  render() {
+    let content, plantsEl = null;
+    if (this.state.loggingIn) {
       content = (
-        <LoginFormFB 
-          checkLogin = {this.props.checkLogin}
-          setLogin = {this.setLogin} />
+        <LoginFormFB
+          checkLogin={this.props.checkLogin}
+          goBack={() => this.setLogin(false)} />
       );
-    }else if (this.state.signingUp){
+    } else if (this.state.signingUp) {
       content = (
-        <SignUpFormFB 
-          SignUp = {this.props.SignUp}
-          setSignUp = {this.setSignUp}/>
+        <SignUpFormFB
+          SignUp={this.props.SignUp}
+          goBack={() => this.setSignUp(false)} />
       );
-    }else{
+    } else {
       content = (
         <div className="home-content">
           <h2>Newroots</h2>
           <p>Give and get support from your support network. Feel safe with those you trust.</p>
           <div className="buts">
-            <button className="signup-but" onClick={()=>this.setSignUp(true)} >Sign up</button>
-            <button className="login-but" onClick={()=>this.setLogin(true) }>Login</button>
+            <button className="signup-but" onClick={() => this.setSignUp(true)} >Sign up</button>
+            <button className="login-but" onClick={() => this.setLogin(true)}>Login</button>
           </div>
         </div>
       );
-      plantsEl = <img className = "plants" src={plants}/>;
+      plantsEl = <img className="plants" src={plants} />;
     }
 
     return (
-        <div>
+      <div>
         {this.state.show &&
-         <div className="home-page">
-        
-            
-            <img className="bg-texture" src={hero}/>
+          <div className="home-page">
+
+
+            <img className="bg-texture" src={hero} />
             {plantsEl}
             {content}
-            
-        
-        </div>
+
+
+          </div>
         }
-        </div>
+      </div>
     );
   }
 }

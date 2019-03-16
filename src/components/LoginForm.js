@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 const INITIAL_STATE = {
   email: '',
@@ -23,22 +23,7 @@ class LoginForm extends React.Component {
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
       .then((authUser) => {
-        let ID = authUser.user.uid;
-
-        /*this.props.firebase
-          .user(ID).once('value').then((snapshot)=>{
-            this.setState({ ...INITIAL_STATE });
-            this.props.checkLogin(snapshot.val());
-
-          });*/
-        this.props.firebase.user(ID).get().then(function (doc) {
-          element.setState({
-            ...INITIAL_STATE
-          });
-          // console.log(JSON.stringify(doc.data()));
-          element.props.checkLogin(doc.data());
-        });
-
+        element.props.checkLogin(authUser.user.uid);
       })
       .catch(error => {
         this.setState({ error });
@@ -53,7 +38,7 @@ class LoginForm extends React.Component {
     return (
       <div className="login-page">
         <h2>Newroots
-       <button className="back-but" onClick={() => this.props.setLogin(false)}>
+       <button className="back-but" onClick={this.props.goBack}>
             <span className="jam jam-arrow-left" style={{ color: '#635358' }}></span>
           </button>
         </h2>

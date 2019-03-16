@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import icon from './../graphics/icon.png';
 
 class NavBar extends React.Component {

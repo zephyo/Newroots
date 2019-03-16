@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Conversation from './Conversation';
 
 class Comments extends React.Component {
@@ -29,6 +29,9 @@ class Comments extends React.Component {
           PpfURL={msg.PpfURL}
           isMyPost={msg.isMyPost}
           message={msg.message}
+          convoid={msg.convoid}
+          deleteComment={this.props.deleteComment}
+          editComment={this.props.editComment}
         />
       );
     }

@@ -1,9 +1,9 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 import Dropdown from '../Misc/Dropdown';
 import StaticUserData from '../../data/StaticUserData';
 import OnboardingCategories from '../OnboardingCategories';
-
+import SaveCancelHeader from '../Misc/SaveCancelHeader';
 const visibleDefault = 2;
 
 const INITIAL_STATE = {
@@ -84,12 +84,16 @@ class AddCheckin extends React.Component {
   }
 
   onSubmit = () => {
+    let cat = this.state.category;
+    if (cat == StaticUserData.NULL_KEY) {
+      cat = '';
+    }
     this.props.setAddMode(false);
     this.props.addCheckin({
       q: this.state.q,
       type: this.state.type,
       visibility: this.state.visibility,
-      category: this.state.category
+      category: cat
     });
   }
 
@@ -142,6 +146,13 @@ class AddCheckin extends React.Component {
     }
 
     let categoriesAdjusted = [];
+
+    categoriesAdjusted.push(
+      {
+        text: StaticUserData.NULL_KEY
+      }
+    );
+
     for (let i = 0; i < this.props.categories.length; i++) {
       categoriesAdjusted.push(
         {
@@ -194,12 +205,13 @@ class AddCheckin extends React.Component {
           <small>Who can see this?</small>
         </div>
 
-        <div className="yesno">
-          <button className="yes" onClick={this.onSubmit} disabled={isInvalid}>
-            Submit</button>
-          <button className="no" onClick={this.onCancel}>
-            Cancel</button>
-        </div>
+
+        <SaveCancelHeader
+          Cancel={this.onCancel}
+          Save={this.onSubmit}
+          disabled={isInvalid}
+        />
+
       </div>
     );
   }

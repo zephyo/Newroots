@@ -1,6 +1,4 @@
-
-import React, { Component } from 'react';
-
+import React from 'react';
 
 class Loading extends React.Component {
 
@@ -16,6 +14,5 @@ class Loading extends React.Component {
     );
   }
 }
-
 
 export default Loading;

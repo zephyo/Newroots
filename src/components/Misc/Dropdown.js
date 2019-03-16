@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 
 
 /*
@@ -30,6 +30,19 @@ class Dropdown extends React.Component {
 
   setDropdown = (bool) => {
     this.setState({ dropdown: bool });
+    if (bool == false) {
+      document.removeEventListener('mousedown', this.handleClickOutside, false);
+    } else {
+      document.addEventListener('mousedown', this.handleClickOutside, false);
+    }
+  }
+
+  handleClickOutside = (e) => {
+    if (this.node.contains(e.target)) {
+      return;
+    }
+
+    this.setDropdown(false);
   }
 
   setSelected = (index) => {
@@ -39,6 +52,7 @@ class Dropdown extends React.Component {
   render() {
     const { dropdown, selected } = this.state;
 
+    let content;
 
     if (dropdown) {
       let options = this.props.options.map((item, i) => {
@@ -53,7 +67,7 @@ class Dropdown extends React.Component {
             <span className="jam checkicon jam-chevron-up"></span>;
         }
 
-        return (<li>
+        return (<li key={'dropdown_' + i}>
           <button className="dropdown" onClick={() => {
             this.props.onChange(item.text);
             this.setSelected(i)
@@ -65,33 +79,32 @@ class Dropdown extends React.Component {
           </button>
         </li>)
       });
+      content = options;
 
-      return (
-        <ul className="dropdown-container">
-          {options}
-        </ul>
-      );
-
-    } else {
+    }
+    else {
       let icon;
       if (this.props.options[selected].icon != null) {
         icon = <span className={"jam checkicon jam-" + this.props.options[selected].icon}></span>
       }
-      return (
-        <ul className="dropdown-container">
-          <li>
-            <button className="dropdown" onClick={() => this.setDropdown(true)}>
-              {icon}
-              {' ' + this.props.options[selected].text}
-              <span className="jam checkicon jam-chevron-down"></span>
-            </button>
-          </li>
-        </ul>
-      );
-
+      content =
+        <li>
+          <button className="dropdown" onClick={() => this.setDropdown(true)}>
+            {icon}
+            {' ' + this.props.options[selected].text}
+            <span className="jam checkicon jam-chevron-down"></span>
+          </button>
+        </li>;
     }
 
 
+    return (
+      <ul
+        ref={node => this.node = node}
+        className="dropdown-container">
+        {content}
+      </ul>
+    );
 
   }
 }

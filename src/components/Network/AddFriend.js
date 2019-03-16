@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import plant from '../../graphics/icon.png';
 import $ from 'jquery';
 import Avatar from '../Misc/Avatar';
-import * as firebase from 'firebase';
+import UserRow from './UserRow'
 
 class AddFriend extends React.Component {
   constructor(props) {
@@ -50,12 +50,6 @@ class AddFriend extends React.Component {
     let tempSug = [];
     ref.get()
       .then(querySnapshot => {
-        // console.log(this.props.uid)
-        /*this.props.firebase.users().doc(querySnapshot.docs[0].id)
-          .update({
-            "requests": firebase.firestore.FieldValue.arrayUnion(this.props.uid)
-          });
-        this.setAddedFriend('sent request!');*/
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
           console.log(doc.id, " => ", doc.data());
@@ -76,7 +70,7 @@ class AddFriend extends React.Component {
   confirmAdd = (uid) => {
     console.log("adding " + uid);
     this.props.firebase.user(uid).update({
-      "requests": firebase.firestore.FieldValue.arrayUnion(this.props.uid)
+      "requests": this.props.firebase.arrayUnion(this.props.uid)
     });
     this.setAddedFriend('sent request!');
   }
@@ -99,44 +93,6 @@ class AddFriend extends React.Component {
 
 
     this.genList(ref, search_val);
-    /*ref.get()
-      .then(querySnapshot => {
-        // console.log(this.props.uid)
-        this.props.firebase.users().doc(querySnapshot.docs[0].id)
-          .update({
-            "requests": firebase.firestore.FieldValue.arrayUnion(this.props.uid)
-          });
-        this.setAddedFriend('sent request!');
-        
-      })
-      .catch(err => {
-        this.setAddedFriend("couldn't find " + search_val);
-      });*/
-
-
-
-    // if (this.state.allUsers.length == 0){
-
-    // }else{
-    //   this.sendRequest(users[i].uid);
-    // }
-
-    // let users = this.state.users;
-
-    // for (var i = 0; i < users.length; i++) {
-    //   console.log(JSON.stringify(users[i]));
-    //   if (users[i].email == email) {
-    //     //are they your friend?
-    //     let index = users.indexOf(users[i].uid);
-    //     if (index > -1) {
-    //       this.setAddedFriend("you're already friends!");
-    //       return;
-    //     }
-    //     //send request
-
-    //     return;
-    //   }
-    // }
   };
 
   inviteFriend = () => {
@@ -162,7 +118,7 @@ class AddFriend extends React.Component {
 
     this.props.firebase.user(uid)
       .update({
-        network: firebase.firestore.FieldValue.arrayUnion(this.props.uid)
+        network: this.props.firebase.arrayUnion(this.props.uid)
       });
 
 
@@ -190,27 +146,8 @@ class AddFriend extends React.Component {
   }
 
   removeRequest = (uid) => {
-    //remove uid from your requests
-
-    // let requestArr = this.state.requests;
-    // let index = requestArr.indexOf(uid);
-    // if (index > -1) {
-    //   requestArr.splice(index, 1);
-    // }
-    // let usersArr = this.state.requestUsers;
-    // for (var i = 0; i < usersArr.length; i++) {
-    //   if (usersArr[i].uid == uid) {
-    //     usersArr.splice(i, 1);
-    //   }
-    // }
-    // this.setState({ requests: requestArr, requestUsers: usersArr });
-    // this.props.firebase
-    //   .user(this.props.uid)
-    //   .update({
-    //     requests: requestArr
-    //   });
     this.props.firebase.user(this.props.uid).update({
-      "requests": firebase.firestore.FieldValue.arrayRemove(uid)
+      "requests": this.props.firebase.arrayRemove(uid)
     }).then(() => {
       let users = this.state.requestUsers;
       for (var i = 0; i < users.length; i++) {
@@ -292,15 +229,20 @@ class AddFriend extends React.Component {
       req.push(addEl);
     }
     let length = this.state.suggestions.length;
+
     const suggestions = this.state.suggestions.map((sug, index) =>
-      <button className="friend-result" onClick={() => this.props.setUserPage(sug)}>
-        <Avatar PpfURL={sug.url} />
-        <h3>{sug.name}</h3>
-        <button onClick={() => this.confirmAdd(sug.uid)}>
-          <span className="jam jam-user-plus" ></span>
-        </button>
-      </button>
+      <UserRow
+        onProfileClick={() => this.props.setUserPage(sug)}
+        PpfURL={sug.url}
+        name={sug.name}
+        rightElement={
+          <button onClick={() => this.confirmAdd(sug.uid)}>
+            <span className="jam jam-user-plus" ></span>
+          </button>
+        }
+      />
     );
+
     return (
       <div className="modal network">
         <button className="close" onClick={() => this.props.setAddFriend(false)}>

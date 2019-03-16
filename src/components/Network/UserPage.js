@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Avatar from '../Misc/Avatar';
 import CheckInRow from './CheckinRow';
 
@@ -26,17 +26,19 @@ class UserPage extends React.Component {
     } = this.props;
 
     let checkinsEl = [];
-    for (let i = 0; i < checkins.length; i++) {
-      const checkin = checkins[i];
+    if (checkins != null) {
+      for (let i = 0; i < checkins.length; i++) {
+        const checkin = checkins[i];
 
-      if (checkin.visibility == StaticUserData.VIS_PUBLIC ||
-        (checkin.visibility == StaticUserData.VIS_NETWORK && this.inNetwork(myUID, network))) {
-        checkinsEl.push(
-          <CheckInRow
-            checkin={checkin}
-            trash={false}
-          />
-        );
+        if (checkin.visibility == StaticUserData.VIS_PUBLIC ||
+          (checkin.visibility == StaticUserData.VIS_NETWORK && this.inNetwork(myUID, network))) {
+          checkinsEl.push(
+            <CheckInRow
+              checkin={checkin}
+              trash={false}
+            />
+          );
+        }
       }
     }
 

@@ -403,6 +403,7 @@ section {
 }
 
 .thought-provoker {
+  padding-top: 1px;
   h1 {
     color: $black;
     text-transform: initial;
@@ -981,7 +982,6 @@ section {
         color: rgba(255, 255, 255, 0.7);
       }
       .delete {
-        border-radius: 5px;
         position: absolute;
         width: 60px;
         height: 100%;
@@ -1004,13 +1004,22 @@ section {
   .add-checkin {
     background: $dark-green;
   }
-  #logout-but {
-    margin-top: 60px;
-    margin-bottom: 100px;
-    color: white;
+
+  .logout-but, .delete-but {
     border-radius: 5rem;
     width: 95%;
+    margin-top: 60px;
+  }
+
+  .logout-but {
+    color: white;
     background: $pink;
+  }
+
+  .delete-but {
+    margin-bottom: 100px;
+    color: $dark;
+    background: white;
   }
 
   .add-panel {
@@ -1784,7 +1793,6 @@ section {
     margin: 0;
     padding: 20px;
     font-weight: 500;
-    text-transform: capitalize;
     color: rgba(255, 255, 255, 0.8);
   }
 }
@@ -1803,7 +1811,7 @@ section {
 }
 
 .misc {
-  @include ob-cat-button($dark);
+  @include ob-cat-button($black);
 }
 
 .physical {

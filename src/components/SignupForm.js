@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import StaticUserData from '../data/StaticUserData';
-
+import StaticUtil from '../data/StaticUtil'
 
 const INITIAL_STATE = {
   name: '',
@@ -40,11 +40,7 @@ class SignupForm extends React.Component {
             ...default_vals
           }).then(() => {
             this.setState({ ...INITIAL_STATE });
-            this.props.SignUp({
-              uid: ID,
-              ...default_vals
-
-            });
+            this.props.SignUp(ID);
           });
       })
       .catch(error => {
@@ -54,11 +50,7 @@ class SignupForm extends React.Component {
   };
 
   increasePage = () => {
-
-    //form validation
-    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    if (this.state.page === 1 && !re.test(this.state.email)) {
+    if (this.state.page === 1 && !StaticUtil.isValidEmail(this.state.email)) {
       this.setState({ error: "Please enter a valid email address." })
       return;
     }
@@ -93,7 +85,6 @@ class SignupForm extends React.Component {
 
     let small;
 
-
     progressbar = <div className="progress-bar">
       <div className="progress" style={{
         width: (page + 1) / (maxPages + 1) * 100 + '%'
@@ -105,7 +96,7 @@ class SignupForm extends React.Component {
       isInvalid = name === '' || lastName === '';
       header =
         <h2 className="sign-up-header">My name is
-          <button className="back-but" onClick={() => this.props.setSignUp(false)}>
+          <button className="back-but" onClick={this.props.goBack}>
             <span className="jam jam-arrow-left" style={{ color: '#635358' }}></span>
           </button>
         </h2>;

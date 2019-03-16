@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import $ from 'jquery';
 import moment from 'moment';
 import texture1 from './../graphics/flower.png';
@@ -232,8 +232,6 @@ class CheckinModal extends React.Component {
 
     this.props.firebase.user(this.props.uid).update({
       lastCheckin: time
-    }).then(() => {
-      this.props.updateCheckin(time);
     });
 
   }
@@ -323,7 +321,7 @@ class CheckinModal extends React.Component {
 
         <button
           className="remind"
-          onClick={() => { this.props.updateCheckin(this.getTime()) }}
+          onClick={() => { this.props.updateUserData('lastCheckin',this.getTime()) }}
         >
           Remind me later
           </button>

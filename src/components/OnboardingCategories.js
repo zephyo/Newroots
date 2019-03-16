@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import StaticUserData from '../data/StaticUserData'
 
 
@@ -138,10 +138,10 @@ class OnboardingCategories extends React.Component {
             }
           }
 
-          defCh.push(<button 
-          key = {ii+ '_'+j}
-          className={className} 
-          onClick={onClick}>
+          defCh.push(<button
+            key={ii + '_' + j}
+            className={className}
+            onClick={onClick}>
             {tru ? <span class="jam jam-check"></span> : null}
             {el}
             {item.q}
@@ -149,9 +149,9 @@ class OnboardingCategories extends React.Component {
         }
 
         addEl = (
-          <div 
-          key = {ii+ '_'}
-          className={"ob-cat " + categoryName}>
+          <div
+            key={ii + '_'}
+            className={"ob-cat " + categoryName}>
             {button}
             {defCh}
           </div>

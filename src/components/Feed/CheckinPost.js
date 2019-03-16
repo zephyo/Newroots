@@ -1,11 +1,6 @@
 import React from 'react';
-import Avatar from '../Misc/Avatar';
-import CommentBox from './CommentBox';
-import CommentBut from './CommentBut';
-import Comments from './Comments';
-import EditButton from './EditButton';
+import Post from './Post';
 import StaticUserData from '../../data/StaticUserData';
-
 
 /*
   props:
@@ -14,126 +9,30 @@ import StaticUserData from '../../data/StaticUserData';
   -isMyPost : bool
   -timestamp : string - e.g. a few seconds ago
   -checkinData : array
-
   -conversation :array
-
-  - example of checkinData: 
-    [
-      {
-        q: 'How are you feeling today?'
-        type: StaticUserData.QTYPE_SCALE
-        answer: '5',
-        comment: 'hi'
-      },
-      {
-        q: 'Did you take your medication?'
-        type: StaticUserData.QTYPE_YESNO
-        answer: 'yes'
-        comment: 'hi'
-      },
-      {
-        q: 'u gey?'
-        type: StaticUserData.QTYPE_TEXT
-        answer: 'dsadsdsaadadada'
-      }
-    ]
 */
+
 class CheckinPost extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      conversation: [],
-      conversationLength: 0,
-      showComments: false
-    }
-  }
-  componentDidMount() {
-
-    this.props.firebase.posts().doc(this.props.postid).collection("conversation").onSnapshot((snapshot) => {
-
-      let tempConvo = this.state.conversation;
-
-      if (this.loadedComments()) {
-
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === "added") {
-            let dat = change.doc.data();
-            tempConvo.push({
-              uid: dat.uid,
-              isMyPost: dat.uid == this.props.uid,
-              PpfURL: dat.PpfURL,
-              poster: dat.poster,
-              timestamp: dat.timestamp,
-              message: dat.message
-            })
-          }
-
-        });
-      }
-      this.setState({
-        conversation: tempConvo,
-        conversationLength: snapshot.size
-      });
-
-    });
-
-  }
-
-  loadedComments = () => {
-    return this.state.conversation.length !== 0;
-  }
-
-
-  compare = (a, b) => {
-    if (a.timestamp < b.timestamp)
-      return -1;
-    if (a.timestamp > b.timestamp)
-      return 1;
-    return 0;
-  }
-
-  loadComments = () => {
-
-    if (!this.loadedComments()) {
-
-      //load comments
-      let tempConvo = [];
-
-      //get once snapshot
-      this.props.firebase.posts().doc(this.props.postid).collection("conversation").get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          let dat = doc.data();
-          tempConvo.push({
-            uid: dat.uid,
-            isMyPost: dat.uid == this.props.uid,
-            PpfURL: dat.PpfURL,
-            poster: dat.poster,
-            timestamp: dat.timestamp,
-            message: dat.message
-          })
-        });
-
-        //at end, set state of conversation and showconversation
-
-        tempConvo.sort(this.compare);
-
-        this.setState({
-          conversation: tempConvo,
-          conversationLength: tempConvo.length,
-          showComments: !this.state.showComments
-        });
-      });
-
-
-    } else {
-      this.setState({ showComments: !this.state.showComments })
+      isEditing: false
     }
   }
 
+  Save = () => {
 
+  }
 
-  render() {
+  setEdit = (bool) => {
+    this.setState({ isEditing: bool })
+  }
+
+  getContent = () => {
+    if (this.state.isEditing == true) {
+      // return;
+    }
+
 
     let checkinData = this.props.checkinData;
 
@@ -142,107 +41,78 @@ class CheckinPost extends React.Component {
     for (var i = 0; i < checkinData.length; i++) {
       let checkin = checkinData[i];
 
-      if (this.props.posterUid != this.props.uid &&
-        (checkin.visibility == StaticUserData.VIS_PRIVATE ||
-          (checkin.visibility == StaticUserData.VIS_NETWORK && this.props.yourNetwork.indexOf(this.props.posterUid) < 0))) {
+      if (this.isCheckinVisible(checkin)) {
         continue;
       }
 
-      let el = null;
+      let el, moodContent = null, commentContent = checkin.comment;
 
-      if (checkin.type == StaticUserData.QTYPE_SCALE) {
-        el = (
-          <div
-            key={'key' + i}
-            className="check-in-q">
-            <div className="mood">
-              <span>{checkin.q} </span>
-              <div className="mood-icon number">{checkin.answer}</div>
-            </div>
-            <div className="content comment">{checkin.comment}</div>
-          </div>
-        );
-      }
-      else if (checkin.type == StaticUserData.QTYPE_YESNO) {
-        el = (
-          <div
-            key={'key' + i}
-            className="check-in-q">
-            <div className="mood">
-              <span>{checkin.q}</span>
-              {checkin.answer == 'yes' ?
-                <div className="mood-icon">
-                  <span className="jam jam-check" >
+      switch (checkin.type) {
+        case StaticUserData.QTYPE_SCALE:
+          moodContent = checkin.answer;
+          break;
 
-                  </span>
-                </div>
-                :
-                <div className="mood-icon no">
-                  <span className="jam jam-close" >
+        case StaticUserData.QTYPE_YESNO:
+          moodContent =
+            checkin.answer == 'yes' ?
+              <div className="mood-icon">
+                <span className="jam jam-check" ></span>
+              </div>
+              :
+              <div className="mood-icon no">
+                <span className="jam jam-close" ></span>
+              </div>;
+          break;
 
-                  </span>
-                </div>
-              }
-            </div>
-            <div className="content comment">{checkin.comment}</div>
-          </div>
-        );
+        case StaticUserData.QTYPE_TEXT:
+          commentContent = checkin.answer;
+          break;
       }
-      else if (checkin.type == StaticUserData.QTYPE_TEXT) {
-        el = (
-          <div
-            key={'key' + i}
-            className="check-in-q">
-            <div className="mood">
-              <span>{checkin.q} </span>
-            </div>
-            <div className="content">{checkin.answer}</div>
+
+      el = (
+        <div
+          key={'key' + i}
+          className="check-in-q">
+          <div className="mood">
+            <span>{checkin.q}</span>
+            {moodContent}
           </div>
-        );
-      }
+          <div className="content comment">{commentContent}</div>
+        </div>
+      );
+
       checkins.push(el);
     }
+    return checkins;
+  }
 
-    return (
-      <div className="checkin activity">
-        <div className="header">
-          <Avatar PpfURL={this.props.PpfURL} />
-          <div className="name-date">
-            <div><span className="name">{this.props.name}</span>
-              <span className="sub">&nbsp;checked in</span></div>
-            <div><span className="date">{this.props.timestamp}</span></div>
-          </div>
+  isCheckinVisible = (checkin) => {
+    return this.props.posterUid != this.props.uid &&
+      (checkin.visibility == StaticUserData.VIS_PRIVATE ||
+        (checkin.visibility == StaticUserData.VIS_NETWORK && this.props.yourNetwork.indexOf(this.props.posterUid) < 0));
+  }
 
-          <EditButton
-            isOwnPost={this.props.posterUid == this.props.uid}
-          />
+  render() {
+    return <Post
+      postid={this.props.postid}
+      posterUid={this.props.posterUid}
+      uid={this.props.uid}
+      yourNetwork={this.props.yourNetwork}
 
-        </div>
-        <div className="content">
+      PpfURL={this.props.PpfURL}
+      yourPpfURL={this.props.yourPpfURL}
 
-          {checkins}
+      firebase={this.props.firebase}
 
-        </div>
+      name={this.props.name}
+      timestamp={this.props.timestamp}
 
-
-        <CommentBut
-          loadComments={this.loadComments}
-          commentLength={this.state.conversationLength}
-        />
-        <Comments
-          showComments={this.state.showComments}
-          conversation={this.state.conversation}
-        />
-        <CommentBox
-          showComments={this.state.showComments}
-          uid={this.props.uid}
-          PpfURL={this.props.yourPpfURL}
-          poster={this.props.name}
-          firebase={this.props.firebase}
-          postid={this.props.postid}
-        />
-      </div>
-    );
+      postClass='checkin'
+      actionStr='checked in'
+      content={this.getContent()}
+      setEdit={this.setEdit}
+      Save={this.Save}
+    />
   }
 };
 

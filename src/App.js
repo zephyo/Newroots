@@ -1,19 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import $ from 'jquery';
 import moment from 'moment';
 
 import './App.css';
 import NavBar from './components/NavBar.js';
 import CheckinModal from './components/CheckinModal.js';
-import FeedTab from './components/FeedTab.js';
+import FeedTab from './components/Feed/FeedTab.js';
 import HomePage from './components/HomePage.js';
-import NetworkTab from './components/NetworkTab.js';
-import UserTab from './components/UserTab.js';
+import NetworkTab from './components/Network/NetworkTab.js';
+import UserTab from './components/User/UserTab.js';
 import Onboarding from './components/Onboarding.js';
-
-
 import { withFirebase } from './components/Firebase';
-
 
 const UserTabFB = withFirebase(UserTab);
 
@@ -27,51 +24,38 @@ const CheckinModalFB = withFirebase(CheckinModal);
 
 const HomePageFB = withFirebase(HomePage);
 
-//let feedListen;
-
-var data = {
-  baseURL: '',
-  activeTab: 0,
-  userData: null,
-  onboarding: false,
-  feed: [],
-  loadMore: false
-},
-  userBase = 'users';
-let loadMore = false;
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = data;
+    this.state = {
+      baseURL: '',
+      activeTab: 0,
+      userData: null,
+      onboarding: false,
+      feed: [],
+      loadMore: false
+    };
   }
 
-  SignUp = (userData) => {
+  listenForUserData = (uid) => {
+    let ref = this.props.firebase.user(uid);
+
+    ref.onSnapshot((doc) => {
+      this.setState({ userData: doc.data() })
+    })
+  }
+
+  SignUp = (uid) => {
     this.setState({
-      onboarding: true,
-      userData: userData,
+      onboarding: true
     });
+    this.listenForUserData(uid)
   }
 
-  checkLogin = (userData) => {
-    console.log("USER data " + JSON.stringify(userData));
-    this.setState({
-      userData: userData,
-    }, () => {
-      console.log(this.state.userData.bio)
-    });
+  checkLogin = (uid) => {
+    this.listenForUserData(uid)
   }
 
-  // update this.state.lastCheckin as well as input checkin data to feed/database
-  updateCheckin = (lastCheckin) => {
-    this.setState({
-      userData: {
-        ...this.state.userData,
-        lastCheckin: lastCheckin
-      }
-    });
-  }
-
-  //check this.state.lastCheckin and see whether user has checked in today
   needToCheckin = () => {
     if (this.state.userData.checkinFreq &&
       this.state.userData.checkinFreq[new Date().getDay()] == true &&
@@ -81,16 +65,6 @@ class App extends React.Component {
     else {
       return false;
     }
-  }
-
-  setPpfURL = (downloadURL) => {
-    this.setState({
-      userData: {
-        ...this.state.userData,
-        PpfURL: downloadURL
-      }
-    });
-
   }
 
   setActiveTab = (index) => {
@@ -112,32 +86,11 @@ class App extends React.Component {
     })
   }
 
-  setCheckins = (checkins) => {
+  updateUserData = (key, val) => {
     this.setState({
-      userData:
-      {
+      userData: {
         ...this.state.userData,
-        checkins: checkins
-      }
-    })
-  }
-
-  setNetwork = (network) => {
-    this.setState({
-      userData:
-      {
-        ...this.state.userData,
-        network: network
-      }
-    })
-  }
-
-  setRequests = (requests) => {
-    this.setState({
-      userData:
-      {
-        ...this.state.userData,
-        requests: requests
+        [key]: val
       }
     })
   }
@@ -146,19 +99,16 @@ class App extends React.Component {
     this.setState({ onboarding: bool })
   }
 
-  //logout
-  logout = () => {
+  removeUser = () => {
     this.setState({
       userData: null
     });
   }
 
   handleScroll = (e) => {
-    //console.log("skkitteskeet");
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    //loadMore = true;
+
     if (bottom) {
-      //loadMore = true;
       this.setState({
         loadMore: true
       })
@@ -173,14 +123,7 @@ class App extends React.Component {
     }
   }
 
-
-  /*resetScroll = () => {
-    this.setState({})
-  }*/
   render() {
-
-
-
     if (this.state.userData === null) {
       return (
         <HomePageFB
@@ -194,12 +137,11 @@ class App extends React.Component {
         <Onboarding
           setOnboarding={this.setOnboarding}
           name={this.state.userData.name}
-          setCheckins={this.setCheckins}
           uid={this.state.userData.uid}
+          updateUserData={this.updateUserData}
         />
       );
     }
-
 
     var activeTab;
     //active tab is feed
@@ -217,22 +159,19 @@ class App extends React.Component {
     }
     //active tab is network
     else if (this.state.activeTab == 1) {
-      // console.log('app.js req-'+JSON.stringify(this.state.userData.requests));
       activeTab = (
         <NetworkTabFB
           uid={this.state.userData.uid}
           requests={this.state.userData.requests}
           network={this.state.userData.network}
-          setRequests={this.setRequests}
-          setNetwork={this.setNetwork}
+          updateUserData={this.updateUserData}
         />
       );
     }
-    //active tab is profile
     else {
       activeTab = (
         <UserTabFB
-          logout={this.logout}
+          removeUser={this.removeUser}
           checkins={this.state.userData.checkins}
           name={this.state.userData.name}
           bio={this.state.userData.bio}
@@ -242,9 +181,8 @@ class App extends React.Component {
           checkinCategories={this.state.userData.checkinCategories}
           uid={this.state.userData.uid}
           PpfURL={this.state.userData.PpfURL}
-          setPpfURL={this.setPpfURL}
           setUserInfo={this.setUserInfo}
-          setCheckins={this.setCheckins}
+          updateUserData={this.updateUserData}
         />
       );
     }
@@ -269,7 +207,7 @@ class App extends React.Component {
             network={this.state.userData.network}
             name={this.state.userData.name}
             uid={this.state.userData.uid}
-            updateCheckin={this.updateCheckin}
+            updateUserData={this.updateUserData}
             checkins={this.state.userData.checkins ? this.state.userData.checkins : []}
           />
           : null}
