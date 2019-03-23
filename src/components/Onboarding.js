@@ -93,7 +93,6 @@ class Onboarding extends React.Component {
           page = (
             <OnboardingCategoriesFB
               uid={this.props.uid}
-              setCheckins={(checkins) => this.props.updateUserData('checkins', checkins)}
               incrementPage={this.incrementPage}
               onboarding={true}
             />

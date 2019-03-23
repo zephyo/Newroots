@@ -53,7 +53,7 @@ class DeleteAccount extends React.Component {
   verifyAndDelete = () => {
     this.setDeleteState(deleteStates.DELETING)
 
-    this.props.firebase.reAuth(this.state.password, () => {
+    this.props.firebase.reAuth(this.state.password, (user) => {
 
       /*
         if couldn't delete user, show failed. 
@@ -86,14 +86,14 @@ class DeleteAccount extends React.Component {
 
   render() {
     let dButton = (
-      <button className="delete-but"
+      <button className="delete-but long"
         onClick={() => this.setDeleteState(deleteStates.POPUP)}>Delete account</button>
     );
     let footer = null;
 
     switch (this.state.deleteState) {
       case deleteStates.NONE:
-        return <div>
+        return <div className="delete-container">
           {dButton}
         </div>;
       case deleteStates.POPUP:
@@ -130,7 +130,7 @@ class DeleteAccount extends React.Component {
           ;
         return;
     }
-    return <div>
+    return <div className="delete-container">
       {dButton}
       <SimpleModal
         title={this.state.deleteState.title}

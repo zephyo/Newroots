@@ -1,5 +1,5 @@
 import React from 'react';
-import ConvoBase from './ThoughtStarter';
+import ConvoBase from './ConvoBase';
 import ConversationEdit from './ConversationEdit';
 import Post from './Post';
 /*

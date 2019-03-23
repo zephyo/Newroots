@@ -1,6 +1,7 @@
 import React from 'react';
 import ConvoBase from './ConvoBase';
-import EditButton from './EditButton';
+import MoreButton from './MoreButton';
+import ConversationEdit from './ConversationEdit'
 /*
 props
  uid: this.props.uid,
@@ -67,7 +68,7 @@ class Conversation extends React.Component {
     }
 
 
-    mouseEnter = null, mouseLeave = null;
+    let mouseEnter = null, mouseLeave = null;
 
     if (this.props.isMyPost) {
       mouseEnter = () => this.setShowEdit(true);
@@ -82,7 +83,7 @@ class Conversation extends React.Component {
         onMouseEnter={mouseEnter}
         onMouseLeave={mouseLeave}
         optionalContent={this.state.showEdit == true ?
-          <EditButton
+          <MoreButton
             modalOptions={this.getEditOptions()}
           />
           : null} />);

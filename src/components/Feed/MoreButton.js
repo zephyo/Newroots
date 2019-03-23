@@ -15,7 +15,7 @@ import React from 'react';
 
 //report / mute
 
-class EditButton extends React.Component {
+class MoreButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,6 +47,7 @@ class EditButton extends React.Component {
     if (this.state.showModal) {
       let opts = this.props.modalOptions.map((item, index) => {
         return <button
+          key={'option_' + index}
           className={item.class}
           onClick={() => {
             item.onClick();
@@ -64,6 +65,7 @@ class EditButton extends React.Component {
     return (
       <div
         ref={node => this.node = node}
+        className="flex-child-left"
       >
         <button className="user-filter" onClick={() => this.setModal(!this.state.showModal)}>
           <span className="jam jam-more-horizontal-f" ></span>
@@ -75,4 +77,4 @@ class EditButton extends React.Component {
 }
 
 
-export default EditButton;
+export default MoreButton;

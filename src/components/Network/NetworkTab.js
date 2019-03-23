@@ -1,12 +1,12 @@
 import React from 'react';
 import AddFriend from './AddFriend';
 import { withFirebase } from '../Firebase';
-import Avatar from '../Misc/Avatar';
 import UserPage from './UserPage';
 import UserRow from './UserRow'
-
+import ListOfUsers from './ListOfUsers'
 import graphics3 from '../../graphics/3.png';
 import ErrorMsg from '../Misc/ErrorMsg';
+import StaticUtil from '../../data/StaticUtil';
 
 const AddFriendFB = withFirebase(AddFriend);
 
@@ -14,23 +14,20 @@ class NetworkTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      addFriend: false,
-      network: this.props.network,
-      networkUsers: [],
-      loading: false,
       requests: this.props.requests,
+      network: this.props.network,
+      addFriend: false,
       showUser: null
     };
   }
 
-  componentDidMount() {
-    let ref = this.props.firebase.user(this.props.uid);
-
-    ref.onSnapshot((doc) => {
-      let data = doc.data();
-      this.setNetworkUsers(data.network);
-      this.props.updateUserData('requests', data.requests);
-    })
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.requests !== this.state.requests) {
+      this.setState({ requests: nextProps.requests });
+    }
+    if (nextProps.network !== this.state.network) {
+      this.setState({ network: nextProps.network });
+    }
   }
 
   setAddFriend = (bool) => {
@@ -38,62 +35,6 @@ class NetworkTab extends React.Component {
       addFriend: bool
     });
   }
-
-  filterNetwork = (event) => {
-    let word = event.target.value;
-  }
-
-  setRequests = (requests) => {
-    this.setState({ requests: requests });
-    this.props.setRequests(requests);
-  }
-
-  //expect: array of uids
-  setNetworkUsers = (network) => {
-    let users = this.state.networkUsers;
-    if (users == null || users.length == 0) {
-      this.setState({ network: network });
-      this.loadNetworkUsers();
-    }
-    else {
-      //dfind difference  btw n prev state and this state, add to networkUsers
-      let prev = this.state.network;
-
-      let difference = network.filter(function (i) { return prev.indexOf(i) < 0 });
-
-      difference.forEach((val) => {
-        this.props.firebase
-          .user(val)
-          .get().then((doc) => {
-            users.push(doc.data());
-            this.setState({ networkUsers: users });
-          });
-      });
-      this.setState({ network: network });
-    }
-    this.props.updateUserData('network', network);
-  }
-
-  loadNetworkUsers = () => {
-    this.setState({ loading: true, networkUsers: [] });
-    let users = [];
-    let counter = 0;
-
-    for (let i = 0; i < this.state.network.length; i++) {
-
-      this.props.firebase
-        .user(this.state.network[i])
-        .get().then((doc) => {
-          users.push(doc.data());
-          this.setState({ networkUsers: users });
-          counter++;
-          if (counter === this.state.network.length) {
-            this.setState({ loading: false });
-          }
-        });
-    }
-  }
-
 
   closeUserPage = () => {
     this.setState({ showUser: null })
@@ -103,15 +44,16 @@ class NetworkTab extends React.Component {
     this.setState({ showUser: user })
   }
 
+  renderUser = (user, key) =>
+    <UserRow
+      key={key}
+      onProfileClick={() => this.setUser(user)}
+      PpfURL={user.PpfURL}
+      name={user.name}
+      rightElement={<button><span className="jam jam-heart" ></span></button>}
+    />
 
   render() {
-    if ((!this.state.networkUsers || this.state.networkUsers.length === 0) &&
-      this.state.network.length > 0) {
-      if (this.state.loading == false) {
-        this.loadNetworkUsers();
-      }
-    }
-
     let alert = null;
     if (this.state.requests.length > 0) {
       alert = (
@@ -119,40 +61,14 @@ class NetworkTab extends React.Component {
       );
     }
 
-    let network = [];
-    for (var i = 0; i < this.state.networkUsers.length; i++) {
-      let user = this.state.networkUsers[i];
-      if (user == undefined) continue;
-      var addEl = (
-        <UserRow
-          onProfileClick={() => this.setUser(user)}
-          PpfURL={user.PpfURL}
-          name={user.name}
-          rightElement={<button><span className="jam jam-heart" ></span></button>}
-        />
-      );
-      network.push(addEl);
-    }
-
-
     let userPage = null;
-
     if (this.state.showUser !== null) {
       let showUser = this.state.showUser;
-      userPage =
-        <UserPage
-          closeUserPage={this.closeUserPage}
-          PpfURL={showUser.PpfURL}
-          name={showUser.name}
-          bio={showUser.bio}
-          location={showUser.location}
-          pronouns={showUser.pronouns}
-          checkins={showUser.checkinData}
-          network={showUser.network}
-          myUID={this.props.uid}
-        ></UserPage>
+      userPage = StaticUtil.getUserPage(this.props.firebase,
+        this.props.uid,
+        showUser,
+        this.closeUserPage)
     }
-
 
     return (
       <section className="network">
@@ -171,16 +87,21 @@ class NetworkTab extends React.Component {
           </div>
         </div>
 
-        <div className="friends">
-          {this.state.network.length == 0 ?
-            <ErrorMsg
-              src={graphics3}
-              header="Your network hasn't been created yet."
-              msg='Why not invite someone you trust?'
-            />
-            : network
-          }
-        </div>
+          <ListOfUsers
+            containerClass='friends'
+            firebase={this.props.firebase}
+            uid={this.props.uid}
+            listName='network'
+            renderFunc={this.renderUser}
+            errorEl={
+              <ErrorMsg
+                src={graphics3}
+                header="Your network hasn't been created yet."
+                msg='Why not invite someone you trust?'
+              />
+            }
+          />
+
         {(this.state.addFriend ?
           <AddFriendFB
             setUserPage={this.setUser}

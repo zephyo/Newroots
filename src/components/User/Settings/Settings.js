@@ -15,84 +15,82 @@ props:
   firebase
   uid
   removeUser
-  updateUserData
   goBack
 */
-
-const SETTING_STATES = {
-  Home: {},
-  Email: {
-    element: <EditSecurity
-      goBack={this.returnHome}
-      key='email'
-      inputType='email'
-      verifyInput={this.verifyEmail}
-      successCallback={this.updateEmail}
-      firebase={this.props.firebase}
-    />
-  },
-  Password: {
-    element: <EditSecurity
-      goBack={this.returnHome}
-      key='password'
-      inputType='password'
-      verifyInput={this.verifyPassword}
-      successCallback={this.updatePassword}
-      firebase={this.props.firebase}
-    />
-  },
-  Notifications: {
-    element: (
-      <section className="user">
-        <Header
-          goBack={this.returnHome}
-          title='Notifications'
-        />
-        <Notifications />
-      </section>)
-  },
-  Filtering: {
-    element: (
-      <section className="user">
-        <Header
-          goBack={this.returnHome}
-          title='Filtering'
-        />
-        <Filtering />
-      </section>)
-  },
-  Muted: {
-    element: <Muted
-      firebase={this.props.firebase}
-      uid={this.props.uid}
-    />
-  },
-  Help: {
-    element: (
-      <section className="user">
-        <Header
-          goBack={this.returnHome}
-          title='Help Center'
-        />
-        <Help />
-      </section>)
-  },
-}
-
-const INITIAL_STATE = {
-  settingState: SETTING_STATES.Home,
-  showToast: null
-}
 
 class Settings extends React.Component {
   constructor(props) {
     super(props);
-    this.state = INITIAL_STATE;
+    const SETTING_STATES = {
+      Home: {},
+      Email: {
+        element: <EditSecurity
+          goBack={this.returnHome}
+          changing='email'
+          inputType='email'
+          verifyInput={this.verifyEmail}
+          successCallback={this.updateEmail}
+          firebase={this.props.firebase}
+        />
+      },
+      Password: {
+        element: <EditSecurity
+          goBack={this.returnHome}
+          changing='password'
+          inputType='password'
+          verifyInput={this.verifyPassword}
+          successCallback={this.updatePassword}
+          firebase={this.props.firebase}
+        />
+      },
+      Notifications: {
+        element: (
+          <section className="user">
+            <Header
+              goBack={this.returnHome}
+              title='Notifications'
+            />
+            <Notifications />
+          </section>)
+      },
+      Filtering: {
+        element: (
+          <section className="user">
+            <Header
+              goBack={this.returnHome}
+              title='Filtering'
+            />
+            <Filtering />
+          </section>)
+      },
+      Muted: {
+        element: <Muted
+        goBack={this.returnHome}
+          firebase={this.props.firebase}
+          uid={this.props.uid}
+        />
+      },
+      Help: {
+        element: (
+          <section className="user">
+            <Header
+              goBack={this.returnHome}
+              title='Help Center'
+            />
+            <Help />
+          </section>)
+      },
+    }
+    this.state = {
+      SETTING_STATES: SETTING_STATES,
+      settingState: SETTING_STATES.Home,
+      showToast: null
+    };
   }
 
-  setSettingState = (state) => this.setState({ settingState: state })
+  setSettingState = (state) => { this.setState({ settingState: state }) };
 
-  setToast = (el) = this.setState({ showToast: el })
+  setToast = (state) => { this.setState({ showToast: state }) };
 
   verifyEmail = (email) => {
     if (!StaticUtil.isValidEmail(email))
@@ -102,10 +100,6 @@ class Settings extends React.Component {
 
   updateEmail = (email) => {
     this.props.firebase.doEmailUpdate(email, this.updateSucceeded, this.updateFailed);
-    this.props.firebase.user(this.props.uid).update({
-      email: email
-    });
-    this.props.updateUserData('email', email);
   }
 
   verifyPassword = (pword) => {
@@ -132,29 +126,43 @@ class Settings extends React.Component {
     />);
   }
 
-  returnHome = () => this.setSettingState(SETTING_STATES.Home);
+  returnHome = () => this.setSettingState(this.state.SETTING_STATES.Home);
 
   render() {
-    if (this.state.settingState == SETTING_STATES.Home) {
+    const { SETTING_STATES, settingState } = this.state;
+
+    if (settingState == SETTING_STATES.Home) {
       return (
-        <section className="user">
+        <section className="user settings">
           <Header
             goBack={this.props.goBack}
             title='Settings'
           />
           <h3>Security</h3>
-          <button>Email</button>
-          <button>Password</button>
+          <button onClick={() => { this.setSettingState(SETTING_STATES.Email) }}>
+            Email
+            </button>
+          <button onClick={() => { this.setSettingState(SETTING_STATES.Password) }}>
+            Password
+            </button>
 
           <h3>Permissions</h3>
-          <button>Notifications</button>
+          <button onClick={() => { this.setSettingState(SETTING_STATES.Notifications) }}>
+            Notifications
+            </button>
 
           <h3>Safety</h3>
-          <button>Filtering</button>
-          <button>Muted accounts</button>
+          <button onClick={() => { this.setSettingState(SETTING_STATES.Filtering) }}>
+            Filtering
+            </button>
+          <button onClick={() => { this.setSettingState(SETTING_STATES.Muted) }}>
+            Muted accounts
+            </button>
 
           <h3>Account</h3>
-          <button>Help</button>
+          <button onClick={() => { this.setSettingState(SETTING_STATES.Help) }}>
+            Help
+            </button>
           <LogoutAccount
             firebase={this.props.firebase}
             removeUser={this.props.removeUser}
@@ -169,7 +177,7 @@ class Settings extends React.Component {
       );
     }
 
-    return this.state.settingState.element;
+    return settingState.element;
   }
 }
 

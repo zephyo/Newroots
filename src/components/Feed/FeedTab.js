@@ -12,7 +12,7 @@ import Loading from '../Misc/Loading';
 import StaticUtil from '../../data/StaticUtil'
 import StaticDataModel from '../../data/StaticDataModel'
 
-let feedListen;
+let feedListen, muteListen;
 let initial = true;
 
 class FeedTab extends React.Component {
@@ -22,9 +22,9 @@ class FeedTab extends React.Component {
       thoughts: [],
       checkins: [],
       feed: [],
-      newItems: [],
-      lastSeen: '',
+      lastSeen: null,
       loading: false,
+      mutedUsers: {},
     }
   }
 
@@ -46,7 +46,7 @@ class FeedTab extends React.Component {
       .orderBy("realtime", "desc")
       .limit(20);
 
-    if (!initial) {
+    if (initial == false) {
       first = first.startAfter(this.state.lastSeen);
     }
 
@@ -54,9 +54,17 @@ class FeedTab extends React.Component {
     first.get().then((documentSnapshots) => {
       if (documentSnapshots.docs[documentSnapshots.docs.length - 1]) {
         this.setLastSeen(documentSnapshots.docs[documentSnapshots.docs.length - 1])
+      } else if (this.state.feed != null) {
+        this.setLastSeen(this.state.feed[this.state.feed.length - 1])
       }
+
       documentSnapshots.forEach((doc) => {
-        tempFeed.push(this.getDataObj(doc.id, doc.data()))
+        let data = doc.data();
+
+        if (data.uid in this.state.mutedUsers) {
+          return;
+        }
+        tempFeed.push(this.getDataObj(doc.id, data))
       });
 
       this.setState({
@@ -70,19 +78,51 @@ class FeedTab extends React.Component {
 
   componentDidMount = () => {
     initial = true;
-    currFeed = this.state.feed;
+    this.loadMutedUsers(this.loadFeed)
+  }
 
+  loadMutedUsers = (callback) => {
+    muteListen = this.props.firebase.muteList(this.props.uid).onSnapshot((querySnapshot) => {
+      let users = {};
+      querySnapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          users[change.doc.id] = true;
+        }
+        if (change.type === "removed") {
+          delete users[change.doc.id]
+        }
+      });
+
+      this.setState({ mutedUsers: users }, () => {
+
+        if (initial == true) {
+          callback();
+        }
+      })
+    });
+  }
+
+  loadFeed = () => {
     feedListen = this.props.firebase.feed(this.props.uid)
       .onSnapshot((snapshot) => {
-        if (initial) return;
+        if (initial == true) return;
+
+        let currFeed = this.state.feed;
+        let tempFeed = [];
 
         snapshot.docChanges().forEach((change) => {
+          let data = change.doc.data();
+
+          if (data.uid in this.state.mutedUsers) {
+            return;
+          }
+
           if (change.type === "added") {
-            tempFeed.push(this.getDataObj(change.doc.id, change.doc.data()))
+            tempFeed.push(this.getDataObj(change.doc.id, data))
           }
           else if (change.type === "modified") {
             let index = currFeed.map(function (e) { return e.postid; }).indexOf(change.doc.id);
-            currFeed[index] = this.getDataObj(change.doc.id, change.doc.data())
+            currFeed[index] = this.getDataObj(change.doc.id, data)
           }
           else if (change.type === "removed") {
             let index = currFeed.map(function (e) { return e.postid; }).indexOf(change.doc.id);
@@ -93,12 +133,11 @@ class FeedTab extends React.Component {
         tempFeed.sort(StaticUtil.compareTimestamps);
         tempFeed.reverse();
         this.setState({
-          feed: currFeed,
-          newItems: tempFeed
+          feed: tempFeed.concat(currFeed),
         })
       });
 
-    if (initial) {
+    if (initial == true) {
       this.loadMore();
     }
   }
@@ -106,16 +145,17 @@ class FeedTab extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.loadMore === true) {
-      this.loadMore(false);
+      this.loadMore();
     }
   }
 
   componentWillUnmount() {
     feedListen();
+    muteListen();
   }
 
   render() {
-    let local_feed = (this.state.newItems.concat(this.state.feed));
+    let local_feed = this.state.feed;
 
     let last_date = null;
     let feedItems = [];
@@ -124,7 +164,7 @@ class FeedTab extends React.Component {
       let post = local_feed[index];
       if (post.timestamp.split(",")[0] !== last_date) {
         last_date = post.timestamp.split(",")[0];
-        feedItems.push(<h1 className="date-marker">{last_date}</h1>);
+        feedItems.push(<h1 key={"title_" + index} className="date-marker">{last_date}</h1>);
       }
       if (post.checkinData) {
         feedItems.push(

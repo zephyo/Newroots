@@ -21,7 +21,7 @@ const EditInput = (props) => {
       className={"profile-" + props.name}
       placeholder={props.placeholder}
       value={props.value}
-      onChange={this.onChangeUserInfo}>
+      onChange={props.onChange}>
     </input>
   </div>
 }
@@ -42,13 +42,22 @@ class UserTab extends React.Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      name: nextProps.name,
+      bio: nextProps.bio,
+      location: nextProps.location,
+      pronouns: nextProps.pronouns,
+      checkinFreq: nextProps.checkinFreq,
+      PpfURL: nextProps.PpfURL,
+    });
+  }
+
   componentDidMount() {
     autosize($('textarea'));
   }
 
   setEditMode = (bool) => {
-    this.setState({ editMode: bool });
-
     if (bool === false) {
       if (this.state.madeChanges == true) {
 
@@ -64,10 +73,16 @@ class UserTab extends React.Component {
             location: location == null ? null : location,
             pronouns: pronouns == null ? null : pronouns,
             checkinFreq: this.state.checkinFreq
+          }).then(() => {
+            this.setMadeChanges(false);
+            this.setState({ editMode: bool });
           });
-
-        this.setMadeChanges(false)
+      }else{
+        this.setState({ editMode: bool });
       }
+    }
+    else {
+      this.setState({ editMode: bool });
     }
   };
 
@@ -80,12 +95,7 @@ class UserTab extends React.Component {
     this.setMadeChanges(true)
   }
 
-  uploadPpf = (downloadURL) => {
-    this.setState({ PpfURL: downloadURL });
-    this.props.updateUserData('PpfURL', downloadURL);
-  }
-
-  onChangeUserInfo = event => {
+  onChangeUserInfo = (event) => {
     this.setState({ [event.target.name]: event.target.value });
     this.setMadeChanges(true)
   };
@@ -115,7 +125,7 @@ class UserTab extends React.Component {
 
     let cornerButtons,
       pic,
-      name,
+      nameEl,
       bioEl,
       locationEl,
       pronounsEl,
@@ -127,22 +137,22 @@ class UserTab extends React.Component {
       }
 
       cornerButtons = (
-        <div className="header">
-          <button className="edit done" onClick={() => this.setEditMode(false)}>Save</button>
+        <div className="header flex-row">
+          <button className="flex-child-left edit done" onClick={() => this.setEditMode(false)}>Save</button>
         </div>
       );
       pic = <UploadProfilePicture
         firebase={this.props.firebase}
         uid={this.props.uid}
-        uploadPpf={this.uploadPpf}
         PpfURL={this.state.PpfURL} />;
 
-      name = (
+      nameEl = (
         <EditInput
           title='Full name'
           name='name'
           placeholder='Full name'
           value={name}
+          onChange={this.onChangeUserInfo}
         />
       );
 
@@ -169,6 +179,7 @@ class UserTab extends React.Component {
           name='location'
           placeholder='Where are you?'
           value={location}
+          onChange={this.onChangeUserInfo}
         />
       );
 
@@ -193,11 +204,11 @@ class UserTab extends React.Component {
     }
     else {
       cornerButtons = (
-        <div className="header">
-          <button className="settings" onClick={() => this.setShowSettings(true)}>
+        <div className="header flex-row">
+          <button className="flex-child-right settings" onClick={() => this.setShowSettings(true)}>
             <span className="jam jam-cog"></span>
           </button>
-          <button className="edit" onClick={() => this.setEditMode(true)}>
+          <button className="flex-child-left edit" onClick={() => this.setEditMode(true)}>
             <span className="jam jam-pencil"></span>
           </button>
         </div>
@@ -207,7 +218,7 @@ class UserTab extends React.Component {
         <Avatar PpfURL={this.state.PpfURL} />
       );
 
-      name = (
+      nameEl = (
         <div className="profile-name">{name}</div>
       );
 
@@ -236,7 +247,7 @@ class UserTab extends React.Component {
       <section className="user">
         {cornerButtons}
         {pic}
-        {name}
+        {nameEl}
         {bioEl}
         <div className="profile-footer" style={style}>
           {locationEl}

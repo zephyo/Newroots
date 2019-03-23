@@ -31,6 +31,8 @@ class App extends React.Component {
       baseURL: '',
       activeTab: 0,
       userData: null,
+      userNetwork: {},
+      userRequests: {},
       onboarding: false,
       feed: [],
       loadMore: false
@@ -43,6 +45,36 @@ class App extends React.Component {
     ref.onSnapshot((doc) => {
       this.setState({ userData: doc.data() })
     })
+
+    this.props.firebase.network(uid).onSnapshot((snapshot) => {
+      let newNetwork = this.state.userNetwork;
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          newNetwork[change.doc.id] = true;
+        }
+        if (change.type === "modified") {
+        }
+        if (change.type === "removed") {
+          delete newNetwork[change.doc.id]
+        }
+      });
+      this.setState({ userNetwork: newNetwork })
+    });
+
+    this.props.firebase.requests(uid).onSnapshot((snapshot) => {
+      let newRequests = this.state.userRequests;
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          newRequests[change.doc.id] = true;
+        }
+        if (change.type === "modified") {
+        }
+        if (change.type === "removed") {
+          delete newRequests[change.doc.id]
+        }
+      });
+      this.setState({ userRequests: newRequests })
+    });
   }
 
   SignUp = (uid) => {
@@ -138,7 +170,6 @@ class App extends React.Component {
           setOnboarding={this.setOnboarding}
           name={this.state.userData.name}
           uid={this.state.userData.uid}
-          updateUserData={this.updateUserData}
         />
       );
     }
@@ -152,7 +183,7 @@ class App extends React.Component {
           PpfURL={this.state.userData.PpfURL}
           name={this.state.userData.name}
           uid={this.state.userData.uid}
-          network={this.state.userData.network}
+          network={this.state.userNetwork}
           feed={this.state.feed}
         />
       );
@@ -162,9 +193,8 @@ class App extends React.Component {
       activeTab = (
         <NetworkTabFB
           uid={this.state.userData.uid}
-          requests={this.state.userData.requests}
-          network={this.state.userData.network}
-          updateUserData={this.updateUserData}
+          requests={this.state.userRequests}
+          network={this.state.userNetwork}
         />
       );
     }
@@ -182,7 +212,6 @@ class App extends React.Component {
           uid={this.state.userData.uid}
           PpfURL={this.state.userData.PpfURL}
           setUserInfo={this.setUserInfo}
-          updateUserData={this.updateUserData}
         />
       );
     }
@@ -192,7 +221,7 @@ class App extends React.Component {
         <NavBarFB
           setActiveTab={this.setActiveTab}
           activeTab={this.state.activeTab}
-          requestsLength={this.state.userData.requests ? this.state.userData.requests.length : 0}
+          requestsLength={Object.keys(this.state.userRequests).length}
           uid={this.state.userData.uid}
         />
 
@@ -204,7 +233,7 @@ class App extends React.Component {
         {this.needToCheckin() ?
           <CheckinModalFB
             PpfURL={this.state.userData.PpfURL}
-            network={this.state.userData.network}
+            network={this.state.userNetwork}
             name={this.state.userData.name}
             uid={this.state.userData.uid}
             updateUserData={this.updateUserData}
@@ -216,4 +245,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withFirebase(App);

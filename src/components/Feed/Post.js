@@ -3,7 +3,7 @@ import Avatar from '../Misc/Avatar';
 import CommentBox from './CommentBox';
 import CommentBut from './CommentBut';
 import Comments from './Comments';
-import EditButton from './EditButton';
+import MoreButton from './MoreButton';
 import StaticUtil from '../../data/StaticUtil';
 import StaticDataModel from '../../data/StaticDataModel';
 
@@ -35,12 +35,13 @@ class Post extends React.Component {
 
       if (this.loadedComments()) {
         snapshot.docChanges().forEach((change) => {
+          let doc = change.doc;
           if (change.type === "added") {
-            tempConvo.push(StaticDataModel.getConvoObject(doc.id, change.doc.data(), this.props.uid))
+            tempConvo.push(StaticDataModel.getConvoObject(doc.id, doc.data(), this.props.uid))
           }
           if (change.type === "modified") {
             let index = tempConvo.map(function (e) { return e.convoid; }).indexOf(doc.id);
-            tempConvo[index] = StaticDataModel.getConvoObject(doc.id, change.doc.data(), this.props.uid)
+            tempConvo[index] = StaticDataModel.getConvoObject(doc.id, doc.data(), this.props.uid)
           }
           if (change.type === "removed") {
             let index = tempConvo.map(function (e) { return e.convoid; }).indexOf(doc.id);
@@ -101,21 +102,6 @@ class Post extends React.Component {
     }
   }
 
-  mutePoster = () => {
-    //add poster's uid to your blocked list
-    this.props.firebase.muteList(this.props.uid)
-      .doc(this.props.posterUid).set({
-        exists: true
-      })
-      .then(() => { });
-  }
-
-  reportPost = () => {
-    /* 
-      send the contents and postid of the post to our customer service email
-    */
-  }
-
   getEditOptions = () => {
     //is own post
     if (this.props.posterUid == this.props.uid) {
@@ -135,17 +121,18 @@ class Post extends React.Component {
       }
       return options;
     }
-    //not own post
     else {
       return [
         {
           text: 'Mute',
-          onClick: this.mutePoster,
+          onClick: () => this.props.firebase.mutePoster(this.props.uid,
+            this.props.posterUid),
           class: 'grey'
         },
         {
           text: 'Report',
-          onClick: this.reportPost,
+          onClick: () => this.props.firebase.reportPost(this.props.uid,
+            this.props.postid),
           class: 'grey'
         }
       ];
@@ -174,10 +161,10 @@ class Post extends React.Component {
           <Avatar PpfURL={this.props.PpfURL} />
           <div className="name-date">
             <div><span className="name">{this.props.name}</span>
-              <span className="sub">{' ' + this.props.actionStr}</span></div>
+            <span className="sub">{' '+this.props.actionStr}</span></div>
             <div><span className="date">{this.props.timestamp}</span></div>
           </div>
-          <EditButton
+          <MoreButton
             modalOptions={this.getEditOptions()}
           />
         </div>

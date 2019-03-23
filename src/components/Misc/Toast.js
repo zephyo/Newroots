@@ -20,13 +20,8 @@ class Toast extends React.Component {
   }
 
   setTimer() {
-    // clear any existing timer
-    this._timer != null ? clearTimeout(this._timer) : null;
-
-    // hide after `delay` milliseconds
-    this._timer = setTimeout(() => {
+   setTimeout(() => {
       this.setState({ visible: false });
-      this._timer = null;
     }, this.props.delay);
   }
 

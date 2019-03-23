@@ -66,6 +66,26 @@ body {
   color: $black;
 }
 
+body a,
+span,
+tr,
+td {
+  white-space: pre;
+}
+
+.flex-child-left {
+  margin-left: auto;
+}
+
+.flex-child-right {
+  margin-right: auto;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+}
+
 h1,
 div.profile-name {
   font-family: "Quicksand", sans-serif;
@@ -106,6 +126,11 @@ div.profile-bio {
       margin: 0;
     }
   }
+}
+
+button.red {
+  background: $pink;
+  color: white;
 }
 
 .jam {
@@ -174,6 +199,20 @@ a {
 }
 *::placeholder {
   opacity: 0.6;
+}
+
+.header-component {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70px;
+  width: 100%;
+  .back {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 }
 
 .container {
@@ -710,7 +749,7 @@ section {
       background: transparent;
       margin-left: auto;
     }
-    span {
+    span:not(.jam) {
       margin-left: $feed-padding;
       color: $black;
     }
@@ -877,10 +916,11 @@ section {
     }
   }
 
-  .edit {
-    align-self: flex-end;
-    border-radius: 50%;
-    margin-right: 5px;
+  .header {
+    align-self: stretch;
+    button {
+      border-radius: 50%;
+    }
   }
   .done {
     background: #899c7d;
@@ -993,7 +1033,7 @@ section {
       }
     }
   }
-  button:not(.edit):not(.dropdown):not(.delete) {
+  button.long {
     border-radius: 5rem;
     width: initial;
     /* max-width: 100%; */
@@ -1005,21 +1045,17 @@ section {
     background: $dark-green;
   }
 
-  .logout-but, .delete-but {
+  .delete-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logout-but,
+  .delete-but {
     border-radius: 5rem;
     width: 95%;
     margin-top: 60px;
-  }
-
-  .logout-but {
-    color: white;
     background: $pink;
-  }
-
-  .delete-but {
-    margin-bottom: 100px;
-    color: $dark;
-    background: white;
   }
 
   .add-panel {
@@ -1056,6 +1092,16 @@ section {
       small {
         color: $dark;
       }
+    }
+  }
+
+  &.settings {
+    > * {
+      align-self: stretch;
+      width: initial;
+    }
+    > button {
+      margin-bottom: 2px;
     }
   }
 }
@@ -1577,9 +1623,51 @@ section {
 }
 
 .modal.user-page {
+  overflow: scroll;
+  padding: 60px $feed-padding $feed-padding $feed-padding;
+  > * {
+    flex: none;
+  }
+  .profile-name {
+    position: relative;
+    justify-content: center;
+    max-width: initial;
+    align-self: stretch;
+    display: flex;
+    margin-bottom: 20px;
+    .flex-child-left {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  }
+  .action-buts {
+    display: flex;
+    flex-wrap: nowrap;
+    align-self: stretch;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    button {
+      border-radius: 5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
+      margin-right: 10px;
+      border: 2px solid $brown;
+      color: $brown;
+    }
+  }
+  .check-in-edit {
+    text-align: left;
+    align-self: stretch;
+    margin-bottom: 20px;
+  }
   .pic {
-    height: 180px;
-    width: 180px;
+    margin-top: 100px;
+    height: 160px;
+    width: 160px;
     position: relative;
     &:before {
       content: " ";
@@ -1593,10 +1681,6 @@ section {
       background: transparent;
       border: 1px solid $dark;
     }
-  }
-  .action-buts {
-    display: flex;
-    flex-wrap: wrap;
   }
   button:not(.close) {
     width: 100%;

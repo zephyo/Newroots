@@ -87,7 +87,10 @@ class CheckinModule extends React.Component {
       );
     } else {
       addQ = (
-        <button className="add-checkin" onClick={() => { this.setAddMode(true) }}>Add check-in
+        <button 
+        className="add-checkin long" 
+        onClick={() => { this.setAddMode(true) }}>
+        Add check-in
         </button>
       );
     }
@@ -105,6 +108,7 @@ class CheckinModule extends React.Component {
 
       checkins[checkin.category].push(
         <CheckInRow
+          key={'checkin_' + i}
           checkin={checkin}
           removeCheckin={this.removeCheckin}
           trash={this.state.editMode}
@@ -113,8 +117,11 @@ class CheckinModule extends React.Component {
     }
 
     let checkinsEl = [];
-    for (let category in checkins) {
-      let el = <div className={"qcat " + category}>
+    for (let i = 0; i < checkins.length; i++) {
+      let category = checkins[i];
+      let el = <div
+        key={'category_' + i}
+        className={"qcat " + category}>
         <h2>{category}</h2>
         <ul className="your-checkins">
           {checkins[category]}

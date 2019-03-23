@@ -9,9 +9,11 @@ class SaveCancelHeader extends React.Component {
 
   render() {
     return (
-      <div className="header">
+      <div className="header flex-row">
         <button onClick={this.props.Cancel}>Cancel</button>
-        <button onClick={this.props.Save} disabled={this.props.disabled}>Save</button>
+        <button 
+        className="flex-child-left"
+        onClick={this.props.Save} disabled={this.props.disabled}>Save</button>
       </div>
     );
   }

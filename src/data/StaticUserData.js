@@ -64,8 +64,6 @@ class StaticUserData extends React.Component {
       name: name + ' ' + lastName,
       easy_name: name.toLowerCase(),
       email: email,
-      network: [],
-      requests: [],
       checkinCategories: StaticUserData.getDefCheckinCategories(),
       checkinFreq: [true, true, true, true, true, true, true],
       checkins: [],

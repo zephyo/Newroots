@@ -66,7 +66,6 @@ class OnboardingCategories extends React.Component {
       }
     }
 
-    this.props.setCheckins(checkins);
     this.props.firebase
       .user(this.props.uid)
       .update({

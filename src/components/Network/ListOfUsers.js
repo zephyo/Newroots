@@ -7,7 +7,7 @@ props:
   uid
   key (e.g. muteList, network)
   renderFunc : function that takes in user object and outputs component
-
+  errorEl
 */
 class ListOfUsers extends React.Component {
   constructor(props) {
@@ -18,47 +18,25 @@ class ListOfUsers extends React.Component {
   }
 
   componentDidMount() {
-    let ref = this.props.firebase.user(this.props.uid);
+    let ref = this.props.firebase.user(this.props.uid).collection(this.props.listName);
 
-    ref.onSnapshot((doc) => {
-      let data = doc.data();
-      this.setNetworkUsers(data[this.props.key]);
-    })
-  }
-
-  updateLoadedUsers = (newUids) => {
-    if (newUids == null || newUids.length == 0) return;
-
-    let users = this.state.loadedUsers;
-
-    if (users == null || Object.keys(users).length == 0) {
-      this.loadUsers(newUids);
-    }
-    else {
-      for (let uid of newUids) {
-        if (uid in users) continue;
-
-        this.props.firebase.user(uid)
-          .get()
-          .then((doc) => {
-            users[uid] = doc.data();
-            this.setState({ loadedUsers: users });
-          })
-      }
-    }
-  }
-
-  loadUsers = (uids) => {
-    let users = {};
-
-    for (let uid of uids) {
-      this.props.firebase.user(uid)
-        .get()
-        .then((doc) => {
-          users[uid] = doc.data();
-          this.setState({ loadedUsers: users });
-        });
-    }
+    ref.onSnapshot((querySnapshot) => {
+      let users = {};
+      querySnapshot.docChanges().forEach((change) => {
+        let doc = change.doc;
+        if (change.type === "added" || change.type === "modified") {
+          this.props.firebase.user(doc.id)
+            .get()
+            .then((doc) => {
+              users[doc.id] = doc.data();
+              this.setState({ loadedUsers: users });
+            })
+        }
+        if (change.type === "removed") {
+          delete users[doc.id]
+        }
+      });
+    });
   }
 
   render() {
@@ -66,11 +44,11 @@ class ListOfUsers extends React.Component {
 
     let renderUsers = [];
     for (let key in loadedUsers) {
-      renderUsers.push(this.props.renderFunc(loadedUsers[key]));
+      renderUsers.push(this.props.renderFunc(loadedUsers[key], key));
     }
 
     return <div className={this.props.containerClass}>
-      {renderUsers}
+      {renderUsers.length > 0 ? renderUsers : this.props.errorEl}
     </div>;
   }
 

@@ -20,14 +20,13 @@ class HomePage extends React.Component {
     };
   }
   componentDidMount() {
-    const element = this;
-    this.props.firebase.auth.onAuthStateChanged(function (user) {
-      if (user) {
-        element.props.checkLogin(user.uid);
-      } else {
-        element.setState({
+    this.props.firebase.auth.onAuthStateChanged((user) => {
+      if (user == null) {
+        this.setState({
           show: true
         })
+      } else {
+        this.props.checkLogin(user.uid);
       }
     });
   }

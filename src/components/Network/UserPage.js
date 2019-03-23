@@ -1,16 +1,77 @@
 import React from 'react';
 import Avatar from '../Misc/Avatar';
 import CheckInRow from './CheckinRow';
+import MoreButton from '../Feed/MoreButton'
 
 import StaticUserData from '../../data/StaticUserData'
+
+let muteListener = null;
 
 class UserPage extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      initialState: false,
+      muted: false
+    }
   }
+
+  componentDidMount() {
+    this.props.firebase.checkIfMuted(this.props.myUID, this.props.theirUID,
+      () => {
+        this.setState({ initialState: true });
+        this.setMuted(true);
+      })
+  }
+
+  setMuted = (state) => this.setState({ muted: state });
+
+  getMoreOptions = () => {
+    let options = [
+      {
+        text: 'Report ' + this.props.name,
+        onClick: () => this.props.firebase.reportPoster(this.props.myUID,
+          this.props.theirUID),
+        class: 'grey'
+      }
+    ];
+    if (this.state.muted == true) {
+      options.push(
+        {
+          text: 'Unmute ' + this.props.name,
+          onClick: () => this.setMuted(false),
+          class: 'grey'
+        });
+    } else {
+      options.push(
+        {
+          text: 'Mute ' + this.props.name,
+          onClick: () => this.setMuted(true),
+          class: 'grey'
+        });
+    }
+    return options;
+  }
+
 
   inNetwork = (myUID, theirNetwork) => {
     return theirNetwork.indexOf(myUID) > -1;
+  }
+
+  Close = () => {
+    if (this.state.initialState != this.state.muted) {
+      if (this.state.muted) {
+        this.props.firebase.mutePoster(this.props.myUID,
+          this.props.theirUID,
+          this.props.closeUserPage)
+      } else {
+        this.props.firebase.unmutePoster(this.props.myUID,
+          this.props.theirUID,
+          this.props.closeUserPage)
+      }
+    } else {
+      this.props.closeUserPage();
+    }
   }
 
   render() {
@@ -61,7 +122,7 @@ class UserPage extends React.Component {
     if (pronouns != null) {
       pronounEl =
         <p className="profile-pronoun">
-          <span className={"jam checkicon jam-" + StaticUserData.allPronouns[pronouns]}></span>
+          <span className={"jam checkicon jam-" + StaticUserData.allPronouns[pronouns].icon}></span>
           {pronouns}
         </p>
     }
@@ -69,7 +130,7 @@ class UserPage extends React.Component {
 
     return (
       <div className="modal user-page">
-        <button className="close" onClick={() => this.props.closeUserPage()}>
+        <button className="close" onClick={this.Close}>
           <span className="jam jam-close"></span>
         </button>
 
@@ -77,10 +138,17 @@ class UserPage extends React.Component {
           content={null}
         />
 
-        <div className="profile-name">{name}</div>
+        <div className="profile-name">
+          <span>{name}</span>
+          <MoreButton
+            modalOptions={this.getMoreOptions()}
+          />
+        </div>
+        <div className="flex-row">
+          {locationEl}
+          {pronounEl}
+        </div>
 
-        {locationEl}
-        {pronounEl}
         {bioEl}
 
         <div className="action-buts">
@@ -100,7 +168,6 @@ class UserPage extends React.Component {
 
         </div>
 
-
         <div className="check-in-edit">
           <h2>Their check-in</h2>
 
@@ -109,14 +176,6 @@ class UserPage extends React.Component {
             {checkinsEl}
           </ul>
         </div>
-
-
-
-        <button
-          onClick={() => {
-          }}>
-          Report abuse
-          </button>
 
       </div>
     );

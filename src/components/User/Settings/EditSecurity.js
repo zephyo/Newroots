@@ -39,7 +39,7 @@ class EditSecurity extends React.Component {
 
   reAuth = () => {
     this.confirmPword(false);
-    this.props.firebase.reAuth(this.state.password, () => this.props.successCallback(this.state.value), this.onFail)
+    this.props.firebase.reAuth(this.state.password, (user) => this.props.successCallback(this.state.value), this.onFail)
   }
 
   onFail = (error) => {
@@ -49,7 +49,7 @@ class EditSecurity extends React.Component {
   render() {
     let modal;
     let isInvalid = this.state.value == null || this.state.value == '';
-
+    console.log('key:' + this.props.changing);
     if (this.state.confirmPword == true) {
       modal = <SimpleModal
         t='Enter your password'
@@ -70,8 +70,8 @@ class EditSecurity extends React.Component {
           Save={this.checkSubmit}
           disabled={isInvalid}
         />
-        <p>{'Change your ' + this.props.key}</p>
-        <input type={inputType} placeholder={'New ' + this.props.key} onChange={this.setValue} />
+        <p>{'Change your ' + this.props.changing}</p>
+        <input type={this.props.inputType} placeholder={'New ' + this.props.changing} onChange={this.setValue} />
         {this.state.error != '' ? <small>{this.state.error}</small> : null}
         {modal}
       </div>

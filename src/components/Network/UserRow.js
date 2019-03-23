@@ -1,4 +1,5 @@
 import React from 'react';
+import Avatar from '../Misc/Avatar'
 
 /*
 props:
@@ -16,7 +17,7 @@ class UserRow extends React.Component {
   render() {
     return (
       <div className="friend">
-        <a href="#" onClick={this.props.onProfileClick}>
+        <a className="flex-row" href="#" onClick={this.props.onProfileClick}>
           <Avatar PpfURL={this.props.PpfURL} />
           <span>{this.props.name}</span>
         </a>

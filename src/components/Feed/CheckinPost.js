@@ -33,7 +33,6 @@ class CheckinPost extends React.Component {
       // return;
     }
 
-
     let checkinData = this.props.checkinData;
 
     let checkins = [];

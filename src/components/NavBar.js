@@ -10,13 +10,13 @@ class NavBar extends React.Component {
     };
   }
 
-  componentDidMount() {
-    //let element = this;
-    var requestsRef = this.props.firebase.user(this.props.uid);
-
-    requestsRef.onSnapshot((doc) => {
-      this.setState({ requestsLength: doc.data().requests.length })
-    })
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.requestsLength !== this.state.requestsLength) {
+      this.setState({ requestsLength: nextProps.requestsLength });
+    }
+    if (nextProps.activeTab !== this.state.activeTab) {
+      this.setState({ activeTab: nextProps.activeTab });
+    }
   }
 
   setAddFriend = (bool) => {

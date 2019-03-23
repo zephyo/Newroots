@@ -18,6 +18,26 @@ body {
   color: #2b2b2b;
 }
 
+body a,
+span,
+tr,
+td {
+  white-space: pre;
+}
+
+.flex-child-left {
+  margin-left: auto;
+}
+
+.flex-child-right {
+  margin-right: auto;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+}
+
 h1,
 div.profile-name {
   font-family: "Quicksand", sans-serif;
@@ -57,6 +77,11 @@ div.profile-bio {
 }
 .profile-footer div .jam {
   margin: 0;
+}
+
+button.red {
+  background: #e39982;
+  color: white;
 }
 
 .jam {
@@ -129,6 +154,20 @@ a {
 
 *::placeholder {
   opacity: 0.6;
+}
+
+.header-component {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70px;
+  width: 100%;
+}
+.header-component .back {
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .container {
@@ -667,7 +706,7 @@ section {
   background: transparent;
   margin-left: auto;
 }
-.network .friend span {
+.network .friend span:not(.jam) {
   margin-left: 20px;
   color: #2b2b2b;
 }
@@ -872,10 +911,11 @@ section {
   color: #8a8184;
   position: relative;
 }
-.user .edit {
-  align-self: flex-end;
+.user .header {
+  align-self: stretch;
+}
+.user .header button {
   border-radius: 50%;
-  margin-right: 5px;
 }
 .user .done {
   background: #899c7d;
@@ -981,7 +1021,7 @@ section {
   background: #e38882;
   box-shadow: 0 4px 10px rgba(43, 43, 43, 0.2);
 }
-.user button:not(.edit):not(.dropdown):not(.delete) {
+.user button.long {
   border-radius: 5rem;
   width: initial;
   /* max-width: 100%; */
@@ -992,19 +1032,16 @@ section {
 .user .add-checkin {
   background: #899c7d;
 }
-.user .logout-but, .user .delete-but {
+.user .delete-container {
+  display: flex;
+  flex-direction: column;
+}
+.user .logout-but,
+.user .delete-but {
   border-radius: 5rem;
   width: 95%;
   margin-top: 60px;
-}
-.user .logout-but {
-  color: white;
   background: #e39982;
-}
-.user .delete-but {
-  margin-bottom: 100px;
-  color: #8a8184;
-  background: white;
 }
 .user .add-panel {
   margin: 40px 0px 40px 0px;
@@ -1035,6 +1072,13 @@ section {
 }
 .user .add-panel .checkin-choice small {
   color: #8a8184;
+}
+.user.settings > * {
+  align-self: stretch;
+  width: initial;
+}
+.user.settings > button {
+  margin-bottom: 2px;
 }
 
 .jam.checkicon {
@@ -1548,9 +1592,53 @@ section {
   transition: width 0.5s linear;
 }
 
+.modal.user-page {
+  overflow: scroll;
+  padding: 60px 20px 20px 20px;
+}
+.modal.user-page > * {
+  flex: none;
+}
+.modal.user-page .profile-name {
+  position: relative;
+  justify-content: center;
+  max-width: initial;
+  align-self: stretch;
+  display: flex;
+  margin-bottom: 20px;
+}
+.modal.user-page .profile-name .flex-child-left {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+.modal.user-page .action-buts {
+  display: flex;
+  flex-wrap: nowrap;
+  align-self: stretch;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+.modal.user-page .action-buts button {
+  border-radius: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  margin-right: 10px;
+  border: 2px solid #886766;
+  color: #886766;
+}
+.modal.user-page .check-in-edit {
+  text-align: left;
+  align-self: stretch;
+  margin-bottom: 20px;
+}
 .modal.user-page .pic {
-  height: 180px;
-  width: 180px;
+  margin-top: 100px;
+  height: 160px;
+  width: 160px;
   position: relative;
 }
 .modal.user-page .pic:before {
@@ -1564,10 +1652,6 @@ section {
   border-radius: 50%;
   background: transparent;
   border: 1px solid #8a8184;
-}
-.modal.user-page .action-buts {
-  display: flex;
-  flex-wrap: wrap;
 }
 .modal.user-page button:not(.close) {
   width: 100%;

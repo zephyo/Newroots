@@ -22,7 +22,6 @@ class UploadProfilePicture extends React.Component {
             PpfURL: downloadURL
           });
 
-        this.props.uploadPpf(downloadURL);
       });
     });
   }

@@ -2,6 +2,9 @@
 import React from 'react';
 import UserRow from '../../Network/UserRow'
 import ListOfUsers from './../../Network/ListOfUsers';
+import UserPage from '../../Network/UserPage'
+import Header from '../../Misc/Header'
+import StaticUtil from '../../../data/StaticUtil'
 /*
 firebase
 uid
@@ -35,16 +38,14 @@ class Muted extends React.Component {
 
   goBack = () => {
     for (let key in this.state.unmutedUsers) {
-      this.props.firebase.user(this.props.uid).update({
-        "muteList": this.props.firebase.arrayRemove(key)
-      }).then(() => {
-      });
+      this.props.firebase.unmutePoster(this.props.uid, key)
     }
-    this.props.returnHome();
+    this.props.goBack();
   }
 
-  renderUser = (user) => {
+  renderUser = (user, key) =>
     <UserRow
+      key={key}
       onProfileClick={() => this.setUser(user)}
       PpfURL={user.PpfURL}
       name={user.name}
@@ -54,26 +55,19 @@ class Muted extends React.Component {
           onClick={() => this.setUnmuteUser(user.uid)}>
           <span className="jam jam-volume-mute" ></span>
         </button>}
-    />
-  }
+    />;
 
   render() {
     let userPage = null;
 
     if (this.state.showUser != null) {
       const showUser = this.state.showUser;
-      userPage = <UserPage
-        closeUserPage={this.closeUserPage}
-        PpfURL={showUser.PpfURL}
-        name={showUser.name}
-        bio={showUser.bio}
-        location={showUser.location}
-        pronouns={showUser.pronouns}
-        checkins={showUser.checkinData}
-        network={showUser.network}
-        myUID={this.props.uid}
-      ></UserPage>
+      userPage = StaticUtil.getUserPage(this.props.firebase,
+        this.props.uid,
+        showUser,
+        this.closeUserPage);
     }
+
 
     return (
       <section className="user">
@@ -86,7 +80,7 @@ class Muted extends React.Component {
             containerClass='friends'
             firebase={this.props.firebase}
             uid={this.props.uid}
-            key='muteList'
+            listName='muteList'
             renderFunc={this.renderUser}
           />
           {userPage}
